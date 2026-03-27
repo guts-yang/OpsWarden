@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed-variant": "#004492",
+              "surface-container-low": "#191b22",
+              "on-background": "#e2e2eb",
+              "on-primary-fixed": "#001a40",
+              "on-primary": "#002f68",
+              "on-tertiary-fixed-variant": "#6a3b00",
+              "on-tertiary-container": "#412200",
+              "on-secondary-container": "#005441",
+              "secondary-fixed-dim": "#28dfb5",
+              "surface-variant": "#33343b",
+              "surface-container-highest": "#33343b",
+              "tertiary-container": "#d37b02",
+              "on-tertiary-fixed": "#2d1600",
+              "tertiary": "#ffb873",
+              "on-tertiary": "#4b2800",
+              "secondary-fixed": "#55fcd0",
+              "tertiary-fixed-dim": "#ffb873",
+              "error-container": "#93000a",
+              "surface-dim": "#111319",
+              "outline-variant": "#424753",
+              "inverse-primary": "#005bbf",
+              "tertiary-fixed": "#ffdcbf",
+              "surface-tint": "#acc7ff",
+              "primary-fixed-dim": "#acc7ff",
+              "inverse-on-surface": "#2e3037",
+              "surface-container-lowest": "#0c0e14",
+              "surface-bright": "#373940",
+              "on-secondary-fixed-variant": "#00513f",
+              "on-secondary-fixed": "#002118",
+              "secondary": "#41eec2",
+              "error": "#ffb4ab",
+              "on-error-container": "#ffdad6",
+              "on-primary-container": "#00285b",
+              "on-error": "#690005",
+              "on-secondary": "#00382b",
+              "on-surface": "#e2e2eb",
+              "secondary-container": "#00d1a7",
+              "primary-container": "#508ff8",
+              "background": "#111319",
+              "surface-container-high": "#282a30",
+              "primary": "#acc7ff",
+              "surface": "#111319",
+              "inverse-surface": "#e2e2eb",
+              "on-surface-variant": "#c2c6d5",
+              "surface-container": "#1e1f26",
+              "outline": "#8c909e",
+              "primary-fixed": "#d7e2ff"
+            },
+            fontFamily: {
+              "headline": ["Inter", "system-ui"],
+              "body": ["Inter", "system-ui"],
+              "label": ["Inter", "system-ui"],
+              "mono": ["JetBrains Mono", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+        .bg-glass {
+            backdrop-filter: blur(12px);
+            background-color: rgba(26, 29, 39, 0.8);
+        }
+        .data-pulse {
+            position: relative;
+        }
+        .data-pulse::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 4px;
+            height: 4px;
+            background: #41EEC2;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #41EEC2;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30">
+<!-- SideNavBar (Authority: Shared Components JSON) -->
+<aside class="fixed left-0 top-0 bottom-0 z-50 flex flex-col py-6 w-[220px] h-screen bg-[#191B22] dark:bg-[#191B22] border-r-0 font-['Inter'] text-sm tracking-wide uppercase font-medium">
+<div class="text-xl font-bold tracking-tighter text-[#ACC7FF] mb-8 px-4">
+            OpsWarden
+            <div class="text-[10px] font-mono tracking-widest text-[#8B8FA8] mt-1 opacity-60">AI 数字化指挥中心</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active: 仪表盘 -->
+<a class="bg-[#1A1D27] text-[#ACC7FF] border-l-2 border-[#41EEC2] flex items-center px-4 py-3 transition-all duration-300 scale-98" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span>仪表盘</span>
+</a>
+<a class="text-[#8B8FA8] hover:text-[#F0F2FF] hover:bg-[#1A1D27]/50 flex items-center px-4 py-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="smart_toy">smart_toy</span>
+<span>AI 对话</span>
+</a>
+<a class="text-[#8B8FA8] hover:text-[#F0F2FF] hover:bg-[#1A1D27]/50 flex items-center px-4 py-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="manage_accounts">manage_accounts</span>
+<span>账号管理</span>
+</a>
+<a class="text-[#8B8FA8] hover:text-[#F0F2FF] hover:bg-[#1A1D27]/50 flex items-center px-4 py-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="confirmation_number">confirmation_number</span>
+<span>工单系统</span>
+</a>
+<a class="text-[#8B8FA8] hover:text-[#F0F2FF] hover:bg-[#1A1D27]/50 flex items-center px-4 py-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="menu_book">menu_book</span>
+<span>知识库</span>
+</a>
+<a class="text-[#8B8FA8] hover:text-[#F0F2FF] hover:bg-[#1A1D27]/50 flex items-center px-4 py-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span>系统设置</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-[#1A1D27]/50">
+<a class="text-[#8B8FA8] hover:text-[#F0F2FF] hover:bg-[#1A1D27]/50 flex items-center px-4 py-3 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="help">help</span>
+<span>帮助中心</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="ml-[220px] min-h-screen flex flex-col">
+<!-- TopAppBar (Authority: Shared Components JSON) -->
+<header class="h-[56px] w-full sticky top-0 z-40 bg-[#111319]/80 backdrop-blur-xl border-b border-[#1A1D27] shadow-[0_8px_32px_rgba(172,199,255,0.08)] flex justify-between items-center px-6">
+<div class="flex items-center space-x-4">
+<nav class="flex items-center text-xs font-mono">
+<span class="text-[#8B8FA8]">主页</span>
+<span class="material-symbols-outlined text-[14px] mx-2 text-[#424753]">chevron_right</span>
+<span class="text-[#F0F2FF] font-medium">仪表盘</span>
+</nav>
+</div>
+<div class="flex-1 max-w-md mx-8">
+<div class="relative group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[#8B8FA8] text-sm">search</span>
+<input class="w-full bg-surface-container-highest border-none rounded-lg pl-10 pr-4 py-1.5 text-xs text-on-surface focus:ring-1 focus:ring-primary/30 transition-all placeholder:text-[#8B8FA8]/50" placeholder="搜索资源、文档或工单..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-5">
+<button class="relative text-[#8B8FA8] hover:text-primary transition-colors p-1 rounded-lg hover:bg-[#1A1D27]">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-tertiary-container rounded-full ring-2 ring-[#111319] animate-pulse"></span>
+</button>
+<div class="flex items-center space-x-3 cursor-pointer group">
+<div class="text-right hidden sm:block">
+<p class="text-[11px] font-bold text-[#F0F2FF] leading-tight">管理员</p>
+<p class="text-[9px] font-mono text-[#8B8FA8] uppercase tracking-tighter">Superuser</p>
+</div>
+<div class="w-8 h-8 rounded-lg bg-primary-container/20 border border-primary/20 flex items-center justify-center overflow-hidden group-hover:border-primary transition-all">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="minimalist 3d avatar of a male professional with short hair wearing tech apparel on light blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-zK0EjtJRdkW3YRksMYNETV9Sc3f7pUG-u8EUyx_J7tIJAp3Gq50RJAJGgIKToPFu4QI-0ngUMzC0HRQW6UrUL7EtS9W3ZIjxa1UXUHos9SLiJzfIOPaB721hz5C30EGpsJGpUKQ3xpbHy6cCIoC8LWQa97mTLy3eL5iCorN0pPBDAFXJzRfTI3QxgMDmSaa_R_zic2xWOrWAk4zxVBLDHdSWbr9coUWL1budEk9_3B1RwBCdN_syPmN0ALF5j1VcQH4M1VrM3AM"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<div class="p-6 space-y-6">
+<!-- 4-Column Stat Cards Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Card 1 -->
+<div class="bg-[#1A1D27] rounded-xl p-5 border border-[#2A2D3E] hover:border-primary/30 transition-all group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined">forum</span>
+</div>
+<span class="text-[10px] font-mono text-secondary flex items-center">
+<span class="material-symbols-outlined text-xs mr-1">trending_up</span> +12%
+                        </span>
+</div>
+<div class="space-y-1">
+<h3 class="text-[#8B8FA8] text-xs font-medium">今日问答</h3>
+<p class="text-2xl font-mono font-bold text-[#F0F2FF]">247</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-[#1A1D27] rounded-xl p-5 border border-[#2A2D3E] hover:border-tertiary/30 transition-all">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-tertiary-container/10 rounded-lg text-tertiary">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<span class="text-[10px] font-mono text-tertiary px-2 py-0.5 bg-tertiary-container/20 rounded-full">加急处理</span>
+</div>
+<div class="space-y-1">
+<h3 class="text-[#8B8FA8] text-xs font-medium">待处理工单</h3>
+<p class="text-2xl font-mono font-bold text-tertiary">8</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-[#1A1D27] rounded-xl p-5 border border-[#2A2D3E] hover:border-primary/30 transition-all">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary/10 rounded-lg text-secondary">
+<span class="material-symbols-outlined">group</span>
+</div>
+</div>
+<div class="space-y-1">
+<h3 class="text-[#8B8FA8] text-xs font-medium">账号总数</h3>
+<p class="text-2xl font-mono font-bold text-[#F0F2FF]">1,284</p>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-[#1A1D27] rounded-xl p-5 border border-[#2A2D3E] hover:border-primary/30 transition-all">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-outline-variant/20 rounded-lg text-outline">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+</div>
+<div class="space-y-1">
+<h3 class="text-[#8B8FA8] text-xs font-medium">知识库条目</h3>
+<p class="text-2xl font-mono font-bold text-[#F0F2FF]">312</p>
+</div>
+</div>
+</div>
+<!-- Chart Row -->
+<div class="grid grid-cols-1 lg:grid-cols-10 gap-6">
+<!-- Left: Line Chart (60%) -->
+<div class="lg:col-span-6 bg-[#1A1D27] rounded-xl p-6 border border-[#2A2D3E] relative overflow-hidden">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-[#F0F2FF] text-sm font-bold">近7日问答趋势</h3>
+<p class="text-[10px] text-[#8B8FA8] font-mono mt-1 uppercase tracking-wider">AI Analysis Throughput</p>
+</div>
+<div class="flex space-x-2">
+<button class="bg-surface-container-high text-[10px] px-3 py-1 rounded text-on-surface-variant font-medium">周</button>
+<button class="bg-[#2A2D3E] text-[10px] px-3 py-1 rounded text-primary font-medium">日</button>
+</div>
+</div>
+<!-- SVG Chart Visualization -->
+<div class="h-64 w-full relative">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 800 200">
+<defs>
+<lineargradient id="lineGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#ACC7FF" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#ACC7FF" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="#2A2D3E" stroke-dasharray="4,4" x1="0" x2="800" y1="0" y2="0"></line>
+<line stroke="#2A2D3E" stroke-dasharray="4,4" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="#2A2D3E" stroke-dasharray="4,4" x1="0" x2="800" y1="100" y2="100"></line>
+<line stroke="#2A2D3E" stroke-dasharray="4,4" x1="0" x2="800" y1="150" y2="150"></line>
+<!-- Area -->
+<path d="M0,150 Q100,120 200,140 T400,80 T600,100 T800,40 V200 H0 Z" fill="url(#lineGradient)"></path>
+<!-- Line -->
+<path class="drop-shadow-[0_0_8px_rgba(172,199,255,0.4)]" d="M0,150 Q100,120 200,140 T400,80 T600,100 T800,40" fill="none" stroke="#ACC7FF" stroke-width="2"></path>
+<!-- Points -->
+<circle cx="400" cy="80" fill="#ACC7FF" r="4"></circle>
+</svg>
+<!-- Tooltip Overlay -->
+<div class="absolute top-10 left-[48%] bg-surface-container-high border border-primary/20 p-2 rounded-lg shadow-xl text-center backdrop-blur-md">
+<p class="text-[9px] text-[#8B8FA8] uppercase">05月12日</p>
+<p class="text-xs font-mono font-bold text-primary">312 问答</p>
+</div>
+</div>
+<!-- X-Axis Labels -->
+<div class="flex justify-between mt-4 px-2 text-[10px] font-mono text-[#8B8FA8]">
+<span>05-07</span>
+<span>05-08</span>
+<span>05-09</span>
+<span>05-10</span>
+<span>05-11</span>
+<span>05-12</span>
+<span>05-13</span>
+</div>
+</div>
+<!-- Right: Donut Chart (40%) -->
+<div class="lg:col-span-4 bg-[#1A1D27] rounded-xl p-6 border border-[#2A2D3E] flex flex-col">
+<h3 class="text-[#F0F2FF] text-sm font-bold mb-1">工单状态分布</h3>
+<p class="text-[10px] text-[#8B8FA8] font-mono mb-8 uppercase tracking-wider">Ticket Lifecycle Status</p>
+<div class="flex-1 flex items-center justify-center relative">
+<!-- Donut Visual (SVG) -->
+<svg class="w-48 h-48 transform -rotate-90">
+<circle cx="96" cy="96" fill="none" r="80" stroke="#111319" stroke-width="12"></circle>
+<!-- 待处理 (Orange) 15% -->
+<circle cx="96" cy="96" fill="none" r="80" stroke="#D37B02" stroke-dasharray="75.39 427.24" stroke-dashoffset="0" stroke-width="14"></circle>
+<!-- 处理中 (Blue) 30% -->
+<circle cx="96" cy="96" fill="none" r="80" stroke="#508FF8" stroke-dasharray="150.79 351.85" stroke-dashoffset="-75.39" stroke-width="14"></circle>
+<!-- 已解决 (Teal) 40% -->
+<circle cx="96" cy="96" fill="none" r="80" stroke="#41EEC2" stroke-dasharray="201.06 301.59" stroke-dashoffset="-226.18" stroke-width="14"></circle>
+<!-- 已关闭 (Gray) 15% -->
+<circle cx="96" cy="96" fill="none" r="80" stroke="#424753" stroke-dasharray="75.39 427.24" stroke-dashoffset="-427.24" stroke-width="14"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-mono font-bold text-[#F0F2FF]">56</span>
+<span class="text-[10px] text-[#8B8FA8] uppercase font-medium">总工单</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="mt-8 grid grid-cols-2 gap-4">
+<div class="flex items-center">
+<span class="w-2 h-2 rounded-full bg-tertiary-container mr-2"></span>
+<span class="text-xs text-[#8B8FA8]">待处理</span>
+<span class="ml-auto font-mono text-xs text-[#F0F2FF]">8</span>
+</div>
+<div class="flex items-center">
+<span class="w-2 h-2 rounded-full bg-primary-container mr-2"></span>
+<span class="text-xs text-[#8B8FA8]">处理中</span>
+<span class="ml-auto font-mono text-xs text-[#F0F2FF]">14</span>
+</div>
+<div class="flex items-center">
+<span class="w-2 h-2 rounded-full bg-secondary mr-2"></span>
+<span class="text-xs text-[#8B8FA8]">已解决</span>
+<span class="ml-auto font-mono text-xs text-[#F0F2FF]">22</span>
+</div>
+<div class="flex items-center">
+<span class="w-2 h-2 rounded-full bg-outline-variant mr-2"></span>
+<span class="text-xs text-[#8B8FA8]">已关闭</span>
+<span class="ml-auto font-mono text-xs text-[#F0F2FF]">12</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Row: Recent Tickets Table -->
+<div class="bg-[#1A1D27] rounded-xl border border-[#2A2D3E] overflow-hidden">
+<div class="px-6 py-4 border-b border-[#2A2D3E] flex justify-between items-center">
+<div>
+<h3 class="text-[#F0F2FF] text-sm font-bold">最近工单</h3>
+<p class="text-[10px] text-[#8B8FA8] font-mono mt-0.5">Recent Operational Tickets</p>
+</div>
+<button class="text-xs text-primary font-medium hover:underline">查看全部</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs">
+<thead>
+<tr class="bg-surface-container-low text-[#8B8FA8] font-mono uppercase tracking-tighter">
+<th class="px-6 py-3 font-medium">工单编号</th>
+<th class="px-6 py-3 font-medium">问题摘要</th>
+<th class="px-6 py-3 font-medium">报障人</th>
+<th class="px-6 py-3 font-medium">状态</th>
+<th class="px-6 py-3 font-medium">创建时间</th>
+<th class="px-6 py-3 font-medium">操作</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#2A2D3E]">
+<tr class="hover:bg-[#2A2D3E]/30 transition-colors">
+<td class="px-6 py-4 font-mono text-primary">#TK-90231</td>
+<td class="px-6 py-4 text-[#F0F2FF]">核心数据库访问延迟波动</td>
+<td class="px-6 py-4">张伟</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container/10 text-tertiary border border-tertiary-container/20 text-[10px] font-medium">待处理</span>
+</td>
+<td class="px-6 py-4 text-[#8B8FA8] font-mono">2024-05-13 14:20</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:text-white transition-colors">处理</button>
+</td>
+</tr>
+<tr class="hover:bg-[#2A2D3E]/30 transition-colors">
+<td class="px-6 py-4 font-mono text-primary">#TK-90228</td>
+<td class="px-6 py-4 text-[#F0F2FF]">AI 模块响应超时</td>
+<td class="px-6 py-4">李芳</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-primary-container/10 text-primary border border-primary-container/20 text-[10px] font-medium">处理中</span>
+</td>
+<td class="px-6 py-4 text-[#8B8FA8] font-mono">2024-05-13 11:45</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:text-white transition-colors">查看</button>
+</td>
+</tr>
+<tr class="hover:bg-[#2A2D3E]/30 transition-colors">
+<td class="px-6 py-4 font-mono text-primary">#TK-90225</td>
+<td class="px-6 py-4 text-[#F0F2FF]">用户权限同步异常</td>
+<td class="px-6 py-4">王磊</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 text-[10px] font-medium">已解决</span>
+</td>
+<td class="px-6 py-4 text-[#8B8FA8] font-mono">2024-05-12 18:30</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:text-white transition-colors">详情</button>
+</td>
+</tr>
+<tr class="hover:bg-[#2A2D3E]/30 transition-colors">
+<td class="px-6 py-4 font-mono text-primary">#TK-90221</td>
+<td class="px-6 py-4 text-[#F0F2FF]">API 接口鉴权失败</td>
+<td class="px-6 py-4">系统监控</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 text-[10px] font-medium">已解决</span>
+</td>
+<td class="px-6 py-4 text-[#8B8FA8] font-mono">2024-05-12 09:12</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:text-white transition-colors">详情</button>
+</td>
+</tr>
+<tr class="hover:bg-[#2A2D3E]/30 transition-colors">
+<td class="px-6 py-4 font-mono text-primary">#TK-90218</td>
+<td class="px-6 py-4 text-[#F0F2FF]">知识库内容更新失败</td>
+<td class="px-6 py-4">赵敏</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-outline-variant/10 text-outline border border-outline-variant/20 text-[10px] font-medium">已关闭</span>
+</td>
+<td class="px-6 py-4 text-[#8B8FA8] font-mono">2024-05-11 23:55</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:text-white transition-colors">详情</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</body></html>

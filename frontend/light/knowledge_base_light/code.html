@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .lithic-shadow {
+            box-shadow: 0 12px 40px rgba(17, 28, 45, 0.08);
+        }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#ffffff",
+              "surface-variant": "#d8e3fb",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-high": "#dee8ff",
+              "primary-fixed": "#d8e2ff",
+              "surface-container": "#e7eeff",
+              "primary": "#0058be",
+              "outline-variant": "#c2c6d6",
+              "inverse-surface": "#263143",
+              "on-tertiary-fixed": "#0b1c30",
+              "tertiary-container": "#66768d",
+              "inverse-primary": "#adc6ff",
+              "tertiary": "#4d5d73",
+              "inverse-on-surface": "#ecf1ff",
+              "surface-tint": "#005ac2",
+              "on-tertiary-container": "#fdfcff",
+              "on-secondary-fixed-variant": "#005236",
+              "secondary-fixed-dim": "#4edea3",
+              "primary-container": "#2170e4",
+              "on-secondary-fixed": "#002113",
+              "on-background": "#111c2d",
+              "tertiary-fixed": "#d3e4fe",
+              "surface-container-highest": "#d8e3fb",
+              "surface": "#f9f9ff",
+              "on-surface-variant": "#424754",
+              "primary-fixed-dim": "#adc6ff",
+              "on-secondary-container": "#00714d",
+              "on-tertiary": "#ffffff",
+              "on-tertiary-fixed-variant": "#38485d",
+              "secondary": "#006c49",
+              "on-primary-container": "#fefcff",
+              "secondary-container": "#6cf8bb",
+              "on-primary-fixed-variant": "#004395",
+              "surface-container-low": "#f0f3ff",
+              "secondary-fixed": "#6ffbbe",
+              "on-error-container": "#93000a",
+              "background": "#f9f9ff",
+              "on-secondary": "#ffffff",
+              "surface-dim": "#cfdaf2",
+              "on-error": "#ffffff",
+              "outline": "#727785",
+              "on-primary-fixed": "#001a42",
+              "error": "#ba1a1a",
+              "error-container": "#ffdad6",
+              "surface-bright": "#f9f9ff",
+              "on-surface": "#111c2d",
+              "tertiary-fixed-dim": "#b7c8e1"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- SideNavBar (Authority: JSON & Design System) -->
+<aside class="fixed left-0 top-0 h-full w-[220px] bg-slate-50 flex flex-col py-6 border-r border-slate-100">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold tracking-tighter text-blue-800">OpsWarden</h1>
+<p class="text-[10px] text-slate-500 font-medium uppercase tracking-widest">IT Sentinel</p>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors rounded-lg font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+                Dashboard
+            </a>
+<!-- System Health represents Knowledge Base here as a logical map -->
+<a class="flex items-center gap-3 px-3 py-2 text-blue-700 font-semibold border-r-4 border-blue-700 bg-blue-50/50 transition-all duration-150 font-sans text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined text-lg">monitor_heart</span>
+                System Health
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors rounded-lg font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined text-lg">lan</span>
+                Network
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors rounded-lg font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined text-lg">terminal</span>
+                Logs
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors rounded-lg font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined text-lg">shield_with_heart</span>
+                Security
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors rounded-lg font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="mt-auto px-6 mb-4">
+<button class="w-full py-2 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-transform">
+                New Scan
+            </button>
+</div>
+<div class="px-3 border-t border-slate-100 pt-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 font-sans text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-lg">help</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 font-sans text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-lg">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- TopNavBar (Authority: JSON & Design System) -->
+<header class="fixed top-0 right-0 h-14 bg-white shadow-sm flex items-center justify-between px-6 ml-[220px] w-[calc(100%-220px)] z-10">
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="搜索知识点..." type="text"/>
+</div>
+<nav class="flex items-center gap-4">
+<a class="text-blue-700 font-bold border-b-2 border-blue-700 pb-1 font-sans text-sm tracking-normal" href="#">Infrastructure</a>
+<a class="text-slate-600 hover:text-blue-600 cursor-pointer font-sans text-sm tracking-normal" href="#">Applications</a>
+<a class="text-slate-600 hover:text-blue-600 cursor-pointer font-sans text-sm tracking-normal" href="#">Cloud</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-1.5 text-slate-600 hover:bg-slate-50 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-1.5 text-slate-600 hover:bg-slate-50 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="close-up portrait of professional software engineer in casual tech environment with soft warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVVefdr344uAZvXR8x-oMhnJ5aH18FrQxYlQddBpor9uVbn5QxXvbCNPZl1iDGc0eHPQUZfD72sbmr2xowgYN3g2rBZjkR6oKdIGXpkh6U5tohjo6n1XlWYxXgHn0l41lTSxUu8EsZdb7RPhEF3eqPGwEkGUp0Nsyk66EYASLuCxRxbf_HnejtWSILE3iVnVozvvgDUyX3GXTHtcNMYvNizNG2evv0NFxYnu-1WV7XwApKRA__z34HeUBaAU9uz5phVjKxxZgPjKw"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[220px] pt-14 min-h-screen p-8 bg-surface">
+<!-- Header Section -->
+<div class="flex items-center justify-between mb-8">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight text-on-background">知识库管理</h2>
+<p class="text-tertiary text-sm mt-1">集成的智能哨兵知识资产中心</p>
+</div>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-bold active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-lg">add</span>
+                新增条目
+            </button>
+</div>
+<!-- Stats Row (Bento Style) -->
+<div class="grid grid-cols-3 gap-6 mb-10">
+<div class="bg-surface-container-lowest p-6 rounded-2xl border-none lithic-shadow">
+<div class="flex items-center justify-between mb-4">
+<span class="text-sm font-semibold text-tertiary">本周新增</span>
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">auto_graph</span>
+</div>
+</div>
+<div class="text-3xl font-extrabold text-on-surface">128</div>
+<div class="mt-2 text-xs text-secondary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+                    +14.2% 较上周
+                </div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border-none lithic-shadow">
+<div class="flex items-center justify-between mb-4">
+<span class="text-sm font-semibold text-tertiary">工单回写</span>
+<div class="w-10 h-10 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+</div>
+<div class="text-3xl font-extrabold text-on-surface">542</div>
+<div class="mt-2 text-xs text-tertiary font-medium">覆盖率 68%</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border-none lithic-shadow">
+<div class="flex items-center justify-between mb-4">
+<span class="text-sm font-semibold text-tertiary">平均检索得分</span>
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">star</span>
+</div>
+</div>
+<div class="text-3xl font-extrabold text-on-surface">4.85<span class="text-sm font-medium text-slate-400">/5.0</span></div>
+<div class="mt-2 text-xs text-secondary font-medium">处于行业领先水平</div>
+</div>
+</div>
+<!-- Filters & Tabs -->
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-2 bg-surface-container-low p-1 rounded-xl overflow-x-auto no-scrollbar">
+<button class="px-5 py-2 rounded-lg text-sm font-bold bg-white text-primary shadow-sm">全部</button>
+<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">账号管理</button>
+<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">权限管理</button>
+<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">网络问题</button>
+<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">服务器运维</button>
+<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">日志审计</button>
+<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">工单回写</button>
+</div>
+</div>
+<!-- Knowledge Cards Grid -->
+<div class="grid grid-cols-2 gap-6">
+<!-- Card 1: Ticket Backfill -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl border-l-4 border-secondary/40 lithic-shadow hover:translate-y-[-4px] transition-transform cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-2">
+<span class="px-2.5 py-1 bg-surface-container text-primary text-[10px] font-bold uppercase rounded tracking-wider">网络问题</span>
+<span class="px-2.5 py-1 bg-secondary-container/20 text-secondary text-[10px] font-bold uppercase rounded tracking-wider">工单回写</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">arrow_outward</span>
+</div>
+<h3 class="text-base font-bold text-on-surface mb-2">如何解决堡垒机连接超时问题 (ErrorCode: 504)</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-4 leading-relaxed">
+                    在高峰时段，VPN与内网网关之间的握手协议可能因带宽竞争导致504超时。建议先检查SSH Config中的AliveInterval参数，并重置网卡驱动。
+                </p>
+<div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+<span>ID: KB-2023-0892</span>
+<span>更新于: 2023.10.24</span>
+</div>
+</div>
+<!-- Card 2: Manual -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl lithic-shadow hover:translate-y-[-4px] transition-transform cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-2">
+<span class="px-2.5 py-1 bg-surface-container text-primary text-[10px] font-bold uppercase rounded tracking-wider">账号管理</span>
+<span class="px-2.5 py-1 bg-surface-container-high text-tertiary text-[10px] font-bold uppercase rounded tracking-wider">人工录入</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">arrow_outward</span>
+</div>
+<h3 class="text-base font-bold text-on-surface mb-2">新员工入职账号权限矩阵模板</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-4 leading-relaxed">
+                    标准化的权限分配流程，包含GitLab、Jira及运维平台的默认权限集。请确保在LDAP同步完成后进行映射。
+                </p>
+<div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+<span>ID: KB-2023-0102</span>
+<span>更新于: 2023.11.02</span>
+</div>
+</div>
+<!-- Card 3: Ticket Backfill -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl border-l-4 border-secondary/40 lithic-shadow hover:translate-y-[-4px] transition-transform cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-2">
+<span class="px-2.5 py-1 bg-surface-container text-primary text-[10px] font-bold uppercase rounded tracking-wider">服务器运维</span>
+<span class="px-2.5 py-1 bg-secondary-container/20 text-secondary text-[10px] font-bold uppercase rounded tracking-wider">工单回写</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">arrow_outward</span>
+</div>
+<h3 class="text-base font-bold text-on-surface mb-2">CentOS 7 升级至 8 后的内核兼容性修复</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-4 leading-relaxed">
+                    处理升级后常见的XFS文件系统报错问题。需要手动更新 grub 引导项并禁用旧版的 kernel-devel。
+                </p>
+<div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+<span>ID: KB-2023-1144</span>
+<span>更新于: 2023.11.05</span>
+</div>
+</div>
+<!-- Card 4: Manual -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl lithic-shadow hover:translate-y-[-4px] transition-transform cursor-pointer group">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-2">
+<span class="px-2.5 py-1 bg-surface-container text-primary text-[10px] font-bold uppercase rounded tracking-wider">日志审计</span>
+<span class="px-2.5 py-1 bg-surface-container-high text-tertiary text-[10px] font-bold uppercase rounded tracking-wider">人工录入</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">arrow_outward</span>
+</div>
+<h3 class="text-base font-bold text-on-surface mb-2">ELK Stack 索引生命周期管理策略</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-4 leading-relaxed">
+                    配置Hot-Warm-Cold架构，确保旧日志在30天后自动转入压缩存储，90天后自动删除。
+                </p>
+<div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+<span>ID: KB-2023-0421</span>
+<span>更新于: 2023.11.07</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Slide-in Panel (新增知识条目) -->
+<div class="fixed inset-0 z-50 pointer-events-none overflow-hidden">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-on-background/10 backdrop-blur-sm pointer-events-auto"></div>
+<!-- Panel -->
+<div class="absolute right-0 top-0 h-full w-[480px] bg-white lithic-shadow pointer-events-auto flex flex-col">
+<div class="px-8 py-6 border-b border-slate-50 flex items-center justify-between">
+<h2 class="text-xl font-extrabold tracking-tight text-on-background">新增知识条目</h2>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-8 space-y-8 no-scrollbar">
+<!-- Category Select -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-tertiary uppercase tracking-wider">分类</label>
+<select class="w-full bg-surface-container-low border-none rounded-xl text-sm px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all">
+<option>网络问题</option>
+<option>账号管理</option>
+<option>服务器运维</option>
+<option>日志审计</option>
+</select>
+</div>
+<!-- Question -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-tertiary uppercase tracking-wider">问题</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl text-sm px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all" placeholder="输入核心问题或故障表现..." type="text"/>
+</div>
+<!-- Solution -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-tertiary uppercase tracking-wider">解决方案</label>
+<textarea class="w-full bg-surface-container-low border-none rounded-xl text-sm px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all resize-none" placeholder="详细说明处理步骤及注意事项..." rows="6"></textarea>
+</div>
+<!-- Tags -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-tertiary uppercase tracking-wider">标签</label>
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full flex items-center gap-1">
+                            #VPN <button class="material-symbols-outlined text-[14px]">close</button>
+</span>
+<span class="px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full flex items-center gap-1">
+                            #Timeout <button class="material-symbols-outlined text-[14px]">close</button>
+</span>
+</div>
+<input class="w-full bg-surface-container-low border-none rounded-xl text-sm px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all" placeholder="添加新标签..." type="text"/>
+</div>
+<!-- Source -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-tertiary uppercase tracking-wider">来源</label>
+<div class="flex gap-4">
+<label class="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low rounded-xl cursor-pointer border-2 border-transparent hover:border-primary/20 transition-all has-[:checked]:border-primary has-[:checked]:bg-white">
+<input checked="" class="hidden" name="source" type="radio"/>
+<span class="material-symbols-outlined text-lg">person</span>
+<span class="text-sm font-bold">人工录入</span>
+</label>
+<label class="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low rounded-xl cursor-pointer border-2 border-transparent hover:border-primary/20 transition-all has-[:checked]:border-primary has-[:checked]:bg-white">
+<input class="hidden" name="source" type="radio"/>
+<span class="material-symbols-outlined text-lg">auto_awesome</span>
+<span class="text-sm font-bold">工单回写</span>
+</label>
+</div>
+</div>
+</div>
+<!-- Panel Footer -->
+<div class="p-8 border-t border-slate-50 flex items-center justify-end gap-4">
+<button class="px-6 py-2.5 text-sm font-bold text-tertiary hover:bg-slate-50 rounded-xl transition-colors">取消</button>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">auto_fix_high</span>
+                    保存并向量化
+                </button>
+</div>
+</div>
+</div>
+</body></html>

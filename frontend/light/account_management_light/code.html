@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#d8e3fb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#dee8ff",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container": "#e7eeff",
+                        "primary": "#0058be",
+                        "outline-variant": "#c2c6d6",
+                        "inverse-surface": "#263143",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "tertiary-container": "#66768d",
+                        "inverse-primary": "#adc6ff",
+                        "tertiary": "#4d5d73",
+                        "inverse-on-surface": "#ecf1ff",
+                        "surface-tint": "#005ac2",
+                        "on-tertiary-container": "#fdfcff",
+                        "on-secondary-fixed-variant": "#005236",
+                        "secondary-fixed-dim": "#4edea3",
+                        "primary-container": "#2170e4",
+                        "on-secondary-fixed": "#002113",
+                        "on-background": "#111c2d",
+                        "tertiary-fixed": "#d3e4fe",
+                        "surface-container-highest": "#d8e3fb",
+                        "surface": "#f9f9ff",
+                        "on-surface-variant": "#424754",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-secondary-container": "#00714d",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "secondary": "#006c49",
+                        "on-primary-container": "#fefcff",
+                        "secondary-container": "#6cf8bb",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container-low": "#f0f3ff",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-error-container": "#93000a",
+                        "background": "#f9f9ff",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#cfdaf2",
+                        "on-error": "#ffffff",
+                        "outline": "#727785",
+                        "on-primary-fixed": "#001a42",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9ff",
+                        "on-surface": "#111c2d",
+                        "tertiary-fixed-dim": "#b7c8e1"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .lithic-layer {
+            background-color: #ffffff;
+            transition: background-color 0.2s ease;
+        }
+        .lithic-layer:hover {
+            background-color: #f0f3ff;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d8e3fb;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="fixed left-0 top-0 h-full w-[220px] bg-slate-50 dark:bg-slate-900 flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm">
+<span class="material-symbols-outlined text-lg" data-icon="shield_with_heart">shield_with_heart</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tighter text-blue-800 dark:text-blue-300 leading-none">OpsWarden</h1>
+<p class="text-[10px] font-medium text-slate-500 uppercase tracking-widest mt-1">IT Sentinel</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors font-sans text-sm font-medium tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors font-sans text-sm font-medium tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="monitor_heart">monitor_heart</span>
+<span>System Health</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors font-sans text-sm font-medium tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="lan">lan</span>
+<span>Network</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors font-sans text-sm font-medium tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+<span>Logs</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors font-sans text-sm font-medium tracking-tight rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="shield_with_heart">shield_with_heart</span>
+<span>Security</span>
+</a>
+<!-- Active Mapping: Account Management -> Settings (closest semantic match) -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-blue-700 dark:text-blue-400 font-semibold border-r-4 border-blue-700 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/20 font-sans text-sm tracking-tight rounded-l-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-3 pt-6 border-t border-slate-200 dark:border-slate-800 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors font-sans text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-[220px] min-h-screen bg-surface">
+<!-- TopNavBar (Authority: JSON) -->
+<header class="fixed top-0 right-0 h-14 bg-white dark:bg-slate-950 flex items-center justify-between px-6 ml-[220px] w-[calc(100%-220px)] z-40 shadow-sm dark:shadow-none">
+<div class="flex items-center flex-1 max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-slate-50 border-none rounded-lg pl-10 pr-4 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="搜索资源、日志或账号..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-slate-600 dark:text-slate-400">
+<a class="font-sans text-sm tracking-normal hover:text-blue-600 cursor-pointer transition-transform active:scale-95" href="#">Infrastructure</a>
+<a class="font-sans text-sm tracking-normal hover:text-blue-600 cursor-pointer transition-transform active:scale-95" href="#">Applications</a>
+<a class="font-sans text-sm tracking-normal text-blue-700 font-bold border-b-2 border-blue-700 pb-1 cursor-pointer transition-transform active:scale-95" href="#">Cloud</a>
+</div>
+<div class="flex items-center gap-3 ml-4">
+<button class="p-1.5 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full ring-2 ring-white"></span>
+</button>
+<button class="p-1.5 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-slate-200">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="professional portrait of a male IT administrator with a clean tech aesthetic and soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARVv9jIH3jC42mrv2kSVE79fSQmll2b1HTPa1yiaQMp7kwDjFrWUFyln8o8ZI4OfKKBMcZuwF1woRfCRNiQBdKZ9bhZbPwQXcccCpy5NDZQTALmCjwp4lgoW3856MhpyoHoLg_SapXiQM04GyrUR5Nf5HKqcnJoKgIJnmMxK67cLn0e_YB6moYbUItSPWNCHjp8_cyStWUkUSXm97BBTeHtlhsMzj3KGvCbLKFSnNuaAv4sZZH0Im9kZmSIPMxaNTiaux2lBxwxAc"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="pt-24 pb-12 px-8 max-w-[1400px] mx-auto">
+<!-- Page Header -->
+<div class="flex items-end justify-between mb-10">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight text-on-background">账号管理</h2>
+<p class="text-on-surface-variant mt-2 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+                        目前系统中共有 <span class="font-bold text-primary">1,284</span> 个有效账号
+                    </p>
+</div>
+<button class="flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-xl font-semibold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-xl">person_add</span>
+<span>新建账号</span>
+</button>
+</div>
+<!-- Bento Filter Bar -->
+<div class="grid grid-cols-12 gap-4 mb-8">
+<div class="col-span-12 lg:col-span-4 bg-surface-container-low p-1 rounded-xl flex items-center">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-sm py-3 pl-12" placeholder="按姓名、工号或邮箱搜索" type="text"/>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-2 bg-surface-container-low rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="text-xs font-bold text-outline-variant uppercase tracking-wider">部门</span>
+<div class="flex items-center gap-2">
+<span class="text-sm font-medium">全部部门</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-2 bg-surface-container-low rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="text-xs font-bold text-outline-variant uppercase tracking-wider">状态</span>
+<div class="flex items-center gap-2">
+<span class="text-sm font-medium">所有状态</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-2 bg-surface-container-low rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="text-xs font-bold text-outline-variant uppercase tracking-wider">权限</span>
+<div class="flex items-center gap-2">
+<span class="text-sm font-medium">所有级别</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-2 flex gap-2">
+<button class="flex-1 bg-surface-container-highest text-on-surface font-semibold rounded-xl flex items-center justify-center hover:bg-surface-dim transition-colors">
+<span class="material-symbols-outlined mr-2">tune</span>
+                        高级筛选
+                    </button>
+</div>
+</div>
+<!-- Accounts Table (Lithic Layering) -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm border border-slate-100">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-surface-container">
+<th class="px-6 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-widest">工号</th>
+<th class="px-6 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-widest">姓名</th>
+<th class="px-6 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-widest">部门</th>
+<th class="px-6 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-widest">状态</th>
+<th class="px-6 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-widest">权限级别</th>
+<th class="px-6 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-widest">最后登录</th>
+<th class="px-6 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-right">操作</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50">
+<!-- Row 1 -->
+<tr class="lithic-layer group transition-colors">
+<td class="px-6 py-5 font-mono text-sm text-tertiary">#OPS-8291</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">张</div>
+<div class="text-sm font-semibold">张伟</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm">运维中心 / 云平台组</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-secondary-container/30 text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-2"></span>
+                                    正常
+                                </span>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-surface-container text-[10px] font-bold uppercase rounded text-on-surface-variant">L3 - Senior Ops</span>
+</td>
+<td class="px-6 py-5 text-sm text-tertiary">2023-10-24 14:20</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-primary hover:underline text-sm font-medium">编辑</button>
+<button class="text-on-surface-variant hover:underline text-sm font-medium">查看</button>
+<button class="p-1 hover:bg-slate-200 rounded"><span class="material-symbols-outlined text-lg">more_horiz</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="lithic-layer group transition-colors">
+<td class="px-6 py-5 font-mono text-sm text-tertiary">#OPS-7723</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-xs">李</div>
+<div class="text-sm font-semibold">李沐</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm">安全部 / 渗透测试</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span>
+                                    冻结
+                                </span>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-surface-container text-[10px] font-bold uppercase rounded text-on-surface-variant">L4 - Security</span>
+</td>
+<td class="px-6 py-5 text-sm text-tertiary">2023-10-23 09:45</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-primary hover:underline text-sm font-medium">编辑</button>
+<button class="text-on-surface-variant hover:underline text-sm font-medium">查看</button>
+<button class="p-1 hover:bg-slate-200 rounded"><span class="material-symbols-outlined text-lg">more_horiz</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="lithic-layer group transition-colors">
+<td class="px-6 py-5 font-mono text-sm text-tertiary">#OPS-4412</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs">王</div>
+<div class="text-sm font-semibold">王建国</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm">架构部 / 基础架构</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400 mr-2"></span>
+                                    已停用
+                                </span>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-surface-container text-[10px] font-bold uppercase rounded text-on-surface-variant">L2 - Engineer</span>
+</td>
+<td class="px-6 py-5 text-sm text-tertiary">2023-09-15 17:00</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-primary hover:underline text-sm font-medium">编辑</button>
+<button class="text-on-surface-variant hover:underline text-sm font-medium">查看</button>
+<button class="p-1 hover:bg-slate-200 rounded"><span class="material-symbols-outlined text-lg">more_horiz</span></button>
+</div>
+</td>
+</tr>
+<!-- Additional Rows for visual density -->
+<tr class="lithic-layer group transition-colors">
+<td class="px-6 py-5 font-mono text-sm text-tertiary">#OPS-9011</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">陈</div>
+<div class="text-sm font-semibold">陈思琪</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm">运维中心 / SRE</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-secondary-container/30 text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-2"></span>
+                                    正常
+                                </span>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-surface-container text-[10px] font-bold uppercase rounded text-on-surface-variant">L5 - Lead SRE</span>
+</td>
+<td class="px-6 py-5 text-sm text-tertiary">2023-10-24 15:58</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-primary hover:underline text-sm font-medium">编辑</button>
+<button class="text-on-surface-variant hover:underline text-sm font-medium">查看</button>
+<button class="p-1 hover:bg-slate-200 rounded"><span class="material-symbols-outlined text-lg">more_horiz</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 bg-surface-container-low flex justify-between items-center text-sm text-tertiary">
+<span>显示 1-10 条，共 1,284 条记录</span>
+<div class="flex items-center gap-2">
+<button class="p-1 hover:bg-surface-container-high rounded disabled:opacity-30" disabled=""><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="w-8 h-8 rounded bg-primary text-on-primary font-bold">1</button>
+<button class="w-8 h-8 rounded hover:bg-surface-container-high">2</button>
+<button class="w-8 h-8 rounded hover:bg-surface-container-high">3</button>
+<span class="px-1">...</span>
+<button class="w-8 h-8 rounded hover:bg-surface-container-high">129</button>
+<button class="p-1 hover:bg-surface-container-high rounded"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Slide-in Panel Overlay -->
+<div class="fixed inset-0 bg-on-background/40 backdrop-blur-sm z-50 flex justify-end">
+<!-- Panel -->
+<div class="w-full max-w-[480px] bg-surface shadow-2xl flex flex-col h-full transform transition-transform duration-300">
+<!-- Panel Header -->
+<div class="px-8 py-6 border-b border-surface-container flex items-center justify-between">
+<div>
+<h3 class="text-xl font-extrabold tracking-tight">新建运维账号</h3>
+<p class="text-xs text-on-surface-variant mt-1">创建新的系统操作员并分配权限级别</p>
+</div>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">close</span>
+</button>
+</div>
+<!-- Panel Body -->
+<div class="flex-1 overflow-y-auto px-8 py-8 custom-scrollbar">
+<form class="space-y-6">
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-xs font-bold text-outline-variant uppercase tracking-wider">工号</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all font-mono text-sm" type="text" value="OPS-8292"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-outline-variant uppercase tracking-wider">姓名</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" placeholder="输入真实姓名" type="text"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-outline-variant uppercase tracking-wider">部门</label>
+<select class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm appearance-none">
+<option>请选择所属部门</option>
+<option>运维中心 / 云平台组</option>
+<option>运维中心 / SRE</option>
+<option>安全部 / 渗透测试</option>
+<option>架构部 / 基础架构</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-outline-variant uppercase tracking-wider">邮箱</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" placeholder="official@opswarden.com" type="email"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-outline-variant uppercase tracking-wider">权限级别</label>
+<div class="grid grid-cols-3 gap-3">
+<button class="py-3 px-2 border-2 border-primary bg-primary/5 rounded-lg text-xs font-bold text-primary transition-all" type="button">L1 - Entry</button>
+<button class="py-3 px-2 border-2 border-transparent bg-surface-container-low rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-high transition-all" type="button">L3 - Senior</button>
+<button class="py-3 px-2 border-2 border-transparent bg-surface-container-low rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-high transition-all" type="button">L5 - Admin</button>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-outline-variant uppercase tracking-wider">初始密码</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" type="password" value="********"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant cursor-pointer hover:text-primary">visibility</span>
+</div>
+<p class="text-[10px] text-tertiary">密码应包含字母、数字及特殊符号，长度不小于 12 位。</p>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-outline-variant uppercase tracking-wider">备注</label>
+<textarea class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm resize-none" placeholder="添加账号相关的额外信息..." rows="3"></textarea>
+</div>
+<!-- AI Suggestion Tip (Branded Element) -->
+<div class="p-4 bg-secondary-container/20 rounded-xl border border-secondary/20 flex gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<div>
+<p class="text-xs font-bold text-on-secondary-fixed-variant">AI 助手建议</p>
+<p class="text-[11px] text-on-secondary-container mt-1">根据该职位的安全基准，建议启用 **强制 MFA 多因素认证** 以满足合规性要求。</p>
+</div>
+</div>
+</form>
+</div>
+<!-- Panel Footer -->
+<div class="px-8 py-6 bg-surface-container-low flex items-center gap-4 sticky bottom-0">
+<button class="flex-1 px-6 py-3 border border-outline-variant text-on-surface-variant font-bold rounded-xl hover:bg-surface-container-high transition-colors">取消</button>
+<button class="flex-1 px-6 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-container transition-all">创建账号</button>
+</div>
+</div>
+</div>
+</body></html>
