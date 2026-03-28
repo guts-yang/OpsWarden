@@ -432,8 +432,73 @@
 </div>
 </main>
 <!-- Contextual FAB (Semantic Mapping: Home/Dashboard) -->
-<button class="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group">
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group" onclick="window.location.href='tickets.html'">
 <span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
 <span class="absolute right-16 bg-on-background text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">创建新工单</span>
 </button>
+<script src="api.js"></script>
+<script>
+  const user = requireAuth();
+  if (user) {
+    bindSidebar();
+    // 顶栏"查看全部"按钮跳转
+    document.querySelector('button.text-primary.text-xs')?.addEventListener('click', () => { window.location.href = 'tickets.html'; });
+
+    // 渲染工单行
+    function ticketRow(t) {
+      const s = TICKET_STATUS[t.status] || { label: t.status, cls: '' };
+      const p = TICKET_PRIORITY[t.priority] || { label: t.priority, cls: 'text-on-surface-variant' };
+      const init = t.reporter_name ? t.reporter_name.slice(0, 1) : '?';
+      return `<tr class="hover:bg-surface-container-high/30 transition-colors">
+        <td class="px-6 py-4 font-mono text-xs">${t.ticket_no}</td>
+        <td class="px-6 py-4 font-medium text-on-surface">${t.title}</td>
+        <td class="px-6 py-4">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px] font-bold text-primary">${init}</div>
+            <span>${t.reporter_name || '系统'}</span>
+          </div>
+        </td>
+        <td class="px-6 py-4"><span class="flex items-center gap-1.5 ${p.cls} font-bold text-[10px]"><span class="w-1.5 h-1.5 rounded-full bg-current"></span>${p.label}</span></td>
+        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${s.cls}">${s.label}</span></td>
+        <td class="px-6 py-4 text-right font-mono text-xs text-on-surface-variant">${fmtDate(t.created_at)}</td>
+      </tr>`;
+    }
+
+    async function loadDashboard() {
+      try {
+        const [recent, pending, processing] = await Promise.all([
+          getTickets({ page: 1, page_size: 5 }),
+          getTickets({ status: 'pending', page_size: 1 }),
+          getTickets({ status: 'processing', page_size: 1 }),
+        ]);
+
+        // 更新"待处理工单"数字
+        const statCards = document.querySelectorAll('.bg-surface-container-lowest');
+        statCards.forEach(card => {
+          const label = card.querySelector('.text-on-surface-variant');
+          if (label?.textContent.trim() === '待处理工单') {
+            const num = card.querySelector('.text-3xl');
+            if (num) num.textContent = pending.data.total;
+          }
+        });
+
+        // 更新最近工单表格
+        const tbody = document.querySelector('tbody');
+        if (tbody) {
+          tbody.innerHTML = recent.data.items.length
+            ? recent.data.items.map(ticketRow).join('')
+            : `<tr><td colspan="6" class="px-6 py-10 text-center text-on-surface-variant text-sm">暂无工单数据</td></tr>`;
+        }
+
+        // 更新时间戳
+        const ts = document.querySelector('.font-mono.text-tertiary');
+        if (ts) ts.textContent = `Last sync: ${new Date().toLocaleString('zh-CN')}`;
+      } catch (e) {
+        console.error('加载 Dashboard 失败', e);
+      }
+    }
+
+    loadDashboard();
+  }
+</script>
 </body></html>

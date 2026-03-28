@@ -1,19 +1,27 @@
 # OpsWarden
 
 > AI-Powered Operations Digital Employee Platform
-> 运维数字员工系统 · 基于 DeepSeek + RAG + 飞书
+> 运维数字员工系统 · 基于 DeepSeek + FastAPI + MySQL
+
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?logo=sqlalchemy&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-06B6D4?logo=tailwindcss&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
 ## 目录
 
 - [项目简介](#项目简介)
-- [快速开始](#快速开始)
+- [快速开始（本地，无需 Docker）](#快速开始本地无需-docker)
+- [Docker 部署](#docker-部署)
 - [目录结构](#目录结构)
+- [API 接口](#api-接口)
 - [团队分工](#团队分工)
 - [开发规范](#开发规范)
-- [常用命令](#常用命令)
-- [联调说明](#联调说明)
 - [FAQ](#faq)
 
 ---
@@ -22,145 +30,204 @@
 
 OpsWarden 是一套面向企业运维场景的 AI 数字员工系统，核心功能三条线：
 
-- **AI 问答**：用户在飞书或 Web 提问，RAG 知识库检索 + DeepSeek 生成回答
-- **账号管理**：运维账号的增删改查、冻结、重置，后台可视化管理
-- **工单系统**：AI 无法回答时自动创建工单，运维人员处理后回写知识库
+- **AI 问答**：用户在 Web 提问，自动创建工单并由运维人员跟进处理
+- **账号管理**：运维账号的增删改查、冻结、重置密码，后台可视化管理
+- **工单系统**：工单全生命周期管理（待处理 → 处理中 → 已解决 → 已关闭）
 
-**技术栈一览**
+**技术栈**
 
-| 层次 | 技术 |
-|---|---|
-| 后端 | Python 3.11 · FastAPI · SQLAlchemy |
-| 前端 | Vue3 · Element Plus · Vite |
-| 大模型 | DeepSeek API（兼容 OpenAI SDK） |
-| 知识库 | LangChain · ChromaDB · bge-small-zh-v1.5 |
-| 数据库 | MySQL 8.0 |
-| 集成 | 飞书开放平台 Webhook |
-| 部署 | Docker Compose · Nginx · 云服务器 |
+| 层次 | 技术 | 版本 |
+|---|---|---|
+| 后端框架 | FastAPI + Uvicorn | 0.115 / 0.30 |
+| ORM | SQLAlchemy + PyMySQL | 2.0 / 1.1 |
+| 认证 | JWT (python-jose + passlib) | HS256 |
+| 前端 | 原生 HTML/JS + Tailwind CSS CDN | 3.x |
+| 数据库 | MySQL | 8.0 |
+| 运行时 | Python | 3.11 |
 
 ---
 
-## 快速开始
+## 快速开始（本地，无需 Docker）
+
+适合本机已有 MySQL 的开发环境，无需安装 Docker。
 
 ### 前置要求
 
-- Docker >= 24.0 + Docker Compose >= 2.0
-- Python 3.11（本地开发用）
-- Node.js 18+（前端开发用）
+- Python 3.11+
+- MySQL 8.0（本地已运行）
 - Git
 
 ### 1. 克隆仓库
 
 ```bash
-git clone <repo_url>
-cd opswarden
+git clone https://github.com/guts-yang/OpsWarden.git
+cd OpsWarden
 ```
 
-### 2. 配置环境变量
+### 2. 初始化数据库
+
+以 root 身份登录 MySQL，执行初始化脚本：
+
+```bash
+mysql -u root -p < init.sql
+```
+
+`init.sql` 会自动完成以下操作：
+- 创建数据库 `opswarden`
+- 创建用户 `ops`（密码 `ops123456`）并授权
+- 建表：`accounts`、`tickets`、`ticket_logs`
+- 插入默认管理员账号：用户名 `admin`，密码 `admin123`
+
+> **注意**：若 MySQL 仅允许 `localhost` 连接，脚本末尾的 `GRANT` 语句需同时包含 `'ops'@'localhost'`。可手动执行：
+> ```sql
+> CREATE USER IF NOT EXISTS 'ops'@'localhost' IDENTIFIED BY 'ops123456';
+> GRANT ALL PRIVILEGES ON opswarden.* TO 'ops'@'localhost';
+> FLUSH PRIVILEGES;
+> ```
+
+### 3. 启动后端
+
+```bash
+cd backend
+pip install -r ../requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+验证：访问 [http://localhost:8000/health](http://localhost:8000/health)，应返回 `"database": "connected"`。
+
+API 文档：[http://localhost:8000/docs](http://localhost:8000/docs)
+
+### 4. 启动前端
+
+新开一个终端，在项目根目录执行：
+
+```bash
+python -m http.server 3000 -d frontend/pages
+```
+
+浏览器打开 [http://localhost:3000/login.html](http://localhost:3000/login.html)，使用 `admin` / `admin123` 登录。
+
+### 5. 配置环境变量（可选）
+
+默认配置已可直接运行。如需修改数据库连接或密钥：
 
 ```bash
 cp .env.example .env
+# 编辑 .env，填写需要修改的值
 ```
 
-打开 `.env`，填写以下必填项（搜索 `CHANGE_ME`）：
-
-| 变量 | 说明 | 获取方式 |
+| 变量 | 默认值 | 说明 |
 |---|---|---|
-| `DEEPSEEK_API_KEY` | DeepSeek API 密钥 | [platform.deepseek.com](https://platform.deepseek.com) |
-| `MYSQL_PASSWORD` | MySQL 用户密码 | 自定义，字母数字组合 |
-| `MYSQL_ROOT_PASSWORD` | MySQL root 密码 | 自定义，与上面不同 |
-| `JWT_SECRET_KEY` | JWT 签名密钥 | 见下方生成命令 |
-| `FEISHU_APP_ID` | 飞书应用 ID | 飞书开放平台 → 我的应用 |
-| `FEISHU_APP_SECRET` | 飞书应用密钥 | 同上 |
+| `DATABASE_URL` | `mysql+pymysql://ops:ops123456@localhost:3306/opswarden` | 数据库连接串 |
+| `SECRET_KEY` | `ops-warden-secret-key` | JWT 签名密钥（生产环境请修改） |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | `480` | Token 有效期（分钟） |
+| `DEEPSEEK_API_KEY` | _(空)_ | DeepSeek API 密钥（AI 功能扩展时使用） |
 
-生成 JWT 密钥：
+生成强密钥：
 
 ```bash
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-### 3. 启动所有服务
+---
+
+## Docker 部署
+
+如果本地未安装 MySQL，可使用 Docker Compose 一键启动全部服务。
+
+> **注意**：若本机 3306 端口已被占用（本地 MySQL 正在运行），请先停止本地 MySQL，或修改 `docker-compose.yml` 中的端口映射（如改为 `3307:3306`），同时更新 `.env` 中的 `DATABASE_URL`。
 
 ```bash
+# 启动 MySQL 容器
 docker compose up -d
+
+# 查看状态
+docker compose ps
+
+# 停止（保留数据）
+docker compose down
+
+# 停止并清除数据（慎用）
+docker compose down -v
 ```
 
-首次启动会拉取镜像，约需 3–5 分钟。启动后访问：
-
-| 服务 | 地址 |
-|---|---|
-| 前端页面 | http://localhost:3000 |
-| 后端 API | http://localhost:8000 |
-| API 文档 | http://localhost:8000/docs |
-| ChromaDB | http://localhost:8001 |
-
-### 4. 初始化知识库
-
-```bash
-# 确认后端已正常启动
-curl http://localhost:8000/health
-
-# 导入预置 FAQ（100条）
-docker compose exec backend python scripts/init_faq.py
-```
-
-### 5. 验证安装
-
-```bash
-# 测试 RAG 问答
-curl -X POST http://localhost:8000/api/v1/rag/query \
-  -H "Content-Type: application/json" \
-  -d '{"question": "账号冻结了怎么处理？"}'
-```
-
-返回 `has_knowledge: true` 且 `answer` 有内容即为成功。
+启动后按照[上方步骤 3–4](#3-启动后端) 启动后端和前端。
 
 ---
 
 ## 目录结构
 
 ```
-opswarden/
-├── backend/                  # FastAPI 后端
-│   ├── api/                  # 路由层
-│   │   ├── rag_router.py     # 知识库接口
-│   │   ├── account_router.py # 账号管理接口
-│   │   ├── ticket_router.py  # 工单接口
-│   │   └── feishu_router.py  # 飞书 Webhook
-│   ├── rag/                  # AI 核心模块（成员 A）
-│   │   ├── embeddings.py     # Embedding 模型封装
-│   │   ├── knowledge_base.py # FAQ 录入与向量化
-│   │   ├── retriever.py      # RAG 检索 + DeepSeek 问答
-│   │   ├── knowledge_updater.py # 工单知识回写
-│   │   ├── intent.py         # 意图识别
-│   │   └── cache.py          # 问答缓存
-│   ├── models/               # 数据库模型（成员 B）
-│   │   ├── user.py
-│   │   └── ticket.py
-│   ├── feishu/               # 飞书集成（成员 D）
-│   │   └── bot.py
-│   ├── config/
-│   │   └── settings.py       # 环境变量读取
-│   ├── main.py               # FastAPI 入口
-│   └── requirements.txt
-├── frontend/                 # Vue3 前端（成员 C）
-│   ├── src/
-│   │   ├── views/            # 页面组件
-│   │   ├── components/       # 通用组件
-│   │   └── api/              # 接口封装
-│   └── package.json
-├── scripts/                  # 工具脚本
-│   ├── init_faq.py           # 知识库初始化
-│   ├── tune_threshold.py     # RAG 阈值调优
-│   └── stress_test.py        # 压测脚本
-├── nginx/
-│   └── default.conf          # Nginx 配置
-├── chroma_db/                # ChromaDB 数据（Git 忽略）
-├── logs/                     # 日志目录（Git 忽略）
-├── docker-compose.yml
-├── .env.example              # 环境变量模板
+OpsWarden/
+├── backend/
+│   └── app/
+│       ├── api/                # 路由层
+│       │   ├── auth.py         # 登录认证
+│       │   ├── account.py      # 账号管理 CRUD
+│       │   └── ticket.py       # 工单管理
+│       ├── middleware/         # 中间件
+│       │   ├── auth.py         # JWT 鉴权
+│       │   ├── exception.py    # 统一异常处理
+│       │   └── logging.py      # 请求日志
+│       ├── models/             # SQLAlchemy ORM 模型
+│       │   ├── account.py
+│       │   └── ticket.py
+│       ├── schemas/            # Pydantic 请求/响应模型
+│       │   ├── account.py
+│       │   └── ticket.py
+│       ├── utils/
+│       │   ├── response.py     # 统一响应格式
+│       │   └── security.py     # 密码哈希 / JWT 工具
+│       ├── config.py           # 环境变量配置
+│       ├── database.py         # 数据库连接
+│       └── main.py             # FastAPI 入口
+├── frontend/
+│   └── pages/
+│       ├── api.js              # 共享 API 客户端（所有页面引用）
+│       ├── login.html          # 登录页
+│       ├── dashboard.html      # 仪表盘
+│       ├── accounts.html       # 账号管理
+│       ├── tickets.html        # 工单管理
+│       ├── ai_chat.html        # AI 对话 / 提交工单
+│       └── knowledge_base.html # 知识库
+├── docs/
+│   ├── API_TESTING.md          # API 测试文档
+│   ├── backend.md              # 后端设计文档
+│   └── screenshots/            # 页面截图
+├── backend/
+│   └── knowledge_base/
+│       └── OpsWarden_FAQ.md    # 知识库 FAQ 内容
+├── init.sql                    # 数据库初始化脚本
+├── requirements.txt            # Python 依赖
+├── docker-compose.yml          # Docker 编排（仅 MySQL）
+├── .env.example                # 环境变量模板
 └── README.md
 ```
+
+---
+
+## API 接口
+
+所有接口基础路径：`http://localhost:8000`
+
+| 接口 | 方法 | 路径 | 认证 |
+|---|---|---|---|
+| 登录 | POST | `/api/auth/login` | 无 |
+| 账号列表 | GET | `/api/accounts` | Bearer |
+| 创建账号 | POST | `/api/accounts` | Bearer (admin) |
+| 更新账号 | PUT | `/api/accounts/{id}` | Bearer (admin) |
+| 冻结账号 | PATCH | `/api/accounts/{id}/freeze` | Bearer (admin) |
+| 解冻账号 | PATCH | `/api/accounts/{id}/unfreeze` | Bearer (admin) |
+| 重置密码 | PATCH | `/api/accounts/{id}/reset-password` | Bearer (admin) |
+| 工单列表 | GET | `/api/tickets` | Bearer |
+| 工单详情 | GET | `/api/tickets/{id}` | Bearer |
+| 工单日志 | GET | `/api/tickets/{id}/logs` | Bearer |
+| 更新工单 | PUT | `/api/tickets/{id}` | Bearer (operator+) |
+| 解决工单 | POST | `/api/tickets/{id}/resolve` | Bearer (operator+) |
+| 关闭工单 | POST | `/api/tickets/{id}/close` | Bearer (operator+) |
+| 创建工单（自动） | POST | `/api/tickets/auto` | 无 |
+
+完整接口文档：[http://localhost:8000/docs](http://localhost:8000/docs)（Swagger UI）
 
 ---
 
@@ -169,16 +236,9 @@ opswarden/
 | 成员 | 负责模块 | 主要文件 |
 |---|---|---|
 | **A** | AI 核心 / RAG / DeepSeek | `backend/rag/` · `scripts/` |
-| **B** | 后端业务 / 账号 / 工单 / 数据库 | `backend/models/` · `backend/api/account_router.py` · `backend/api/ticket_router.py` |
-| **C** | 前端全部页面 | `frontend/src/` |
-| **D** | 飞书集成 / Docker / 云服务器 | `backend/feishu/` · `docker-compose.yml` · `nginx/` |
-
-**跨成员依赖关系（需提前沟通接口）：**
-
-- A → B：工单自动创建接口（RAG 无答案时调用 B 的 `POST /tickets`）
-- A → D：问答结果通过 D 的飞书 Bot 推送给用户
-- B → A：工单关闭时调用 A 的 `POST /rag/writeback`
-- C → A/B：前端调用所有后端接口，需 A/B 先完成接口文档
+| **B** | 后端业务 / 账号 / 工单 / 数据库 | `backend/app/api/` · `backend/app/models/` · `init.sql` |
+| **C** | 前端全部页面 | `frontend/pages/` |
+| **D** | 飞书集成 / Docker / 云服务器 | `docker-compose.yml` · 飞书 Webhook |
 
 ---
 
@@ -193,170 +253,58 @@ feat/A-rag    ← 成员 A 功能分支，格式：feat/成员-功能名
 fix/B-ticket  ← Bug 修复分支
 ```
 
-**流程：** 在自己的 `feat/` 分支开发 → PR 合入 `dev` → 联调通过后合入 `main`
-
 ### Commit 规范
 
 ```
-feat: 添加 RAG 相似度阈值调优脚本
-fix:  修复账号冻结后无法解冻的问题
-docs: 更新 README 快速开始章节
-test: 添加意图识别单元测试
-chore: 更新 docker-compose MySQL 配置
+feat: 添加账号冻结功能
+fix:  修复 CORS 跨域问题
+docs: 更新 README 本地部署章节
+test: 添加工单状态流转测试
+chore: 更新依赖版本
 ```
 
 ### 接口规范
 
-- 所有接口统一前缀 `/api/v1`
-- 响应格式统一：`{"status": "ok"|"error", "data": ..., "message": ...}`
-- 错误码：400 参数错误 · 401 未登录 · 403 无权限 · 404 不存在 · 500 服务器错误
-- 新增接口在 `http://localhost:8000/docs` 的 Swagger 中验证后再通知前端联调
-
-### Python 规范
-
-- 所有函数加类型注解和 docstring
-- 使用 `python-dotenv` 读取环境变量，禁止硬编码密钥
-- 异常统一用 `HTTPException`，不要裸露 `Exception`
-
----
-
-## 常用命令
-
-### Docker 操作
-
-```bash
-# 启动所有服务
-docker compose up -d
-
-# 查看服务状态
-docker compose ps
-
-# 查看后端实时日志
-docker compose logs -f backend
-
-# 重启单个服务（改了代码后）
-docker compose restart backend
-
-# 完全重建（修改了 Dockerfile 或依赖）
-docker compose up -d --build backend
-
-# 停止并清理（保留数据）
-docker compose down
-
-# 停止并清理所有数据（慎用）
-docker compose down -v
-```
-
-### 后端本地开发
-
-```bash
-cd backend
-
-# 安装依赖
-pip install -r requirements.txt
-
-# 本地启动（热重载）
-uvicorn main:app --reload --port 8000
-
-# 运行测试
-pytest tests/ -v
-```
-
-### 前端本地开发
-
-```bash
-cd frontend
-
-# 安装依赖
-npm install
-
-# 本地启动（热重载，代理到后端 8000）
-npm run dev
-
-# 构建生产版本
-npm run build
-```
-
-### 知识库操作
-
-```bash
-# 初始化 / 重新导入 FAQ
-docker compose exec backend python scripts/init_faq.py
-
-# RAG 阈值调优
-docker compose exec backend python scripts/tune_threshold.py
-
-# 压力测试
-docker compose exec backend python scripts/stress_test.py --url http://localhost:8000
-```
-
----
-
-## 联调说明
-
-### 第2周联调检查清单
-
-在合并到 `dev` 分支前，确认以下接口均可正常调用：
-
-```bash
-# 1. 健康检查
-curl http://localhost:8000/health
-
-# 2. RAG 问答（A 完成后验证）
-curl -X POST http://localhost:8000/api/v1/rag/query \
-  -H "Content-Type: application/json" \
-  -d '{"question": "VPN连接失败怎么办"}'
-
-# 3. 账号创建（B 完成后验证）
-curl -X POST http://localhost:8000/api/v1/accounts \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"emp_id":"EMP0001","name":"张三","department":"技术运维"}'
-
-# 4. 飞书 Webhook 验证（D 完成后验证）
-curl -X POST http://localhost:8000/api/v1/feishu/webhook \
-  -H "Content-Type: application/json" \
-  -d '{"type":"url_verification","challenge":"test123"}'
-```
-
-### 演示场景验收标准
-
-| 场景 | 验收标准 |
-|---|---|
-| 飞书智能问答 | 发送"账号冻结了"，3秒内收到飞书回复，`has_knowledge=true` |
-| 账号管理 | 后台创建账号后，前台搜索立即可见 |
-| 工单闭环 | 问知识库没有的问题 → 工单生成 → 处理 → 再问同一问题有答案 |
+- 响应格式统一：`{"code": 200, "message": "ok", "data": ...}`
+- 错误码：`400` 参数错误 · `401` 未登录 · `403` 无权限 · `404` 不存在 · `500` 服务器错误
+- 新增接口在 Swagger (`/docs`) 验证后再通知前端联调
 
 ---
 
 ## FAQ
 
-**Q: 首次启动后 Embedding 模型下载很慢？**
-A: 模型约 100MB，国内网络可能较慢。可手动下载后放入 Docker Volume，或在 `.env` 中配置 HuggingFace 镜像：
-```bash
-HF_ENDPOINT=https://hf-mirror.com
+**Q: 后端启动报 `Access denied for user 'ops'@'localhost'`？**
+
+A: 说明数据库未初始化或 `ops` 用户缺少 `@localhost` 授权。执行：
+```sql
+CREATE USER IF NOT EXISTS 'ops'@'localhost' IDENTIFIED BY 'ops123456';
+GRANT ALL PRIVILEGES ON opswarden.* TO 'ops'@'localhost';
+FLUSH PRIVILEGES;
 ```
 
-**Q: DeepSeek API 返回 429 限流错误？**
-A: 降低并发请求数，或在 `.env` 中开启缓存：`RAG_CACHE_TTL=3600`。测试阶段建议逐个发送请求，不要并发。
+**Q: 浏览器显示"无法连接到后端服务"？**
 
-**Q: ChromaDB 数据重启后丢失？**
-A: 检查 `docker-compose.yml` 中 `chroma_data` Volume 是否正确挂载到 `/chroma/chroma`，并确认 `knowledge_base.py` 中每次写入后调用了 `db.persist()`。
+A: 确认后端已在 8000 端口运行（`curl http://localhost:8000/health`）。如果后端正常但仍报错，检查 CORS 配置——`allow_origins=["*"]` 与 `allow_credentials=True` 不能同时使用。
 
-**Q: 飞书 Webhook 收不到消息？**
-A: 确认云服务器的 80/443 端口已开放，飞书后台配置的 Webhook URL 为公网地址而非 localhost，且签名验证通过。
+**Q: Docker 启动报端口 3306 冲突？**
 
-**Q: MySQL 连接报 `Access denied`？**
-A: 检查 `.env` 中 `MYSQL_USER`、`MYSQL_PASSWORD` 与 `DATABASE_URL` 中的用户名密码是否一致，重建容器：`docker compose down -v && docker compose up -d`。
+A: 本机 MySQL 已占用 3306 端口。选择其一：
+- 停止本机 MySQL，再运行 `docker compose up -d`
+- 改用[本地部署方式](#快速开始本地无需-docker)，直接在本机 MySQL 上初始化数据库
 
-**Q: 前端页面空白或报 CORS 错误？**
-A: 检查 `.env` 中 `CORS_ORIGINS` 是否包含前端实际访问地址（含端口号）。
+**Q: 登录提示用户名或密码错误？**
+
+A: 默认账号 `admin` / `admin123`。确认 `init.sql` 已成功执行（检查 `accounts` 表是否有数据）。
+
+**Q: 前端页面跳转到 login 但已登录？**
+
+A: 清除浏览器 localStorage 后重新登录（F12 → Application → Local Storage → 清空）。
 
 ---
 
 ## 联系方式
 
-| 角色 | 负责人 | 飞书 |
+| 角色 | 负责人 | 联系 |
 |---|---|---|
 | AI 核心 / RAG | 成员 A | @成员A |
 | 后端 / 数据库 | 成员 B | @成员B |

@@ -299,7 +299,7 @@
 </div>
 </main>
 <!-- Slide-in Panel (新增知识条目) -->
-<div class="fixed inset-0 z-50 pointer-events-none overflow-hidden">
+<div id="panel-overlay" class="fixed inset-0 z-50 pointer-events-none overflow-hidden" style="display:none!important">
 <!-- Backdrop -->
 <div class="absolute inset-0 bg-on-background/10 backdrop-blur-sm pointer-events-auto"></div>
 <!-- Panel -->
@@ -371,4 +371,29 @@
 </div>
 </div>
 </div>
+<script src="api.js"></script>
+<script>
+  requireAuth();
+  bindSidebar();
+
+  const overlay = document.getElementById('panel-overlay');
+
+  // Open panel
+  document.querySelector('button.bg-gradient-to-br').addEventListener('click', () => {
+    overlay.style.removeProperty('display');
+    overlay.classList.remove('pointer-events-none');
+  });
+
+  // Close panel
+  overlay.querySelector('button').addEventListener('click', () => {
+    overlay.style.setProperty('display', 'none', 'important');
+    overlay.classList.add('pointer-events-none');
+  });
+
+  // Cancel button
+  overlay.querySelector('button.text-tertiary').addEventListener('click', () => {
+    overlay.style.setProperty('display', 'none', 'important');
+    overlay.classList.add('pointer-events-none');
+  });
+</script>
 </body></html>

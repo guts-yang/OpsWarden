@@ -161,7 +161,7 @@
 </div>
 </div>
 <div class="flex items-center gap-4">
-<button class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs font-medium text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-2">
+<button id="btn-clear" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs font-medium text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-2">
 <span class="material-symbols-outlined text-sm">delete_sweep</span>
                     清空对话
                 </button>
@@ -177,7 +177,7 @@
 </div>
 </header>
 <!-- Chat Area -->
-<div class="flex-1 overflow-y-auto mt-14 p-8 bg-white flex flex-col space-y-8">
+<div class="flex-1 overflow-y-auto mt-14 p-8 bg-white flex flex-col space-y-8" id="chat-messages">
 <!-- Timestamp -->
 <div class="flex justify-center">
 <span class="text-[10px] uppercase tracking-widest text-outline font-bold bg-surface-container-low px-3 py-1 rounded-full">Today, 14:32</span>
@@ -268,12 +268,12 @@
 <button class="p-2 text-tertiary hover:text-primary transition-colors">
 <span class="material-symbols-outlined">attach_file</span>
 </button>
-<textarea class="flex-1 bg-transparent border-none focus:ring-0 text-sm py-2 resize-none max-h-32 text-on-surface placeholder:text-outline/60" placeholder="输入运维问题..." rows="1"></textarea>
+<textarea id="chat-input" class="flex-1 bg-transparent border-none focus:ring-0 text-sm py-2 resize-none max-h-32 text-on-surface placeholder:text-outline/60" placeholder="输入运维问题..." rows="1"></textarea>
 <div class="flex items-center gap-1">
 <button class="p-2 text-tertiary hover:text-primary transition-colors">
 <span class="material-symbols-outlined">mic</span>
 </button>
-<button class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-md shadow-primary/20 hover:bg-primary-container active:scale-95 transition-all">
+<button id="btn-send" class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-md shadow-primary/20 hover:bg-primary-container active:scale-95 transition-all">
 <span class="material-symbols-outlined">send</span>
 </button>
 </div>
@@ -290,4 +290,103 @@
 </div>
 </div>
 </main>
+<script src="api.js"></script>
+<script>
+  requireAuth();
+  bindSidebar();
+
+  const chatMessages = document.getElementById('chat-messages');
+  const chatInput = document.getElementById('chat-input');
+  const btnSend = document.getElementById('btn-send');
+  const btnClear = document.getElementById('btn-clear');
+
+  // Auto-resize textarea
+  chatInput.addEventListener('input', () => {
+    chatInput.style.height = 'auto';
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 128) + 'px';
+  });
+
+  // Send on Enter (Shift+Enter = newline)
+  chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+
+  btnSend.addEventListener('click', sendMessage);
+
+  btnClear.addEventListener('click', () => {
+    chatMessages.innerHTML = `<div class="flex justify-center"><span class="text-[10px] uppercase tracking-widest text-outline font-bold bg-surface-container-low px-3 py-1 rounded-full">对话已清空</span></div>`;
+  });
+
+  // Quick action chips fill input
+  document.querySelectorAll('footer button.whitespace-nowrap').forEach(btn => {
+    btn.addEventListener('click', () => {
+      chatInput.value = btn.textContent.trim();
+      chatInput.focus();
+    });
+  });
+
+  function appendUserBubble(text) {
+    const div = document.createElement('div');
+    div.className = 'flex justify-end items-start gap-4';
+    div.innerHTML = `<div class="flex flex-col items-end gap-2 max-w-[70%]"><div class="bg-primary text-white px-5 py-3 rounded-2xl rounded-tr-none shadow-md"><p class="text-sm font-medium">${escapeHtml(text)}</p></div></div>`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function appendAIBubble(html) {
+    const div = document.createElement('div');
+    div.className = 'flex justify-start items-start gap-4';
+    div.innerHTML = `<div class="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white shrink-0"><span class="material-symbols-outlined text-lg">smart_toy</span></div><div class="flex flex-col items-start gap-2 max-w-[80%]"><div class="bg-white border-l-4 border-primary shadow-[0_4px_20px_rgba(0,88,190,0.06)] px-6 py-5 rounded-2xl rounded-tl-none border border-outline-variant/10">${html}</div></div>`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function appendThinking() {
+    const div = document.createElement('div');
+    div.id = 'thinking-bubble';
+    div.className = 'flex justify-start items-start gap-4';
+    div.innerHTML = `<div class="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white shrink-0"><span class="material-symbols-outlined text-lg">smart_toy</span></div><div class="px-6 py-4 bg-surface-container-low rounded-2xl rounded-tl-none text-sm text-on-surface-variant flex items-center gap-2"><span class="animate-pulse">正在处理中…</span></div>`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function removeThinking() {
+    const el = document.getElementById('thinking-bubble');
+    if (el) el.remove();
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  async function sendMessage() {
+    const text = chatInput.value.trim();
+    if (!text) return;
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    btnSend.disabled = true;
+
+    appendUserBubble(text);
+    appendThinking();
+
+    try {
+      const res = await createAutoTicket(text, '', getUser()?.name || '');
+      removeThinking();
+      const ticketNo = res.data?.ticket_no || res.data?.id || '—';
+      appendAIBubble(`
+        <p class="text-sm text-on-surface leading-relaxed mb-3">已为您创建工单，运维人员将尽快处理。</p>
+        <div class="flex items-center gap-2 px-4 py-2.5 bg-surface-container-low rounded-xl w-fit">
+          <span class="material-symbols-outlined text-primary text-lg">confirmation_number</span>
+          <span class="text-sm font-bold text-primary">${escapeHtml(String(ticketNo))}</span>
+        </div>
+        <p class="text-xs text-on-surface-variant mt-3">您可前往 <a href="tickets.html" class="text-primary underline">工单管理</a> 页面查看处理进度。</p>
+      `);
+    } catch (err) {
+      removeThinking();
+      appendAIBubble(`<p class="text-sm text-error">${escapeHtml(err.message || '请求失败，请稍后重试')}</p>`);
+    } finally {
+      btnSend.disabled = false;
+    }
+  }
+</script>
 </body></html>

@@ -180,7 +180,7 @@
 <!-- Split Panel Layout -->
 <div class="flex-1 flex overflow-hidden px-8 pb-8 gap-6">
 <!-- Left Panel: Ticket List -->
-<div class="w-1/3 flex flex-col gap-4 overflow-y-auto pr-2 custom-scrollbar">
+<div id="ticket-list" class="w-1/3 flex flex-col gap-4 overflow-y-auto pr-2 custom-scrollbar">
 <!-- Active Card -->
 <div class="group relative bg-white rounded-xl p-4 border-2 border-primary shadow-sm active:scale-[0.98] transition-all cursor-pointer">
 <div class="absolute left-0 top-4 bottom-4 w-1 bg-primary rounded-r"></div>
@@ -237,10 +237,10 @@
 <div class="flex-1 flex flex-col bg-white rounded-2xl shadow-sm overflow-hidden">
 <!-- Detail Header -->
 <div class="px-6 py-5 bg-surface-container-lowest border-b border-surface-container flex justify-between items-center">
-<div class="flex items-center gap-4">
-<h2 class="text-lg font-bold font-label text-on-background">TK-2026031501</h2>
-<span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full border border-blue-100 uppercase tracking-wide">待处理</span>
-<span class="px-2 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded-full uppercase tracking-wide">紧急</span>
+<div class="flex items-center gap-4" id="detail-header">
+<h2 id="detail-no" class="text-lg font-bold font-label text-on-background">请选择工单</h2>
+<span id="detail-status" class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full border border-blue-100 uppercase tracking-wide hidden"></span>
+<span id="detail-priority" class="px-2 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded-full uppercase tracking-wide hidden"></span>
 </div>
 <div class="flex items-center gap-2">
 <button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined">share</span></button>
@@ -248,7 +248,7 @@
 </div>
 </div>
 <!-- Scrollable Content -->
-<div class="flex-1 overflow-y-auto px-6 py-6 space-y-8 custom-scrollbar">
+<div id="detail-body" class="flex-1 overflow-y-auto px-6 py-6 space-y-8 custom-scrollbar">
 <!-- Section: Problem Description -->
 <section class="space-y-3">
 <div class="flex items-center gap-2 text-on-surface font-bold text-sm">
@@ -349,17 +349,17 @@
 <!-- Footer Action Bar -->
 <div class="px-6 py-6 bg-surface border-t border-surface-container shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
 <div class="mb-4">
-<textarea class="w-full bg-white border-outline-variant rounded-xl p-3 text-sm focus:ring-primary focus:border-primary placeholder:text-slate-400 transition-all" placeholder="填写处理方案..." rows="3"></textarea>
+<textarea id="solution-textarea" class="w-full bg-white border-outline-variant rounded-xl p-3 text-sm focus:ring-primary focus:border-primary placeholder:text-slate-400 transition-all" placeholder="填写处理方案..." rows="3"></textarea>
 </div>
 <div class="flex items-center justify-between">
 <label class="flex items-center gap-2 cursor-pointer group">
-<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox"/>
+<input id="writeback-checkbox" class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox" checked/>
 <span class="text-xs text-on-surface-variant group-hover:text-on-surface transition-colors">解决后自动写入知识库</span>
 </label>
 <div class="flex items-center gap-3">
-<button class="px-5 py-2 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors">保存草稿</button>
-<button class="px-5 py-2 text-xs font-bold bg-secondary text-on-secondary rounded-xl shadow-lg shadow-secondary/20 hover:opacity-90 active:scale-95 transition-all">标记解决</button>
-<button class="px-5 py-2 text-xs font-bold border border-error text-error hover:bg-error/5 rounded-xl transition-all">关闭工单</button>
+<button id="btn-process" class="px-5 py-2 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors hidden">标记处理中</button>
+<button id="btn-resolve" class="px-5 py-2 text-xs font-bold bg-secondary text-on-secondary rounded-xl shadow-lg shadow-secondary/20 hover:opacity-90 active:scale-95 transition-all hidden">标记解决</button>
+<button id="btn-close" class="px-5 py-2 text-xs font-bold border border-error text-error hover:bg-error/5 rounded-xl transition-all hidden">关闭工单</button>
 </div>
 </div>
 </div>
@@ -368,8 +368,189 @@
 </main>
 <!-- Floating AI Assistant Widget -->
 <div class="fixed bottom-8 right-8 z-[60]">
-<button class="w-14 h-14 bg-gradient-to-br from-primary to-primary-container rounded-full shadow-2xl flex items-center justify-center text-white ring-4 ring-white active:scale-90 transition-all group">
+<button class="w-14 h-14 bg-gradient-to-br from-primary to-primary-container rounded-full shadow-2xl flex items-center justify-center text-white ring-4 ring-white active:scale-90 transition-all group" onclick="window.location.href='ai_chat.html'">
 <span class="material-symbols-outlined text-3xl group-hover:rotate-12 transition-transform">bolt</span>
 </button>
 </div>
+<script src="api.js"></script>
+<script>
+  const user = requireAuth();
+  if (!user) throw new Error('redirect');
+  bindSidebar();
+
+  const ticketList = document.getElementById('ticket-list');
+  const detailBody = document.getElementById('detail-body');
+  let activeTicketId = null;
+  let currentFilter = {};
+
+  // ── 筛选按钮 ──────────────────────────────────────────────────────────────────
+  document.querySelectorAll('.flex.gap-2.p-1.bg-surface-container-low button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.flex.gap-2.p-1.bg-surface-container-low button').forEach(b => {
+        b.classList.remove('bg-white', 'text-primary', 'shadow-sm');
+        b.classList.add('text-on-surface-variant');
+      });
+      btn.classList.add('bg-white', 'text-primary', 'shadow-sm');
+      btn.classList.remove('text-on-surface-variant');
+      const txt = btn.textContent.trim();
+      currentFilter = txt === '全部' ? {} :
+        txt.includes('待处理') ? { status: 'pending' } :
+        txt.includes('处理中') ? { status: 'processing' } :
+        txt.includes('已解决') ? { status: 'resolved' } :
+        { status: 'closed' };
+      loadTickets();
+    });
+  });
+
+  // ── 工单列表渲染 ──────────────────────────────────────────────────────────────
+  function ticketCard(t, active = false) {
+    const p = TICKET_PRIORITY[t.priority] || { label: t.priority, cls: '' };
+    const s = TICKET_STATUS[t.status] || { label: t.status, cls: '' };
+    const borderColor = { urgent: 'bg-error', high: 'bg-amber-500', medium: 'bg-primary', low: 'bg-secondary' }[t.priority] || 'bg-slate-300';
+    return `<div class="group relative ${active ? 'bg-white border-2 border-primary shadow-sm' : 'bg-surface-container-lowest border border-transparent hover:bg-white hover:shadow-md'} rounded-xl p-4 transition-all cursor-pointer" data-id="${t.id}">
+      <div class="absolute left-0 top-4 bottom-4 w-1 ${borderColor} rounded-r"></div>
+      <div class="flex justify-between items-start mb-2">
+        <span class="text-[10px] font-label font-bold ${active ? 'text-primary' : 'text-tertiary'} tracking-wider uppercase">${t.ticket_no}</span>
+        <span class="text-[10px] px-2 py-0.5 ${p.cls.replace('text-', 'text-').replace('bg-', '')} bg-surface-container-high text-on-surface-variant rounded font-bold">${p.label}</span>
+      </div>
+      <h3 class="text-sm font-bold text-on-surface mb-1 truncate">${t.title}</h3>
+      <p class="text-xs text-on-surface-variant line-clamp-2 leading-relaxed mb-3">${t.description || '无描述'}</p>
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] px-2 py-0.5 rounded font-bold ${s.cls}">${s.label}</span>
+        <span class="text-[10px] font-medium text-slate-400">${fmtDate(t.created_at)}</span>
+      </div>
+    </div>`;
+  }
+
+  async function loadTickets() {
+    try {
+      const res = await getTickets({ page: 1, page_size: 20, ...currentFilter });
+      const items = res.data.items;
+      ticketList.innerHTML = items.length
+        ? items.map(t => ticketCard(t, t.id === activeTicketId)).join('')
+        : `<div class="text-center text-on-surface-variant text-sm py-10">暂无工单</div>`;
+      ticketList.querySelectorAll('[data-id]').forEach(el => {
+        el.addEventListener('click', () => loadDetail(parseInt(el.dataset.id)));
+      });
+    } catch (e) {
+      ticketList.innerHTML = `<div class="text-center text-error text-sm py-10">${e.message}</div>`;
+    }
+  }
+
+  // ── 工单详情渲染 ──────────────────────────────────────────────────────────────
+  async function loadDetail(id) {
+    activeTicketId = id;
+    loadTickets(); // 刷新列表以更新高亮
+    try {
+      const [ticketRes, logsRes] = await Promise.all([getTicket(id), getTicketLogs(id)]);
+      const t = ticketRes.data;
+      const logs = logsRes.data;
+
+      // 更新右侧面板头部
+      document.getElementById('detail-no').textContent = t.ticket_no;
+      const statusEl = document.getElementById('detail-status');
+      const priorityEl = document.getElementById('detail-priority');
+      const s = TICKET_STATUS[t.status] || { label: t.status, cls: '' };
+      const p = TICKET_PRIORITY[t.priority] || { label: t.priority, cls: '' };
+      statusEl.textContent = s.label;
+      statusEl.className = `px-2 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wide ${s.cls}`;
+      statusEl.classList.remove('hidden');
+      priorityEl.textContent = p.label;
+      priorityEl.className = `px-2 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wide bg-error-container text-on-error-container`;
+      priorityEl.classList.remove('hidden');
+
+      // 操作按钮显隐
+      const canAct = (user.role === 'admin' || user.role === 'operator');
+      document.getElementById('btn-process').classList.toggle('hidden', !canAct || t.status !== 'pending');
+      document.getElementById('btn-resolve').classList.toggle('hidden', !canAct || t.status === 'resolved' || t.status === 'closed');
+      document.getElementById('btn-close').classList.toggle('hidden', !canAct || t.status === 'closed');
+
+      // 详情主体
+      detailBody.innerHTML = `
+        <section class="space-y-3">
+          <div class="flex items-center gap-2 text-on-surface font-bold text-sm">
+            <span class="material-symbols-outlined text-primary text-lg">description</span>问题描述
+          </div>
+          <div class="bg-surface-container-low p-4 rounded-xl">
+            <p class="text-sm text-on-surface-variant leading-relaxed">${t.description || '无描述'}</p>
+          </div>
+        </section>
+        <section class="space-y-3">
+          <div class="flex items-center gap-2 text-on-surface font-bold text-sm">
+            <span class="material-symbols-outlined text-primary text-lg">info</span>工单信息
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="p-3 bg-surface rounded-lg border border-surface-container">
+              <p class="text-[10px] text-on-surface-variant mb-1">来源</p>
+              <p class="text-sm font-bold">{{ ${{ t.source === 'ai_auto' ? 'AI 自动' : t.source === 'feishu' ? '飞书' : '手动' }} }}</p>
+            </div>
+            <div class="p-3 bg-surface rounded-lg border border-surface-container">
+              <p class="text-[10px] text-on-surface-variant mb-1">提单人</p>
+              <p class="text-sm font-bold">${t.reporter_name || '-'}</p>
+            </div>
+            <div class="p-3 bg-surface rounded-lg border border-surface-container">
+              <p class="text-[10px] text-on-surface-variant mb-1">创建时间</p>
+              <p class="text-sm font-bold">${fmtDate(t.created_at)}</p>
+            </div>
+            <div class="p-3 bg-surface rounded-lg border border-surface-container">
+              <p class="text-[10px] text-on-surface-variant mb-1">解决方案</p>
+              <p class="text-sm font-bold">${t.solution || '待填写'}</p>
+            </div>
+          </div>
+        </section>
+        <section class="space-y-5">
+          <div class="flex items-center gap-2 text-on-surface font-bold text-sm">
+            <span class="material-symbols-outlined text-primary text-lg">history</span>处理记录
+          </div>
+          <div class="relative pl-6 space-y-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-surface-container">
+            ${logs.length ? logs.map(l => `
+              <div class="relative">
+                <div class="absolute -left-[19px] top-1 w-4 h-4 rounded-full bg-primary border-4 border-white"></div>
+                <div class="flex items-center gap-3 mb-1">
+                  <span class="text-xs font-bold text-on-background">${l.operator_name || '系统'}</span>
+                  <span class="text-[10px] text-slate-400">${fmtDate(l.created_at)}</span>
+                  <span class="text-[10px] px-1.5 py-0.5 bg-surface-container rounded text-tertiary">${l.action}</span>
+                </div>
+                <p class="text-xs text-on-surface-variant">${l.content || ''}</p>
+              </div>`).join('') : '<p class="text-xs text-on-surface-variant">暂无处理记录</p>'}
+          </div>
+        </section>`;
+
+      // 修正工单来源显示（替换模板字符串中的双括号）
+      detailBody.querySelectorAll('p.text-sm.font-bold').forEach(el => {
+        if (el.textContent.includes('${{')) {
+          const src = t.source === 'ai_auto' ? 'AI 自动' : t.source === 'feishu' ? '飞书' : '手动';
+          el.textContent = src;
+        }
+      });
+    } catch (e) {
+      detailBody.innerHTML = `<p class="text-error text-sm">${e.message}</p>`;
+    }
+  }
+
+  // ── 操作按钮 ──────────────────────────────────────────────────────────────────
+  document.getElementById('btn-process').addEventListener('click', async () => {
+    if (!activeTicketId) return;
+    try { await updateTicket(activeTicketId, { status: 'processing' }); loadTickets(); loadDetail(activeTicketId); }
+    catch (e) { alert(e.message); }
+  });
+
+  document.getElementById('btn-resolve').addEventListener('click', async () => {
+    if (!activeTicketId) return;
+    const solution = document.getElementById('solution-textarea').value.trim();
+    if (!solution) { alert('请填写处理方案后再标记解决'); return; }
+    const writeBack = document.getElementById('writeback-checkbox').checked;
+    try { await resolveTicket(activeTicketId, solution, writeBack); loadTickets(); loadDetail(activeTicketId); }
+    catch (e) { alert(e.message); }
+  });
+
+  document.getElementById('btn-close').addEventListener('click', async () => {
+    if (!activeTicketId) return;
+    if (!confirm('确认关闭此工单？')) return;
+    try { await closeTicket(activeTicketId); loadTickets(); loadDetail(activeTicketId); }
+    catch (e) { alert(e.message); }
+  });
+
+  loadTickets();
+</script>
 </body></html>
