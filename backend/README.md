@@ -34,7 +34,7 @@ http://localhost:8000/docs
 ### accounts 账号表
 
 | 字段 | 类型 | 说明 |
-|------|------|------|
+| --- | --- | --- |
 | id | bigint | 主键自增 |
 | employee_id | varchar(32) | 工号，唯一 |
 | username | varchar(64) | 用户名，唯一 |
@@ -51,7 +51,7 @@ http://localhost:8000/docs
 ### tickets 工单表
 
 | 字段 | 类型 | 说明 |
-|------|------|------|
+| --- | --- | --- |
 | id | bigint | 主键自增 |
 | ticket_no | varchar(32) | 工单编号 T-YYYYMMDD-NNN |
 | title | varchar(256) | 标题 |
@@ -73,7 +73,7 @@ http://localhost:8000/docs
 ### ticket_logs 工单日志表
 
 | 字段 | 类型 | 说明 |
-|------|------|------|
+| --- | --- | --- |
 | id | bigint | 主键自增 |
 | ticket_id | bigint | 关联工单ID |
 | action | varchar(64) | 操作类型 |
@@ -86,12 +86,12 @@ http://localhost:8000/docs
 ### 认证
 
 | 方法 | 路径 | 说明 | 权限 |
-|------|------|------|------|
+| --- | --- | --- | --- |
 | POST | /api/auth/login | 用户登录，返回JWT Token | 无 |
 ### 账号管理
 
 | 方法 | 路径 | 说明 | 权限 |
-|------|------|------|------|
+| --- | --- | --- | --- |
 | POST | /api/accounts | 创建运维账号 | admin |
 | GET | /api/accounts | 查询账号列表（支持筛选+分页） | login |
 | GET | /api/accounts/{id} | 查询账号详情 | login |
@@ -102,7 +102,7 @@ http://localhost:8000/docs
 ### 工单管理
 
 | 方法 | 路径 | 说明 | 权限 |
-|------|------|------|------|
+| --- | --- | --- | --- |
 | POST | /api/tickets/auto | AI自动生成工单 | 无（内部调用） |
 | GET | /api/tickets | 查询工单列表（支持筛选+分页） | login |
 | GET | /api/tickets/{id} | 查询工单详情 | login |
@@ -114,7 +114,7 @@ http://localhost:8000/docs
 ### 系统
 
 | 方法 | 路径 | 说明 |
-|------|------|------|
+| --- | --- | --- |
 | GET | / | 系统信息 |
 | GET | /health | 健康检查（含数据库连通性） |
 认证说明
