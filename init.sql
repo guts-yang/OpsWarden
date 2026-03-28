@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS ticket_logs (
 
 -- 插入默认管理员（密码: admin123 的bcrypt哈希）
 INSERT INTO accounts (employee_id, username, password_hash, name, department, role, status)
-VALUES ('ADMIN001', 'admin', '$2b$12$LJ3m4ys3GZ8bPqdFJH4wXOYFnLBsRlAhK7Jk6VBv8H9zK5m7K2f6i', '系统管理员', '运维管理部', 'admin', 'active');
+VALUES ('ADMIN001', 'admin', '$2b$12$y3JGlrKh27jfkD2Cpiij/OoTie4H4Az4BSx2A.5mfLUFNEtPawrF2', '系统管理员', '运维管理部', 'admin', 'active');
 
 GRANT ALL PRIVILEGES ON opswarden.* TO 'ops'@'%';
 FLUSH PRIVILEGES;

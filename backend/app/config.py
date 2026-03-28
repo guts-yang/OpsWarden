@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "ops-warden-secret-key"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
+    DEEPSEEK_API_KEY: str = ""
+    DEEPSEEK_BASE_URL: str = "https://api.deepseek.com"
 
     class Config:
         env_file = ".env"
