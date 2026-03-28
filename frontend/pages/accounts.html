@@ -243,7 +243,7 @@
 <th class="px-6 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-right">操作</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-slate-50">
+<tbody id="accounts-tbody" class="divide-y divide-slate-50">
 <!-- Row 1 -->
 <tr class="lithic-layer group transition-colors">
 <td class="px-6 py-5 font-mono text-sm text-tertiary">#OPS-8291</td>
@@ -374,7 +374,7 @@
 </div>
 </main>
 <!-- Slide-in Panel Overlay -->
-<div class="fixed inset-0 bg-on-background/40 backdrop-blur-sm z-50 flex justify-end">
+<div id="panel-overlay" class="fixed inset-0 bg-on-background/40 backdrop-blur-sm z-50 flex justify-end" style="display:none!important">
 <!-- Panel -->
 <div class="w-full max-w-[480px] bg-surface shadow-2xl flex flex-col h-full transform transition-transform duration-300">
 <!-- Panel Header -->
@@ -389,46 +389,44 @@
 </div>
 <!-- Panel Body -->
 <div class="flex-1 overflow-y-auto px-8 py-8 custom-scrollbar">
-<form class="space-y-6">
+<form id="create-form" class="space-y-6">
 <div class="grid grid-cols-2 gap-4">
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline-variant uppercase tracking-wider">工号</label>
-<input class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all font-mono text-sm" type="text" value="OPS-8292"/>
+<input id="f-employee-id" class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all font-mono text-sm" type="text" placeholder="OPS-XXXX"/>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline-variant uppercase tracking-wider">姓名</label>
-<input class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" placeholder="输入真实姓名" type="text"/>
+<input id="f-name" class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" placeholder="输入真实姓名" type="text"/>
 </div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-outline-variant uppercase tracking-wider">用户名</label>
+<input id="f-username" class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" placeholder="登录用户名" type="text"/>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline-variant uppercase tracking-wider">部门</label>
-<select class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm appearance-none">
-<option>请选择所属部门</option>
-<option>运维中心 / 云平台组</option>
-<option>运维中心 / SRE</option>
-<option>安全部 / 渗透测试</option>
-<option>架构部 / 基础架构</option>
-</select>
+<input id="f-department" class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" placeholder="所属部门" type="text"/>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline-variant uppercase tracking-wider">邮箱</label>
-<input class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" placeholder="official@opswarden.com" type="email"/>
+<input id="f-email" class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" placeholder="official@opswarden.com" type="email"/>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline-variant uppercase tracking-wider">权限级别</label>
-<div class="grid grid-cols-3 gap-3">
-<button class="py-3 px-2 border-2 border-primary bg-primary/5 rounded-lg text-xs font-bold text-primary transition-all" type="button">L1 - Entry</button>
-<button class="py-3 px-2 border-2 border-transparent bg-surface-container-low rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-high transition-all" type="button">L3 - Senior</button>
-<button class="py-3 px-2 border-2 border-transparent bg-surface-container-low rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-high transition-all" type="button">L5 - Admin</button>
+<div class="grid grid-cols-3 gap-3" id="role-btns">
+<button class="py-3 px-2 border-2 border-primary bg-primary/5 rounded-lg text-xs font-bold text-primary transition-all" data-role="user" type="button">普通用户</button>
+<button class="py-3 px-2 border-2 border-transparent bg-surface-container-low rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-high transition-all" data-role="operator" type="button">运维员</button>
+<button class="py-3 px-2 border-2 border-transparent bg-surface-container-low rounded-lg text-xs font-bold text-on-surface-variant hover:bg-surface-container-high transition-all" data-role="admin" type="button">管理员</button>
 </div>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline-variant uppercase tracking-wider">初始密码</label>
 <div class="relative">
-<input class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" type="password" value="********"/>
+<input id="f-password" class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all text-sm" type="password" placeholder="至少6位"/>
 <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline-variant cursor-pointer hover:text-primary">visibility</span>
 </div>
-<p class="text-[10px] text-tertiary">密码应包含字母、数字及特殊符号，长度不小于 12 位。</p>
+<p class="text-[10px] text-tertiary">密码应包含字母、数字及特殊符号，长度不小于 6 位。</p>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-outline-variant uppercase tracking-wider">备注</label>
@@ -446,9 +444,151 @@
 </div>
 <!-- Panel Footer -->
 <div class="px-8 py-6 bg-surface-container-low flex items-center gap-4 sticky bottom-0">
-<button class="flex-1 px-6 py-3 border border-outline-variant text-on-surface-variant font-bold rounded-xl hover:bg-surface-container-high transition-colors">取消</button>
-<button class="flex-1 px-6 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-container transition-all">创建账号</button>
+<p id="form-error" class="text-xs text-error flex-1 hidden"></p>
+<button id="btn-cancel" class="px-6 py-3 border border-outline-variant text-on-surface-variant font-bold rounded-xl hover:bg-surface-container-high transition-colors">取消</button>
+<button id="btn-submit" class="px-6 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-container transition-all">创建账号</button>
 </div>
 </div>
 </div>
+<script src="api.js"></script>
+<script>
+  const user = requireAuth();
+  if (!user) throw new Error('redirect');
+  bindSidebar();
+
+  const overlay = document.getElementById('panel-overlay');
+  const tbody = document.getElementById('accounts-tbody');
+  const formErr = document.getElementById('form-error');
+  let selectedRole = 'user';
+  let currentPage = 1;
+  const PAGE_SIZE = 10;
+
+  // ── 面板开关 ──────────────────────────────────────────────────────────────────
+  function openPanel() { overlay.style.display = 'flex'; }
+  function closePanel() {
+    overlay.style.display = 'none';
+    document.getElementById('create-form').reset();
+    selectedRole = 'user';
+    highlightRole('user');
+    formErr.classList.add('hidden');
+  }
+
+  document.getElementById('btn-cancel').addEventListener('click', closePanel);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closePanel(); });
+  // 新建账号按钮（页面顶部）
+  document.querySelector('button span.material-symbols-outlined[data-icon="person_add"]')
+    ?.closest('button')?.addEventListener('click', openPanel);
+  // 备用：查找含 person_add 图标的按钮
+  document.querySelectorAll('button').forEach(b => {
+    if (b.textContent.includes('新建账号')) b.addEventListener('click', openPanel);
+  });
+
+  // ── 权限级别选择 ─────────────────────────────────────────────────────────────
+  function highlightRole(role) {
+    document.querySelectorAll('#role-btns button').forEach(b => {
+      const active = b.dataset.role === role;
+      b.classList.toggle('border-primary', active);
+      b.classList.toggle('bg-primary/5', active);
+      b.classList.toggle('text-primary', active);
+      b.classList.toggle('border-transparent', !active);
+    });
+  }
+  document.querySelectorAll('#role-btns button').forEach(b => {
+    b.addEventListener('click', () => { selectedRole = b.dataset.role; highlightRole(selectedRole); });
+  });
+
+  // ── 创建账号提交 ──────────────────────────────────────────────────────────────
+  document.getElementById('btn-submit').addEventListener('click', async () => {
+    const data = {
+      employee_id: document.getElementById('f-employee-id').value.trim(),
+      username:    document.getElementById('f-username').value.trim(),
+      password:    document.getElementById('f-password').value,
+      name:        document.getElementById('f-name').value.trim(),
+      department:  document.getElementById('f-department').value.trim(),
+      email:       document.getElementById('f-email').value.trim(),
+      role:        selectedRole,
+    };
+    if (!data.employee_id || !data.username || !data.password || !data.name) {
+      formErr.textContent = '工号、用户名、姓名、密码为必填项'; formErr.classList.remove('hidden'); return;
+    }
+    const btn = document.getElementById('btn-submit');
+    btn.disabled = true; btn.textContent = '创建中...';
+    try {
+      await createAccount(data);
+      closePanel();
+      loadAccounts();
+    } catch (e) {
+      formErr.textContent = e.message; formErr.classList.remove('hidden');
+      btn.disabled = false; btn.textContent = '创建账号';
+    }
+  });
+
+  // ── 渲染表格行 ────────────────────────────────────────────────────────────────
+  function accountRow(a) {
+    const s = ACCOUNT_STATUS[a.status] || { label: a.status, cls: '', dotCls: 'bg-slate-400' };
+    const r = ACCOUNT_ROLE[a.role] || { label: a.role, cls: '' };
+    const init = a.name ? a.name.slice(0, 1) : '?';
+    const isFrozen = a.status === 'frozen';
+    return `<tr class="lithic-layer group transition-colors" data-id="${a.id}" data-status="${a.status}">
+      <td class="px-6 py-5 font-mono text-sm text-tertiary">${a.employee_id}</td>
+      <td class="px-6 py-5"><div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">${init}</div>
+        <div class="text-sm font-semibold">${a.name}</div>
+      </div></td>
+      <td class="px-6 py-5 text-sm">${a.department || '-'}</td>
+      <td class="px-6 py-5">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${s.cls}">
+          <span class="w-1.5 h-1.5 rounded-full ${s.dotCls} mr-2"></span>${s.label}
+        </span>
+      </td>
+      <td class="px-6 py-5"><span class="px-2 py-1 bg-surface-container text-[10px] font-bold uppercase rounded text-on-surface-variant ${r.cls}">${r.label}</span></td>
+      <td class="px-6 py-5 text-sm text-tertiary">${a.last_login_at ? fmtDate(a.last_login_at) : '从未登录'}</td>
+      <td class="px-6 py-5 text-right">
+        <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button class="btn-freeze text-sm font-medium ${isFrozen ? 'text-secondary' : 'text-amber-600'} hover:underline">
+            ${isFrozen ? '解冻' : '冻结'}
+          </button>
+          <button class="btn-reset text-on-surface-variant hover:underline text-sm font-medium">重置密码</button>
+        </div>
+      </td>
+    </tr>`;
+  }
+
+  // ── 加载账号列表 ──────────────────────────────────────────────────────────────
+  async function loadAccounts(params = {}) {
+    try {
+      const res = await getAccounts({ page: currentPage, page_size: PAGE_SIZE, ...params });
+      const { items, total } = res.data;
+      tbody.innerHTML = items.length
+        ? items.map(accountRow).join('')
+        : `<tr><td colspan="7" class="px-6 py-10 text-center text-on-surface-variant text-sm">暂无账号数据</td></tr>`;
+
+      // 更新总数
+      document.querySelectorAll('.font-bold.text-primary').forEach(el => {
+        if (el.textContent.match(/^\d/)) el.textContent = total;
+      });
+
+      // 绑定行按钮事件
+      tbody.querySelectorAll('tr[data-id]').forEach(row => {
+        const id = row.dataset.id;
+        row.querySelector('.btn-freeze')?.addEventListener('click', async () => {
+          try {
+            row.dataset.status === 'frozen' ? await unfreezeAccount(id) : await freezeAccount(id);
+            loadAccounts();
+          } catch (e) { alert(e.message); }
+        });
+        row.querySelector('.btn-reset')?.addEventListener('click', async () => {
+          const pwd = prompt('请输入新密码（至少6位）：');
+          if (!pwd || pwd.length < 6) return;
+          try { await resetPassword(id, pwd); alert('密码已重置'); }
+          catch (e) { alert(e.message); }
+        });
+      });
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-10 text-center text-error text-sm">${e.message}</td></tr>`;
+    }
+  }
+
+  loadAccounts();
+</script>
 </body></html>

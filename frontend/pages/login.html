@@ -191,4 +191,52 @@
 </footer>
 </section>
 </main>
+<script src="api.js"></script>
+<script>
+  // 已登录则跳转 dashboard
+  if (getToken()) window.location.href = 'dashboard.html';
+
+  // 密码可见性切换
+  document.querySelector('button[type="button"]').addEventListener('click', function () {
+    const pwd = document.getElementById('password');
+    const icon = this.querySelector('span');
+    if (pwd.type === 'password') { pwd.type = 'text'; icon.textContent = 'visibility'; }
+    else { pwd.type = 'password'; icon.textContent = 'visibility_off'; }
+  });
+
+  // 错误提示元素
+  const errEl = document.createElement('p');
+  errEl.className = 'text-xs text-error text-center mt-1 hidden';
+  document.querySelector('form').insertBefore(errEl, document.querySelector('button[type="submit"]'));
+
+  function showError(msg) { errEl.textContent = msg; errEl.classList.remove('hidden'); }
+  function hideError() { errEl.classList.add('hidden'); }
+
+  document.querySelector('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideError();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    if (!username || !password) { showError('请输入用户名和密码'); return; }
+
+    const btn = document.querySelector('button[type="submit"]');
+    const btnText = btn.querySelector('span:first-child');
+    btn.disabled = true;
+    btnText.textContent = '登录中...';
+
+    try {
+      const res = await login(username, password);
+      localStorage.setItem('ow_token', res.data.access_token);
+      localStorage.setItem('ow_user', JSON.stringify({
+        id: res.data.user_id, username: res.data.username,
+        name: res.data.name, role: res.data.role,
+      }));
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      showError(err.message || '登录失败');
+      btn.disabled = false;
+      btnText.textContent = '登录系统';
+    }
+  });
+</script>
 </body></html>

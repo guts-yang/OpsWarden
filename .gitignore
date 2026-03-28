@@ -1,8 +1,9 @@
 # Environment & secrets
 .env
 
-# ML models (use pip install instead)
+# ML models (large files, use pip install instead)
 /models
+models/
 
 # Python
 __pycache__/
