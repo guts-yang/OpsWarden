@@ -38,6 +38,20 @@ class AccountResetPassword(BaseModel):
     new_password: str = Field(..., min_length=6, max_length=128)
 
 
+class AccountProfileUpdate(BaseModel):
+    """用户修改自己的资料（不含角色）"""
+    name: Optional[str] = Field(None, max_length=64)
+    department: Optional[str] = Field(None, max_length=128)
+    email: Optional[str] = Field(None, max_length=128)
+    phone: Optional[str] = Field(None, max_length=20)
+
+
+class AccountChangePassword(BaseModel):
+    """用户修改自己的密码"""
+    old_password: str = Field(..., min_length=1, max_length=128)
+    new_password: str = Field(..., min_length=6, max_length=128)
+
+
 class AccountResponse(BaseModel):
     id: int
     employee_id: str

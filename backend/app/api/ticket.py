@@ -6,7 +6,7 @@ from datetime import datetime
 from app.database import get_db
 from app.models.ticket import Ticket, TicketLog
 from app.schemas.ticket import (
-    TicketAutoCreate, TicketUpdate, TicketResolve, TicketCallback,
+    TicketAutoCreate, TicketManualCreate, TicketUpdate, TicketResolve, TicketCallback,
     TicketResponse, TicketListResponse, TicketLogResponse
 )
 from app.middleware.auth import get_current_user, require_operator, CurrentUser
@@ -62,6 +62,36 @@ def auto_create_ticket(req: TicketAutoCreate, db: Session = Depends(get_db)):
     db.refresh(ticket)
 
     return success(data=TicketResponse.model_validate(ticket), message="工单已自动创建")
+
+
+# 手动创建工单
+@router.post("/manual", summary="人工手动创建工单")
+def manual_create_ticket(
+    req: TicketManualCreate,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    ticket = Ticket(
+        ticket_no=generate_ticket_no(db),
+        title=req.title,
+        description=req.description or req.title,
+        source="manual",
+        status="pending",
+        priority=req.priority.value,
+        reporter_id=current_user.id,
+        reporter_name=current_user.name,
+    )
+    db.add(ticket)
+    db.flush()
+
+    add_log(db, ticket.id, action="created",
+            operator_id=current_user.id,
+            operator_name=current_user.username,
+            content=f"人工创建工单：{req.title}")
+    db.commit()
+    db.refresh(ticket)
+
+    return success(data=TicketResponse.model_validate(ticket), message="工单已创建")
 
 
 # OPS-15: 查询工单列表

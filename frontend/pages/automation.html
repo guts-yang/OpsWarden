@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Automation Rules | OpsWarden</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#4edea3",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed": "#6ffbbe",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#263143",
+              "primary-fixed": "#d8e2ff",
+              "outline-variant": "#c2c6d6",
+              "surface-container-high": "#dee8ff",
+              "tertiary": "#4d5d73",
+              "on-tertiary-container": "#fdfcff",
+              "on-tertiary-fixed": "#0b1c30",
+              "surface-container": "#e7eeff",
+              "on-secondary-fixed-variant": "#005236",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#424754",
+              "secondary-container": "#6cf8bb",
+              "tertiary-container": "#66768d",
+              "surface": "#f9f9ff",
+              "inverse-primary": "#adc6ff",
+              "primary-container": "#2170e4",
+              "inverse-on-surface": "#ecf1ff",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f9f9ff",
+              "background": "#f9f9ff",
+              "tertiary-fixed-dim": "#b7c8e1",
+              "on-surface": "#111c2d",
+              "surface-dim": "#cfdaf2",
+              "tertiary-fixed": "#d3e4fe",
+              "on-secondary-container": "#00714d",
+              "primary": "#0058be",
+              "surface-container-highest": "#d8e3fb",
+              "on-error": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#f0f3ff",
+              "on-tertiary-fixed-variant": "#38485d",
+              "error": "#ba1a1a",
+              "on-secondary-fixed": "#002113",
+              "primary-fixed-dim": "#adc6ff",
+              "secondary": "#006c49",
+              "outline": "#727785",
+              "on-primary-fixed": "#001a42",
+              "surface-tint": "#005ac2",
+              "surface-variant": "#d8e3fb",
+              "error-container": "#ffdad6",
+              "on-background": "#111c2d",
+              "on-primary-container": "#fefcff",
+              "on-primary-fixed-variant": "#004395"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'Inter', sans-serif; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .lithic-layer {
+        box-shadow: 0 12px 40px rgba(17, 28, 45, 0.04);
+      }
+      .bg-gradient-primary {
+        background: linear-gradient(135deg, #0058be 0%, #2170e4 100%);
+      }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- SideNavBar (Shared Component) -->
+<aside class="flex flex-col fixed left-0 top-0 h-screen py-4 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/20 dark:border-slate-800/20 w-64 z-50">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm" data-icon="security">security</span>
+</div>
+<div>
+<h1 class="text-lg font-bold text-slate-900 dark:text-slate-100 leading-none">OpsWarden</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mt-1">Intelligent Sentinel</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="hub">hub</span> Network
+            </a>
+<a class="flex items-center px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dns">dns</span> Nodes
+            </a>
+<!-- Active Navigation: Automation -->
+<a class="flex items-center px-4 py-3 text-blue-700 dark:text-blue-400 bg-white dark:bg-slate-950 font-semibold transition-all duration-200 ease-in-out rounded-lg font-['Inter'] text-sm" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings_suggest">settings_suggest</span> Automation
+            </a>
+<a class="flex items-center px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="menu_book">menu_book</span> Documentation
+            </a>
+<a class="flex items-center px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="support_agent">support_agent</span> Support
+            </a>
+<a class="flex items-center px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="layers">layers</span> Applications
+            </a>
+<a class="flex items-center px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="cloud">cloud</span> Cloud
+            </a>
+</nav>
+<div class="px-3 pt-4 border-t border-slate-200/20">
+<a class="flex items-center px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out rounded-lg font-['Inter'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="logout">logout</span> Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-8 h-16 bg-slate-50 dark:bg-slate-950 sticky top-0 z-40">
+<div class="flex items-center flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-900 border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search automation sequences..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-full transition-colors active:scale-95 duration-75">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-full transition-colors active:scale-95 duration-75">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-full transition-colors active:scale-95 duration-75">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="ml-4 flex items-center gap-3 pl-4 border-l border-slate-200">
+<img alt="Operator Profile" class="w-8 h-8 rounded-full object-cover" data-alt="close-up portrait of a professional male systems administrator with short hair and modern glasses in a bright office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXlCqMkpCrAT81bzMT2lAm1Lrlc-RbzuC0CUMc74j-ZMebTGuaa91GpUE2I-nOD066umJWKp4Q6i9GhaWZsbOuB649gQOJ3uHLMgw5THhDU3Xbg1VNgctj-Nbr8WL0SUwAXxv5N3Dfyr26_nc8QmuBgXNUJlM7Pt73wyeV5TptsjLvChNTKyMzp55GSFadz7JkXW1MWSbkmbuzF5FVrrs-lahzoIOzTOLy4KKPgMMYDrYBBNqQqDQsIZgW9P1TNDWID1blNMlgjZI"/>
+<div class="hidden lg:block text-left">
+<p class="text-xs font-bold text-slate-900 dark:text-slate-100 leading-tight">Alex Rivera</p>
+<p class="text-[10px] text-slate-500 font-medium">Lead Operator</p>
+</div>
+</div>
+</div>
+</header>
+<div class="p-8 max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div class="space-y-2">
+<nav class="flex items-center gap-2 text-xs font-medium text-tertiary">
+<span>Console</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary">Automation Rules</span>
+</nav>
+<h2 class="text-3xl font-bold tracking-tight text-on-surface">Automation Rules</h2>
+<p class="text-on-surface-variant max-w-xl">Configure intelligent sentinels to monitor your infrastructure and execute pre-defined recovery workflows.</p>
+</div>
+<div>
+<button class="bg-gradient-primary text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 lithic-layer hover:opacity-90 transition-opacity active:scale-[0.98]">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                        Create New Rule
+                    </button>
+</div>
+</div>
+<!-- Bento-style Stats Grid (Lithic Layering) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
+<p class="text-xs font-bold text-tertiary uppercase tracking-wider mb-2">Total Active Rules</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black text-on-surface">24</span>
+<span class="text-secondary text-xs font-bold flex items-center"><span class="material-symbols-outlined text-xs" data-icon="arrow_upward">arrow_upward</span> 12%</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
+<p class="text-xs font-bold text-tertiary uppercase tracking-wider mb-2">Executions (24h)</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black text-on-surface">1,284</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
+<p class="text-xs font-bold text-tertiary uppercase tracking-wider mb-2">Success Rate</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black text-secondary">99.8%</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
+<p class="text-xs font-bold text-tertiary uppercase tracking-wider mb-2">System Savings</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black text-primary">42h</span>
+<span class="text-on-surface-variant text-xs font-medium">manual work</span>
+</div>
+</div>
+</div>
+<!-- Main Rules Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-8 rounded-full border border-outline-variant/20 hover:border-primary/30 transition-all lithic-layer group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-high rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="memory">memory</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">CPU Threshold Overflow</h3>
+<p class="text-xs text-on-surface-variant font-mono">ID: AR-9021-X</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-lg">
+<p class="text-[10px] uppercase font-bold text-tertiary mb-1">Trigger Condition</p>
+<p class="text-sm font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-error" data-icon="bolt">bolt</span>
+                                    CPU Usage &gt; 90%
+                                </p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg">
+<p class="text-[10px] uppercase font-bold text-tertiary mb-1">Response Action</p>
+<p class="text-sm font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="trending_up">trending_up</span>
+                                    Auto-Scale Node
+                                </p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-surface-container">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-bold text-tertiary">Last Executed</span>
+<span class="text-xs font-medium text-on-surface-variant">2 mins ago • Success</span>
+</div>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-xs text-on-secondary-container" data-icon="check" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-8 rounded-full border border-outline-variant/20 hover:border-primary/30 transition-all lithic-layer group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-high rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="database">database</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Database Read Latency</h3>
+<p class="text-xs text-on-surface-variant font-mono">ID: AR-4412-B</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-lg">
+<p class="text-[10px] uppercase font-bold text-tertiary mb-1">Trigger Condition</p>
+<p class="text-sm font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-error" data-icon="timer">timer</span>
+                                    Latency &gt; 250ms
+                                </p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg">
+<p class="text-[10px] uppercase font-bold text-tertiary mb-1">Response Action</p>
+<p class="text-sm font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="refresh">refresh</span>
+                                    Flush Cache Pool
+                                </p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-surface-container">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-bold text-tertiary">Last Executed</span>
+<span class="text-xs font-medium text-on-surface-variant">4 hours ago • Success</span>
+</div>
+<button class="text-primary text-xs font-bold hover:underline flex items-center gap-1">
+                                View Logs
+                                <span class="material-symbols-outlined text-xs" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-8 rounded-full border border-outline-variant/20 hover:border-primary/30 transition-all lithic-layer group">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-high rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="cloud_done">cloud_done</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-on-surface group-hover:text-primary transition-colors">SSL Certificate Expiry</h3>
+<p class="text-xs text-on-surface-variant font-mono">ID: AR-1105-S</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-lg">
+<p class="text-[10px] uppercase font-bold text-tertiary mb-1">Trigger Condition</p>
+<p class="text-sm font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-on-surface-variant" data-icon="event">event</span>
+                                    Expiry &lt; 30 days
+                                </p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg">
+<p class="text-[10px] uppercase font-bold text-tertiary mb-1">Response Action</p>
+<p class="text-sm font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="sync">sync</span>
+                                    Auto-Renew Let's Encrypt
+                                </p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-surface-container">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-bold text-tertiary">Last Executed</span>
+<span class="text-xs font-medium text-on-surface-variant">Never</span>
+</div>
+<span class="px-2 py-1 bg-surface-container-high text-on-surface-variant text-[10px] font-bold rounded">PENDING</span>
+</div>
+</div>
+</div>
+<!-- Card 4 (Disabled State) -->
+<div class="bg-surface-container-low p-8 rounded-full border border-outline-variant/20 transition-all opacity-75 grayscale-[0.5]">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-highest rounded-xl flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined text-2xl" data-icon="security">security</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-500">Intrusion Detection Response</h3>
+<p class="text-xs text-slate-400 font-mono">ID: AR-0082-Z</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/50 p-4 rounded-lg">
+<p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Trigger Condition</p>
+<p class="text-sm font-semibold text-slate-500 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400" data-icon="shield">shield</span>
+                                    3+ Failed Auth
+                                </p>
+</div>
+<div class="bg-white/50 p-4 rounded-lg">
+<p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Response Action</p>
+<p class="text-sm font-semibold text-slate-500 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400" data-icon="block">block</span>
+                                    Block IP Range
+                                </p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-slate-200">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-bold text-slate-400">Last Executed</span>
+<span class="text-xs font-medium text-slate-400">Paused by Administrator</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Insight Widget (Glassmorphism AI Warden) -->
+<div class="mt-16 bg-white/40 backdrop-blur-xl border border-white/60 p-8 rounded-full flex flex-col md:flex-row items-center gap-8 relative overflow-hidden lithic-layer">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-9xl text-secondary" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="w-16 h-16 bg-secondary-container rounded-full flex items-center justify-center shrink-0 relative">
+<div class="absolute inset-0 bg-secondary rounded-full animate-ping opacity-20"></div>
+<span class="material-symbols-outlined text-3xl text-on-secondary-container" data-icon="smart_toy">smart_toy</span>
+</div>
+<div class="flex-1 space-y-2 relative z-10">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-black tracking-widest uppercase text-secondary">AI Warden Insights</span>
+<span class="w-1.5 h-1.5 bg-secondary rounded-full"></span>
+<span class="text-xs font-bold text-on-surface-variant">Real-time analysis active</span>
+</div>
+<h4 class="text-xl font-bold text-on-surface">Rule Optimization Suggested</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed max-w-2xl">Based on last week's traffic patterns, we recommend lowering the <span class="font-mono text-primary font-bold">CPU Usage</span> trigger from 90% to 82% for the <span class="font-bold">Database Clusters</span> to prevent micro-latencies during peak hours.</p>
+</div>
+<div class="shrink-0 relative z-10">
+<button class="bg-on-surface text-surface py-3 px-6 rounded-xl font-bold hover:bg-slate-800 transition-colors shadow-lg">Apply Suggestion</button>
+</div>
+</div>
+<!-- Bottom Table Logs (Monospace precision) -->
+<div class="mt-20">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-on-surface">Execution Audit Log</h3>
+<button class="text-xs font-bold text-primary hover:bg-primary/5 px-3 py-1 rounded transition-colors">Download Report (CSV)</button>
+</div>
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50">
+<th class="px-6 py-4 text-[10px] font-bold text-tertiary uppercase tracking-wider">Timestamp</th>
+<th class="px-6 py-4 text-[10px] font-bold text-tertiary uppercase tracking-wider">Rule Identifier</th>
+<th class="px-6 py-4 text-[10px] font-bold text-tertiary uppercase tracking-wider">Action Taken</th>
+<th class="px-6 py-4 text-[10px] font-bold text-tertiary uppercase tracking-wider">Duration</th>
+<th class="px-6 py-4 text-[10px] font-bold text-tertiary uppercase tracking-wider text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-white/50 transition-colors">
+<td class="px-6 py-4 font-mono text-xs text-on-surface-variant">2023-11-24 14:02:11</td>
+<td class="px-6 py-4 text-sm font-semibold text-on-surface">CPU Threshold Overflow</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Scaled AWS-EC2-US-EAST-1 (2 Nodes)</td>
+<td class="px-6 py-4 font-mono text-xs text-on-surface-variant">420ms</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center gap-1 text-[10px] font-black text-secondary uppercase bg-secondary-container/30 px-2 py-0.5 rounded">Completed</span>
+</td>
+</tr>
+<tr class="hover:bg-white/50 transition-colors">
+<td class="px-6 py-4 font-mono text-xs text-on-surface-variant">2023-11-24 13:58:45</td>
+<td class="px-6 py-4 text-sm font-semibold text-on-surface">Database Read Latency</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Redis Cache Flush (DB-MAIN-01)</td>
+<td class="px-6 py-4 font-mono text-xs text-on-surface-variant">15ms</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center gap-1 text-[10px] font-black text-secondary uppercase bg-secondary-container/30 px-2 py-0.5 rounded">Completed</span>
+</td>
+</tr>
+<tr class="hover:bg-white/50 transition-colors">
+<td class="px-6 py-4 font-mono text-xs text-on-surface-variant">2023-11-24 13:45:10</td>
+<td class="px-6 py-4 text-sm font-semibold text-on-surface">Disk I/O Peak</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Log Rotation Service</td>
+<td class="px-6 py-4 font-mono text-xs text-on-surface-variant">2.1s</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center gap-1 text-[10px] font-black text-error uppercase bg-error-container/30 px-2 py-0.5 rounded">Retried</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating AI Prompt (FAB) - Suppressed on this detail screen per rules but kept for global if context allowed -->
+<!-- Suppressed: We are in a specific task-focused screen (Rules Configuration) -->
+<script src="api.js"></script>
+<script>
+  requireAuth();
+  bindSidebar();
+</script>
+</body></html>

@@ -9,7 +9,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from database import engine
-from api import auth, account, ticket
+from api import auth, account, ticket, analytics
 
 # 直接导入异常处理函数
 from middleware.exception import (
@@ -44,6 +44,7 @@ app.add_exception_handler(Exception, general_exception_handler)
 app.include_router(auth.router)
 app.include_router(account.router)
 app.include_router(ticket.router)
+app.include_router(analytics.router)
 
 
 @app.get("/", tags=["系统"])

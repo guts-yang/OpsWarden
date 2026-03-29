@@ -130,6 +130,40 @@ async function createAutoTicket(title, description = '', reporterName = '') {
   });
 }
 
+async function createManualTicket(title, description = '', priority = 'medium') {
+  return request('/api/tickets/manual', {
+    method: 'POST',
+    body: JSON.stringify({ title, description, priority }),
+  });
+}
+
+// ─── 个人资料接口 ──────────────────────────────────────────────────────────────
+
+async function getMe() {
+  return request('/api/accounts/me');
+}
+
+async function updateMe(data) {
+  return request('/api/accounts/me', { method: 'PUT', body: JSON.stringify(data) });
+}
+
+async function changePassword(oldPassword, newPassword) {
+  return request('/api/accounts/me/password', {
+    method: 'PATCH',
+    body: JSON.stringify({ old_password: oldPassword, new_password: newPassword }),
+  });
+}
+
+// ─── 数据分析接口 ──────────────────────────────────────────────────────────────
+
+async function getAnalyticsSummary() {
+  return request('/api/analytics/summary');
+}
+
+async function getAnalyticsOperators() {
+  return request('/api/analytics/operators');
+}
+
 // ─── 工具函数 ──────────────────────────────────────────────────────────────────
 
 /** 格式化日期时间为 MM-DD HH:mm */
@@ -178,13 +212,29 @@ const ACCOUNT_STATUS = {
  */
 function bindSidebar() {
   const navMap = [
-    ['Dashboard',    'dashboard.html'],
-    ['Settings',     'accounts.html'],
-    ['Logs',         'tickets.html'],
-    ['System Health','ai_chat.html'],
-    ['Security',     'knowledge_base.html'],
+    ['Dashboard',      'dashboard.html'],
+    ['Overview',       'dashboard.html'],
+    ['Infrastructure', 'dashboard.html'],
+    ['Settings',       'accounts.html'],
+    ['Logs',           'tickets.html'],
+    ['Incidents',      'tickets.html'],
+    ['System Health',  'ai_chat.html'],
+    ['Security',       'knowledge_base.html'],
+    ['Analytics',      'analytics.html'],
+    ['New Ticket',     'ticket_create.html'],
+    ['New Scan',       'ticket_create.html'],
+    ['New Deployment', 'ticket_create.html'],
+    ['Profile',        'profile.html'],
+    ['Assign',         'ticket_assign.html'],
+    ['Network',        'network.html'],
+    ['Nodes',          'nodes.html'],
+    ['Automation',     'automation.html'],
+    ['Documentation',  'documentation.html'],
+    ['Support',        'support.html'],
+    ['Applications',   'applications.html'],
+    ['Cloud',          'cloud.html'],
   ];
-  document.querySelectorAll('aside a, aside div[class*="cursor-pointer"]').forEach(el => {
+  document.querySelectorAll('aside a, aside button, aside div[class*="cursor-pointer"], header a').forEach(el => {
     const text = el.textContent;
     if (text.includes('Logout')) {
       el.style.cursor = 'pointer';
@@ -192,7 +242,14 @@ function bindSidebar() {
       return;
     }
     for (const [label, href] of navMap) {
-      if (text.includes(label)) { el.href = href; break; }
+      if (text.includes(label)) {
+        if (el.tagName === 'BUTTON') {
+          el.addEventListener('click', () => { window.location.href = href; });
+        } else {
+          el.href = href;
+        }
+        break;
+      }
     }
   });
 }

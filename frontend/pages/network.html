@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Network Monitoring - OpsWarden</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#4edea3",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed": "#6ffbbe",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#263143",
+              "primary-fixed": "#d8e2ff",
+              "outline-variant": "#c2c6d6",
+              "surface-container-high": "#dee8ff",
+              "tertiary": "#4d5d73",
+              "on-tertiary-container": "#fdfcff",
+              "on-tertiary-fixed": "#0b1c30",
+              "surface-container": "#e7eeff",
+              "on-secondary-fixed-variant": "#005236",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#424754",
+              "secondary-container": "#6cf8bb",
+              "tertiary-container": "#66768d",
+              "surface": "#f9f9ff",
+              "inverse-primary": "#adc6ff",
+              "primary-container": "#2170e4",
+              "inverse-on-surface": "#ecf1ff",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f9f9ff",
+              "background": "#f9f9ff",
+              "tertiary-fixed-dim": "#b7c8e1",
+              "on-surface": "#111c2d",
+              "surface-dim": "#cfdaf2",
+              "tertiary-fixed": "#d3e4fe",
+              "on-secondary-container": "#00714d",
+              "primary": "#0058be",
+              "surface-container-highest": "#d8e3fb",
+              "on-error": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#f0f3ff",
+              "on-tertiary-fixed-variant": "#38485d",
+              "error": "#ba1a1a",
+              "on-secondary-fixed": "#002113",
+              "primary-fixed-dim": "#adc6ff",
+              "secondary": "#006c49",
+              "outline": "#727785",
+              "on-primary-fixed": "#001a42",
+              "surface-tint": "#005ac2",
+              "surface-variant": "#d8e3fb",
+              "error-container": "#ffdad6",
+              "on-background": "#111c2d",
+              "on-primary-container": "#fefcff",
+              "on-primary-fixed-variant": "#004395"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { backdrop-filter: blur(12px); background: rgba(255, 255, 255, 0.7); }
+        .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<aside class="flex flex-col fixed left-0 top-0 h-screen py-4 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/20 dark:border-slate-800/20 w-64 z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h1 class="text-lg font-bold text-slate-900 dark:text-slate-100">OpsWarden</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Intelligent Sentinel</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-3">
+<!-- Active Tab: Network -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-blue-700 dark:text-blue-400 bg-white dark:bg-slate-950 font-semibold transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-['Inter'] text-sm font-medium">Network</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">dns</span>
+<span class="font-['Inter'] text-sm font-medium">Nodes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings_suggest</span>
+<span class="font-['Inter'] text-sm font-medium">Automation</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-['Inter'] text-sm font-medium">Documentation</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="font-['Inter'] text-sm font-medium">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span class="font-['Inter'] text-sm font-medium">Applications</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">cloud</span>
+<span class="font-['Inter'] text-sm font-medium">Cloud</span>
+</a>
+</nav>
+<div class="mt-auto px-3 border-t border-slate-200/10 pt-4">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:text-error hover:bg-error-container/20 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-['Inter'] text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="flex-1 ml-64 min-h-screen flex flex-col">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-8 h-16 bg-slate-50 dark:bg-slate-950 sticky top-0 z-40">
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary w-64 transition-all" placeholder="Search infrastructure..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-full text-slate-500 hover:bg-slate-200/50 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 rounded-full text-slate-500 hover:bg-slate-200/50 transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="p-2 rounded-full text-slate-500 hover:bg-slate-200/50 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-slate-200"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold text-on-surface leading-none">Alex Rivera</p>
+<p class="text-[10px] text-slate-500 font-medium">System Operator</p>
+</div>
+<img alt="Operator Profile" class="w-10 h-10 rounded-full border-2 border-primary/20 object-cover" data-alt="portrait of a professional system administrator in a modern office with soft natural lighting and neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNX0aJ5qY6eaxHGJ6cJpEa1-4-kgqg9jaEo-J2Sc0z2Y1tqsTRcj6w3m5lu0cXZtPBrj3ZMuUjTCMtvojRMHiiGwHINPdmMB0HT5LDlczMWhVwi3grsMKWJYrcRsP1ItK4ONloEzM-qTDLzI9HmD34vjIP8lPi0XnVTU8A3N6nptk9caElhZNwe-XX53sSZBUqdVMsgqsvjs4Fo8v9rP7cvqhds2CKxtxeeIpB6t17H15s0DLWEhv1I0ligK75jJvNzUTRKbYNBIk"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-8 space-y-8 max-w-[1600px] mx-auto w-full">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Network Monitoring</h2>
+<p class="text-on-surface-variant font-medium mt-1">Real-time infrastructure health and connectivity status.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-surface-container-highest text-primary font-semibold rounded-lg flex items-center gap-2 hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-lg">download</span>
+                        Export Report
+                    </button>
+<button class="px-6 py-2 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-lg shadow-lg hover:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                        New Deployment
+                    </button>
+</div>
+</div>
+<!-- 4-Column Metric Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Traffic -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-transparent hover:border-primary/10 transition-all group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-primary/5 text-primary">
+<span class="material-symbols-outlined">swap_calls</span>
+</div>
+<span class="text-secondary text-xs font-bold mono bg-secondary-container/20 px-2 py-1 rounded-md">+12.4%</span>
+</div>
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Total Traffic</p>
+<h3 class="text-2xl font-black mt-1">4.2 TB/s</h3>
+<div class="mt-4 h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[70%]"></div>
+</div>
+</div>
+<!-- Latency -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-transparent hover:border-primary/10 transition-all group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-secondary/5 text-secondary">
+<span class="material-symbols-outlined">timer</span>
+</div>
+<span class="text-secondary text-xs font-bold mono bg-secondary-container/20 px-2 py-1 rounded-md">Stable</span>
+</div>
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Avg Latency</p>
+<h3 class="text-2xl font-black mt-1">18.5 ms</h3>
+<div class="mt-4 flex gap-1 items-end h-6">
+<div class="w-1 bg-secondary/30 h-2"></div>
+<div class="w-1 bg-secondary/30 h-3"></div>
+<div class="w-1 bg-secondary/30 h-4"></div>
+<div class="w-1 bg-secondary/30 h-2"></div>
+<div class="w-1 bg-secondary h-6"></div>
+<div class="w-1 bg-secondary/30 h-3"></div>
+</div>
+</div>
+<!-- Error Rate -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-transparent hover:border-primary/10 transition-all group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-error/5 text-error">
+<span class="material-symbols-outlined">error_outline</span>
+</div>
+<span class="text-error text-xs font-bold mono bg-error-container/20 px-2 py-1 rounded-md">-0.02%</span>
+</div>
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Error Rate</p>
+<h3 class="text-2xl font-black mt-1">0.04%</h3>
+<p class="text-[10px] text-slate-400 mt-4 italic">Baseline: 0.06%</p>
+</div>
+<!-- Active Connections -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-transparent hover:border-primary/10 transition-all group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-tertiary/5 text-tertiary">
+<span class="material-symbols-outlined">group</span>
+</div>
+<span class="text-primary text-xs font-bold mono bg-primary-container/10 px-2 py-1 rounded-md">Peak</span>
+</div>
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider">Active Nodes</p>
+<h3 class="text-2xl font-black mt-1">14,892</h3>
+<div class="flex -space-x-2 mt-4">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200"></div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-300"></div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-400"></div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-primary text-[8px] flex items-center justify-center text-white">+8</div>
+</div>
+</div>
+</div>
+<!-- Main Layout Grid (Content + Sidebar) -->
+<div class="grid grid-cols-12 gap-8 items-start">
+<!-- Center Column: Topology & Traffic -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Topology Map Visualization -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm relative group">
+<div class="absolute top-6 left-6 z-10 flex flex-col gap-2">
+<div class="glass-panel px-4 py-2 rounded-lg border border-white/40 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="text-xs font-bold text-on-surface uppercase tracking-tighter">Live Global Topology</span>
+</div>
+</div>
+<div class="absolute bottom-6 right-6 z-10 flex gap-2">
+<button class="w-10 h-10 glass-panel rounded-full flex items-center justify-center border border-white/40 hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-slate-700">zoom_in</span>
+</button>
+<button class="w-10 h-10 glass-panel rounded-full flex items-center justify-center border border-white/40 hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-slate-700">zoom_out</span>
+</button>
+<button class="w-10 h-10 glass-panel rounded-full flex items-center justify-center border border-white/40 hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-slate-700">fullscreen</span>
+</button>
+</div>
+<div class="h-[500px] w-full bg-slate-50 flex items-center justify-center overflow-hidden">
+<!-- Placeholder Illustration for Map -->
+<img alt="Network Topology Map" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000" data-alt="abstract digital visualization of a global network with blue glowing interconnected nodes and lines over a stylized map background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdf4LR0GE_JRUyP2yLsegN_nfXHKBmvvSBvfR_U2pCyhalLY2Y5Iy-Rsc38TfTRm2B1nkHjHSq7kwo1lHFV3-6MWA8yY11X7--d9d4sIRnh8lIMNfmBGr74lphMT2BkehNf6XcJCdJmVRHWKWLQ9tl5B3YtpdCe4W0Gm_XWzJXb6RCFl594g65RI6ls_iRo2UcGMyHLlkbsy8ZsD06Aj5Sz8JTCsVPfozLMcKQo4gFW35eOvDnAJKYVhp3-p5JcvB11X9IWOS_Ma8"/>
+</div>
+</div>
+<!-- Real-Time Traffic Graph -->
+<div class="bg-surface-container-low p-8 rounded-2xl border border-primary/5">
+<div class="flex justify-between items-center mb-8">
+<h4 class="font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                                Bandwidth Throughput
+                            </h4>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-xs font-medium text-on-surface-variant">Ingress</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-xs font-medium text-on-surface-variant">Egress</span>
+</div>
+<select class="text-xs border-none bg-surface-container-lowest rounded-lg py-1 pl-2 pr-8 font-semibold">
+<option>Last 60 Minutes</option>
+<option>Last 24 Hours</option>
+</select>
+</div>
+</div>
+<div class="h-48 w-full flex items-end justify-between gap-1">
+<!-- Simplified CSS-only graph representation -->
+<div class="w-full bg-primary/20 h-12 rounded-t-sm relative group"><div class="absolute bottom-0 w-full bg-primary h-2/3 rounded-t-sm group-hover:h-3/4 transition-all"></div></div>
+<div class="w-full bg-primary/20 h-16 rounded-t-sm relative group"><div class="absolute bottom-0 w-full bg-primary h-1/2 rounded-t-sm group-hover:h-2/3 transition-all"></div></div>
+<div class="w-full bg-primary/20 h-24 rounded-t-sm relative group"><div class="absolute bottom-0 w-full bg-primary h-3/4 rounded-t-sm group-hover:h-5/6 transition-all"></div></div>
+<div class="w-full bg-primary/20 h-32 rounded-t-sm relative group"><div class="absolute bottom-0 w-full bg-primary h-2/3 rounded-t-sm group-hover:h-3/4 transition-all"></div></div>
+<div class="w-full bg-primary/20 h-28 rounded-t-sm relative group"><div class="absolute bottom-0 w-full bg-primary h-4/5 rounded-t-sm group-hover:h-full transition-all"></div></div>
+<div class="w-full bg-primary/20 h-40 rounded-t-sm relative group"><div class="absolute bottom-0 w-full bg-primary h-3/5 rounded-t-sm group-hover:h-4/5 transition-all"></div></div>
+<div class="w-full bg-primary/20 h-36 rounded-t-sm relative group"><div class="absolute bottom-0 w-full bg-primary h-5/6 rounded-t-sm group-hover:h-full transition-all"></div></div>
+<div class="w-full bg-primary/20 h-44 rounded-t-sm relative group"><div class="absolute bottom-0 w-full bg-primary h-1/2 rounded-t-sm group-hover:h-2/3 transition-all"></div></div>
+<div class="w-full bg-primary/20 h-32 rounded-t-sm relative group"><div class="absolute bottom-0 w-full bg-primary h-3/4 rounded-t-sm group-hover:h-5/6 transition-all"></div></div>
+<div class="w-full bg-primary/20 h-20 rounded-t-sm relative group"><div class="absolute bottom-0 w-full bg-primary h-2/3 rounded-t-sm group-hover:h-3/4 transition-all"></div></div>
+</div>
+<div class="flex justify-between mt-4 border-t border-slate-200 pt-4 px-2">
+<span class="text-[10px] mono text-slate-400">14:00</span>
+<span class="text-[10px] mono text-slate-400">14:15</span>
+<span class="text-[10px] mono text-slate-400">14:30</span>
+<span class="text-[10px] mono text-slate-400">14:45</span>
+<span class="text-[10px] mono text-slate-400">15:00</span>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Incidents & Bandwidth Usage -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<!-- AI Insights Chip -->
+<div class="bg-secondary-container/10 border border-secondary/20 p-4 rounded-xl flex items-start gap-4 animate-pulse-subtle">
+<div class="bg-secondary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined text-lg">bolt</span>
+</div>
+<div>
+<p class="text-xs font-black text-secondary uppercase tracking-widest">Warden Insight</p>
+<p class="text-sm text-on-surface-variant mt-1">Routing optimization available for APAC regions. Potential latency reduction: <span class="font-bold text-secondary">4.2ms</span>.</p>
+</div>
+</div>
+<!-- Recent Incidents -->
+<div class="bg-surface-container-low rounded-2xl p-6">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-bold">Recent Incidents</h4>
+<button class="text-primary text-xs font-bold hover:underline">View All</button>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4">
+<div class="w-2 h-10 rounded-full bg-error"></div>
+<div class="flex-1">
+<p class="text-sm font-bold leading-none">BGP Route Flapping</p>
+<p class="text-[11px] text-slate-500 mt-1 mono">AS-64512 • 4m ago</p>
+</div>
+<div class="p-2 bg-surface rounded-lg">
+<span class="material-symbols-outlined text-slate-400 text-lg">chevron_right</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4">
+<div class="w-2 h-10 rounded-full bg-orange-400"></div>
+<div class="flex-1">
+<p class="text-sm font-bold leading-none">High Disk I/O Wait</p>
+<p class="text-[11px] text-slate-500 mt-1 mono">node-tx-04 • 12m ago</p>
+</div>
+<div class="p-2 bg-surface rounded-lg">
+<span class="material-symbols-outlined text-slate-400 text-lg">chevron_right</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4">
+<div class="w-2 h-10 rounded-full bg-secondary"></div>
+<div class="flex-1">
+<p class="text-sm font-bold leading-none">SSL Certificate Renewed</p>
+<p class="text-[11px] text-slate-500 mt-1 mono">api.internal • 1h ago</p>
+</div>
+<div class="p-2 bg-surface rounded-lg text-secondary">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Usage by Node -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-slate-100">
+<h4 class="font-bold mb-6">Bandwidth by Region</h4>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between text-xs font-bold mb-2">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-slate-400">public</span>
+                                        North America (US-East)
+                                    </span>
+<span class="mono">2.1 GB/s</span>
+</div>
+<div class="h-1.5 w-full bg-slate-100 rounded-full">
+<div class="h-full bg-primary rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-bold mb-2">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-slate-400">public</span>
+                                        Europe (EU-West)
+                                    </span>
+<span class="mono">1.4 GB/s</span>
+</div>
+<div class="h-1.5 w-full bg-slate-100 rounded-full">
+<div class="h-full bg-primary/60 rounded-full" style="width: 62%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-bold mb-2">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-slate-400">public</span>
+                                        Asia Pacific (AP-South)
+                                    </span>
+<span class="mono">0.7 GB/s</span>
+</div>
+<div class="h-1.5 w-full bg-slate-100 rounded-full">
+<div class="h-full bg-primary/40 rounded-full" style="width: 38%"></div>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 py-3 rounded-xl border border-dashed border-slate-300 text-slate-500 text-xs font-bold hover:bg-slate-50 hover:border-primary transition-all">
+                            Add Custom View
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script src="api.js"></script>
+<script>
+  requireAuth();
+  bindSidebar();
+</script>
+</body></html>
