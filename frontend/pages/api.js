@@ -160,8 +160,32 @@ async function getAnalyticsSummary() {
   return request('/api/analytics/summary');
 }
 
-async function getAnalyticsOperators() {
-  return request('/api/analytics/operators');
+// ─── 知识库接口 ────────────────────────────────────────────────────────────────
+
+async function getKBEntries(params = {}) {
+  return request(`/api/knowledge${buildQuery(params)}`);
+}
+
+async function getKBStats() {
+  return request('/api/knowledge/stats');
+}
+
+async function createKBEntry(data) {
+  return request('/api/knowledge', { method: 'POST', body: JSON.stringify(data) });
+}
+
+async function updateKBEntry(id, data) {
+  return request(`/api/knowledge/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+}
+
+async function deleteKBEntry(id) {
+  return request(`/api/knowledge/${id}`, { method: 'DELETE' });
+}
+
+// ─── AI问答接口 ────────────────────────────────────────────────────────────────
+
+async function sendChatMessage(query) {
+  return request('/api/chat', { method: 'POST', body: JSON.stringify({ query }) });
 }
 
 // ─── 工具函数 ──────────────────────────────────────────────────────────────────
@@ -212,31 +236,24 @@ const ACCOUNT_STATUS = {
  */
 function bindSidebar() {
   const navMap = [
+    // Chinese labels (stitch pages)
+    ['仪表盘',   'dashboard.html'],
+    ['AI 问答',  'ai_chat.html'],
+    ['账号管理', 'accounts.html'],
+    ['工单系统', 'tickets.html'],
+    ['知识库',   'knowledge_base.html'],
+    // English fallback
     ['Dashboard',      'dashboard.html'],
     ['Overview',       'dashboard.html'],
     ['Infrastructure', 'dashboard.html'],
     ['Settings',       'accounts.html'],
     ['Logs',           'tickets.html'],
-    ['Incidents',      'tickets.html'],
-    ['System Health',  'ai_chat.html'],
+    ['AI Chat',        'ai_chat.html'],
     ['Security',       'knowledge_base.html'],
-    ['Analytics',      'analytics.html'],
-    ['New Ticket',     'ticket_create.html'],
-    ['New Scan',       'ticket_create.html'],
-    ['New Deployment', 'ticket_create.html'],
-    ['Profile',        'profile.html'],
-    ['Assign',         'ticket_assign.html'],
-    ['Network',        'network.html'],
-    ['Nodes',          'nodes.html'],
-    ['Automation',     'automation.html'],
-    ['Documentation',  'documentation.html'],
-    ['Support',        'support.html'],
-    ['Applications',   'applications.html'],
-    ['Cloud',          'cloud.html'],
   ];
   document.querySelectorAll('aside a, aside button, aside div[class*="cursor-pointer"], header a').forEach(el => {
     const text = el.textContent;
-    if (text.includes('Logout')) {
+    if (text.includes('退出登录') || text.includes('Logout')) {
       el.style.cursor = 'pointer';
       el.addEventListener('click', (e) => { e.preventDefault(); logout(); });
       return;

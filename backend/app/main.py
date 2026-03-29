@@ -2,14 +2,17 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy import text
+import logging
 import sys
 import os
+
+logger = logging.getLogger(__name__)
 
 # 确保能找到 app 模块
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from database import engine
-from api import auth, account, ticket, analytics
+from api import auth, account, ticket, analytics, knowledge, chat
 
 # 直接导入异常处理函数
 from middleware.exception import (
@@ -45,6 +48,22 @@ app.include_router(auth.router)
 app.include_router(account.router)
 app.include_router(ticket.router)
 app.include_router(analytics.router)
+app.include_router(knowledge.router)
+app.include_router(chat.router)
+
+
+
+@app.on_event("startup")
+def startup_event():
+    from database import SessionLocal
+    from app.rag.faq_loader import load_faq_if_empty
+    db = SessionLocal()
+    try:
+        load_faq_if_empty(db)
+    except Exception as e:
+        logger.warning(f"FAQ 加载失败（不影响服务启动）：{e}")
+    finally:
+        db.close()
 
 
 @app.get("/", tags=["系统"])
@@ -60,4 +79,13 @@ def health_check():
         db_status = "connected"
     except Exception as e:
         db_status = f"error: {str(e)}"
-    return {"status": "healthy", "database": db_status}
+
+    try:
+        from app.rag.retriever import collection_count
+        chroma_docs = collection_count()
+        chroma_status = "connected"
+    except Exception as e:
+        chroma_status = f"error: {str(e)}"
+        chroma_docs = -1
+
+    return {"status": "healthy", "database": db_status, "chroma": chroma_status, "chroma_docs": chroma_docs}

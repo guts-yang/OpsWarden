@@ -5,6 +5,7 @@ from datetime import datetime
 
 from app.database import get_db
 from app.models.ticket import Ticket, TicketLog
+from app.models.knowledge import KBEntry
 from app.schemas.ticket import (
     TicketAutoCreate, TicketManualCreate, TicketUpdate, TicketResolve, TicketCallback,
     TicketResponse, TicketListResponse, TicketLogResponse
@@ -79,7 +80,7 @@ def manual_create_ticket(
         status="pending",
         priority=req.priority.value,
         reporter_id=current_user.id,
-        reporter_name=current_user.name,
+        reporter_name=current_user.username,
     )
     db.add(ticket)
     db.flush()
@@ -193,10 +194,18 @@ def resolve_ticket(ticket_id: int, req: TicketResolve, db: Session = Depends(get
 
     if req.write_back:
         ticket.is_written_back = 1
+        kb_entry = KBEntry(
+            category="其他",
+            question=ticket.title,
+            solution=req.solution,
+            source="ticket_writeback",
+            match_score=0.8,
+        )
+        db.add(kb_entry)
         add_log(db, ticket.id, action="writeback",
                 operator_id=current_user.id,
                 operator_name=current_user.username,
-                content="解决方案已标记回写知识库")
+                content="解决方案已回写知识库")
 
     db.commit()
     db.refresh(ticket)

@@ -3,239 +3,165 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OpsWarden - 登录</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
             colors: {
-              "on-primary": "#ffffff",
-              "surface-variant": "#d8e3fb",
-              "surface-container-lowest": "#ffffff",
-              "surface-container-high": "#dee8ff",
-              "primary-fixed": "#d8e2ff",
-              "surface-container": "#e7eeff",
-              "primary": "#0058be",
-              "outline-variant": "#c2c6d6",
-              "inverse-surface": "#263143",
-              "on-tertiary-fixed": "#0b1c30",
-              "tertiary-container": "#66768d",
-              "inverse-primary": "#adc6ff",
-              "tertiary": "#4d5d73",
-              "inverse-on-surface": "#ecf1ff",
-              "surface-tint": "#005ac2",
-              "on-tertiary-container": "#fdfcff",
-              "on-secondary-fixed-variant": "#005236",
-              "secondary-fixed-dim": "#4edea3",
-              "primary-container": "#2170e4",
-              "on-secondary-fixed": "#002113",
-              "on-background": "#111c2d",
-              "tertiary-fixed": "#d3e4fe",
-              "surface-container-highest": "#d8e3fb",
-              "surface": "#f9f9ff",
-              "on-surface-variant": "#424754",
-              "primary-fixed-dim": "#adc6ff",
-              "on-secondary-container": "#00714d",
-              "on-tertiary": "#ffffff",
-              "on-tertiary-fixed-variant": "#38485d",
-              "secondary": "#006c49",
-              "on-primary-container": "#fefcff",
-              "secondary-container": "#6cf8bb",
-              "on-primary-fixed-variant": "#004395",
-              "surface-container-low": "#f0f3ff",
-              "secondary-fixed": "#6ffbbe",
-              "on-error-container": "#93000a",
-              "background": "#f9f9ff",
-              "on-secondary": "#ffffff",
-              "surface-dim": "#cfdaf2",
-              "on-error": "#ffffff",
-              "outline": "#727785",
-              "on-primary-fixed": "#001a42",
-              "error": "#ba1a1a",
-              "error-container": "#ffdad6",
-              "surface-bright": "#f9f9ff",
-              "on-surface": "#111c2d",
-              "tertiary-fixed-dim": "#b7c8e1"
+              "on-primary-container": "#525151",
+              "surface-variant": "#dbe4e7",
+              "outline": "#737c7f",
+              "surface-tint": "#5f5e5e",
+              "secondary": "#0053dc",
+              "on-secondary-fixed": "#003798",
+              "on-error-container": "#752121",
+              "surface-container-low": "#f1f4f6",
+              "surface-container-highest": "#dbe4e7",
+              "on-error": "#fff7f6",
+              "surface-dim": "#d1dce0",
+              "tertiary-fixed-dim": "#73f08c",
+              "background": "#f8f9fa",
+              "surface": "#f8f9fa",
+              "secondary-container": "#dbe1ff",
+              "on-secondary-fixed-variant": "#0050d4",
+              "surface-container-high": "#e3e9ec",
+              "primary-fixed": "#e5e2e1",
+              "on-primary-fixed-variant": "#5c5b5b",
+              "on-background": "#2b3437",
+              "error-container": "#fe8983",
+              "secondary-dim": "#0049c2",
+              "on-primary-fixed": "#403f3f",
+              "primary-fixed-dim": "#d6d4d3",
+              "primary-dim": "#535252",
+              "error": "#9f403d",
+              "on-tertiary-fixed-variant": "#006c2d",
+              "primary": "#5f5e5e",
+              "error-dim": "#4e0309",
+              "on-secondary-container": "#0048bf",
+              "tertiary-fixed": "#82ff99",
+              "on-surface": "#2b3437",
+              "surface-bright": "#f8f9fa",
+              "on-secondary": "#faf8ff",
+              "primary-container": "#e5e2e1",
+              "inverse-on-surface": "#9b9d9e",
+              "inverse-primary": "#ffffff",
+              "tertiary-container": "#82ff99",
+              "tertiary-dim": "#006127",
+              "on-surface-variant": "#586064",
+              "on-tertiary": "#e9ffe6",
+              "on-tertiary-fixed": "#004c1d",
+              "surface-container": "#eaeff1",
+              "tertiary": "#006e2e",
+              "on-tertiary-container": "#006127",
+              "outline-variant": "#abb3b7",
+              "inverse-surface": "#0c0f10",
+              "on-primary": "#faf7f6",
+              "secondary-fixed-dim": "#c7d3ff",
+              "secondary-fixed": "#dbe1ff",
+              "surface-container-lowest": "#ffffff"
             },
             fontFamily: {
-              "headline": ["Inter", "sans-serif"],
-              "body": ["Inter", "sans-serif"],
-              "label": ["Inter", "sans-serif"]
+              "headline": ["Inter", "system-ui", "sans-serif"],
+              "body": ["Inter", "system-ui", "sans-serif"],
+              "label": ["Inter", "system-ui", "sans-serif"]
             },
-            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+            borderRadius: {
+              "DEFAULT": "0.125rem",
+              "lg": "0.25rem",
+              "xl": "0.5rem",
+              "full": "9999px"
+            },
           },
         },
       }
     </script>
 <style>
-        .dot-grid {
-            background-image: radial-gradient(#c2c6d6 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
-        }
-        .lithic-layering {
-            background: linear-gradient(135deg, #f0f3ff 0%, #e7eeff 100%);
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
+        body { font-family: 'Inter', 'Microsoft YaHei', 'PingFang SC', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20; vertical-align: middle; }
+        .ghost-border { border: 1px solid rgba(171, 179, 183, 0.15); }
     </style>
 </head>
-<body class="bg-surface font-body text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
-<main class="flex min-h-screen">
-<section class="hidden lg:flex lg:w-[55%] dot-grid bg-surface-container-low relative flex-col justify-center px-16 xl:px-24">
-<div class="relative z-10 max-w-xl">
-<div class="mb-8 flex items-center gap-3">
-<div class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-on-primary">
-<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">hexagon</span>
-</div>
-<span class="text-4xl font-extrabold tracking-tighter text-primary font-headline">OpsWarden</span>
-</div>
-<h1 class="text-5xl xl:text-6xl font-bold text-on-background tracking-tight leading-tight mb-6">
-                    AI-Powered Operations <br/>
-<span class="text-tertiary">Digital Employee</span>
-</h1>
-<p class="text-on-surface-variant text-lg mb-12 max-w-md">
-                    下一代智能运维中枢，通过 AI 驱动的自动化流程提升系统稳定性与运维效率。
-                </p>
-<div class="flex flex-wrap gap-3">
-<div class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2.5 rounded-full shadow-sm">
-<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-<span class="text-sm font-semibold text-on-surface">智能问答</span>
-</div>
-<div class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2.5 rounded-full shadow-sm">
-<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">manage_accounts</span>
-<span class="text-sm font-semibold text-on-surface">账号管理</span>
-</div>
-<div class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2.5 rounded-full shadow-sm">
-<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">robot_2</span>
-<span class="text-sm font-semibold text-on-surface">工单自动化</span>
-</div>
-</div>
-</div>
-<div class="absolute bottom-12 left-16 xl:left-24 flex items-center gap-6 text-outline">
-<div class="flex -space-x-3">
-<img class="h-10 w-10 rounded-full border-2 border-surface shadow-sm object-cover" data-alt="close-up portrait of professional female engineer in high-key lighting environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJvrBpibL8go6UwsSCvW4r0du9JKiaeYowGE9xF4BaF_pOfoqbQk7BKMSsShsZ1LpAlRljx5_nlvw3PtV4UzvZX0rBgOGAw0taHSA4LnmA78gQCb7tgRpQmIz34JnCcsT0m86uyHVEJoKiMVTraayonFCzuzTP6yEmql3oAeQdszVS7DWp8h9FKy3G_jqLB4q8fbmawBBzGdSisD8V6kOgBbd8kdzNzMuSPWBeXj6c3q68_qGllYrX1wsEC44wcfKXy3elDBc7FMw"/>
-<img class="h-10 w-10 rounded-full border-2 border-surface shadow-sm object-cover" data-alt="professional male developer smiling in a bright office setting with soft background bokeh" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuGt3VmYh8IR4pkpxohLriyO46ry6Lp-JygRJ2ybBNSNhdIx4ZXGFep_QrRh5CzkgiirJs8GGsAg_6VKe23vx_L_Rtz5QQbpdxNYC44Eh65alMv_YJTtx6IHQZvv4hXhWLjcuirwk7fUy3x6HrzkpD84U_7SfYAPDXpueapltW6KPg7Fbj4xyfy6KpwjlB9IxDjI9BDMRPLgt-txWWmdRxXTRMcJzD9o5zDNJY4Jr5W78QQQTMQYJFJ_piZMSd0ovNgazG7OySJTU"/>
-<img class="h-10 w-10 rounded-full border-2 border-surface shadow-sm object-cover" data-alt="corporate headshot of confident business leader against a clean neutral wall background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzD7Smq5ZwYQ4k4K4boJCpjBZPZKJAY6P-E9Qnd7y1X4QBUIM1MksfkWwp9iX-TI_RDI_RiPQmfrBU2BIqwIa03h3ZnG9gyQO7ValOkX_KzFFH9ClKhI3Vf9Uf7zRBKmgMfuUC_LanshZKtygMrZKKpPQ5ajuNJzZs0sKSpOMaezx2yEGnG4oQ1_R3RQIai83Vf_IBoKUUdpyWYnoe--dEFC9sdDYRJ1PXRCr25GMfXUv3ZCIBMZNU2WGL1kVgTH_oHCMDTkbLPfE"/>
-</div>
-<p class="text-xs font-medium uppercase tracking-widest">Trusted by 2000+ Teams</p>
-</div>
-</section>
-<section class="flex flex-1 flex-col bg-surface-container-lowest items-center justify-center px-6 lg:w-[45%]">
-<div class="w-full max-w-md">
-<div class="mb-10 text-center lg:text-left">
-<div class="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-container-low lg:mx-0 mx-auto">
-<div class="relative flex items-center justify-center">
-<span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 0;">hexagon</span>
-<span class="absolute text-[10px] font-black text-primary uppercase tracking-tighter">OW</span>
-</div>
-</div>
-<h2 class="text-2xl font-bold text-on-surface tracking-tight mb-2">运维门户登录</h2>
-<p class="text-on-surface-variant text-sm">请输入您的凭据以访问控制台</p>
-</div>
-<form class="space-y-6" onsubmit="return false;">
-<div class="space-y-1.5">
-<label class="text-xs font-bold text-on-surface-variant ml-1 uppercase tracking-wider" for="username">工号 / 用户名</label>
-<div class="group relative">
-<div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-outline group-focus-within:text-primary transition-colors">
-<span class="material-symbols-outlined text-xl">person</span>
-</div>
-<input class="block w-full rounded-xl bg-surface-container-low border-transparent px-11 py-3.5 text-on-surface placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none" id="username" name="username" placeholder="请输入工号或用户名" type="text"/>
-</div>
-</div>
-<div class="space-y-1.5">
-<div class="flex items-center justify-between ml-1">
-<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider" for="password">密码</label>
-<a class="text-xs font-semibold text-primary hover:text-primary-container transition-colors" href="#">忘记密码?</a>
-</div>
-<div class="group relative">
-<div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-outline group-focus-within:text-primary transition-colors">
-<span class="material-symbols-outlined text-xl">lock</span>
-</div>
-<input class="block w-full rounded-xl bg-surface-container-low border-transparent px-11 py-3.5 text-on-surface placeholder:text-outline focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none" id="password" name="password" placeholder="请输入您的密码" type="password"/>
-<div class="absolute inset-y-0 right-0 flex items-center pr-4">
-<button class="text-outline hover:text-on-surface-variant" type="button">
-<span class="material-symbols-outlined text-xl">visibility_off</span>
-</button>
-</div>
-</div>
-</div>
-<div class="flex items-center">
-<input class="h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary/30 transition-all cursor-pointer bg-surface-container-low" id="remember-me" name="remember-me" type="checkbox"/>
-<label class="ml-3 block text-sm font-medium text-on-surface-variant cursor-pointer" for="remember-me">记住我</label>
-</div>
-<button class="group relative flex w-full items-center justify-center overflow-hidden rounded-xl bg-primary px-6 py-4 text-sm font-bold text-on-primary transition-all active:scale-[0.98] hover:bg-primary-container shadow-md shadow-primary/10" type="submit">
-<span class="relative z-10 flex items-center gap-2">
-                            登录系统
-                            <span class="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1">arrow_forward</span>
-</span>
-</button>
-</form>
-<div class="mt-12 text-center">
-<div class="inline-flex items-center gap-3 rounded-full bg-surface-container-low px-5 py-2.5">
-<span class="material-symbols-outlined text-tertiary text-lg">support_agent</span>
-<p class="text-xs font-medium text-on-surface-variant">
-                            遇到问题？联系运维热线 <span class="text-on-background font-bold ml-1">400-XXX-XXXX</span>
-</p>
-</div>
-</div>
-</div>
-<footer class="mt-20 flex gap-8 text-[11px] font-bold text-outline uppercase tracking-[0.2em]">
-<a class="hover:text-on-surface transition-colors" href="#">Privacy Policy</a>
-<a class="hover:text-on-surface transition-colors" href="#">Terms of Service</a>
-<span>© 2024 OpsWarden</span>
-</footer>
-</section>
+<body class="bg-background min-h-screen flex items-center justify-center p-4">
+<main class="w-[400px] bg-surface-container-lowest ghost-border rounded-xl shadow-sm p-8 flex flex-col gap-8">
+  <header class="flex items-center gap-2">
+    <div class="w-5 h-5 bg-secondary rounded-full"></div>
+    <span class="text-[18px] font-medium text-on-background tracking-tight">OpsWarden</span>
+  </header>
+  <section>
+    <h1 class="text-[24px] font-medium text-on-background">登录</h1>
+    <p class="text-[14px] text-outline mt-1">运维管理平台</p>
+  </section>
+  <form id="login-form" class="flex flex-col gap-5">
+    <div class="flex flex-col gap-1.5">
+      <label class="text-[13px] text-on-surface-variant font-medium" for="employee-id">工号</label>
+      <input class="h-10 px-3 bg-surface-container-lowest border border-outline-variant/30 rounded-xl text-[14px] focus:ring-2 focus:ring-secondary/20 focus:border-secondary outline-none transition-all placeholder:text-outline-variant" id="employee-id" placeholder="请输入工号" type="text" autocomplete="username"/>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label class="text-[13px] text-on-surface-variant font-medium" for="password">密码</label>
+      <div class="relative">
+        <input class="w-full h-10 px-3 pr-10 bg-surface-container-lowest border border-outline-variant/30 rounded-xl text-[14px] focus:ring-2 focus:ring-secondary/20 focus:border-secondary outline-none transition-all placeholder:text-outline-variant" id="password" placeholder="请输入密码" type="password" autocomplete="current-password"/>
+        <button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-on-surface-variant transition-colors" id="toggle-pw" type="button">
+          <span class="material-symbols-outlined text-[20px]" id="pw-icon">visibility</span>
+        </button>
+      </div>
+    </div>
+    <div id="error-msg" class="hidden text-[13px] text-red-600 bg-red-50 px-3 py-2 rounded-lg"></div>
+    <button class="w-full h-10 bg-[#1A1A1A] hover:bg-on-background text-white text-[14px] font-medium rounded-xl transition-all active:scale-[0.98] shadow-sm flex items-center justify-center gap-2" id="submit-btn" type="submit">
+      <span id="btn-text">登录</span>
+    </button>
+  </form>
+  <footer class="text-center">
+    <p class="text-[12px] text-outline">遇到问题请联系运维</p>
+  </footer>
 </main>
+<div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+  <div class="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-surface-container-low rounded-full blur-[120px] opacity-50"></div>
+  <div class="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-surface-container-low rounded-full blur-[120px] opacity-50"></div>
+</div>
 <script src="api.js"></script>
 <script>
-  // 已登录则跳转 dashboard
   if (getToken()) window.location.href = 'dashboard.html';
 
-  // 密码可见性切换
-  document.querySelector('button[type="button"]').addEventListener('click', function () {
-    const pwd = document.getElementById('password');
-    const icon = this.querySelector('span');
-    if (pwd.type === 'password') { pwd.type = 'text'; icon.textContent = 'visibility'; }
-    else { pwd.type = 'password'; icon.textContent = 'visibility_off'; }
+  document.getElementById('toggle-pw').addEventListener('click', () => {
+    const pw = document.getElementById('password');
+    const icon = document.getElementById('pw-icon');
+    if (pw.type === 'password') { pw.type = 'text'; icon.textContent = 'visibility_off'; }
+    else { pw.type = 'password'; icon.textContent = 'visibility'; }
   });
 
-  // 错误提示元素
-  const errEl = document.createElement('p');
-  errEl.className = 'text-xs text-error text-center mt-1 hidden';
-  document.querySelector('form').insertBefore(errEl, document.querySelector('button[type="submit"]'));
-
-  function showError(msg) { errEl.textContent = msg; errEl.classList.remove('hidden'); }
-  function hideError() { errEl.classList.add('hidden'); }
-
-  document.querySelector('form').addEventListener('submit', async (e) => {
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    hideError();
-    const username = document.getElementById('username').value.trim();
+    const username = document.getElementById('employee-id').value.trim();
     const password = document.getElementById('password').value;
-    if (!username || !password) { showError('请输入用户名和密码'); return; }
+    const errEl = document.getElementById('error-msg');
+    const btnText = document.getElementById('btn-text');
+    const btn = document.getElementById('submit-btn');
 
-    const btn = document.querySelector('button[type="submit"]');
-    const btnText = btn.querySelector('span:first-child');
+    if (!username || !password) {
+      errEl.textContent = '请输入工号和密码';
+      errEl.classList.remove('hidden');
+      return;
+    }
     btn.disabled = true;
     btnText.textContent = '登录中...';
+    errEl.classList.add('hidden');
 
     try {
       const res = await login(username, password);
-      localStorage.setItem('ow_token', res.data.access_token);
-      localStorage.setItem('ow_user', JSON.stringify({
-        id: res.data.user_id, username: res.data.username,
-        name: res.data.name, role: res.data.role,
-      }));
+      const d = res.data;
+      localStorage.setItem('ow_token', d.access_token);
+      localStorage.setItem('ow_user', JSON.stringify({ id: d.user_id, username: d.username, name: d.name, role: d.role }));
       window.location.href = 'dashboard.html';
     } catch (err) {
-      showError(err.message || '登录失败');
+      errEl.textContent = err.message || '登录失败，请检查工号和密码';
+      errEl.classList.remove('hidden');
       btn.disabled = false;
-      btnText.textContent = '登录系统';
+      btnText.textContent = '登录';
     }
   });
 </script>

@@ -1,556 +1,495 @@
 <!DOCTYPE html>
-
-<html lang="zh-CN"><head>
+<html lang="zh-CN">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>工单系统 - OpsWarden</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "on-primary": "#ffffff",
-              "surface-variant": "#d8e3fb",
-              "surface-container-lowest": "#ffffff",
-              "surface-container-high": "#dee8ff",
-              "primary-fixed": "#d8e2ff",
-              "surface-container": "#e7eeff",
-              "primary": "#0058be",
-              "outline-variant": "#c2c6d6",
-              "inverse-surface": "#263143",
-              "on-tertiary-fixed": "#0b1c30",
-              "tertiary-container": "#66768d",
-              "inverse-primary": "#adc6ff",
-              "tertiary": "#4d5d73",
-              "inverse-on-surface": "#ecf1ff",
-              "surface-tint": "#005ac2",
-              "on-tertiary-container": "#fdfcff",
-              "on-secondary-fixed-variant": "#005236",
-              "secondary-fixed-dim": "#4edea3",
-              "primary-container": "#2170e4",
-              "on-secondary-fixed": "#002113",
-              "on-background": "#111c2d",
-              "tertiary-fixed": "#d3e4fe",
-              "surface-container-highest": "#d8e3fb",
-              "surface": "#f9f9ff",
-              "on-surface-variant": "#424754",
-              "primary-fixed-dim": "#adc6ff",
-              "on-secondary-container": "#00714d",
-              "on-tertiary": "#ffffff",
-              "on-tertiary-fixed-variant": "#38485d",
-              "secondary": "#006c49",
-              "on-primary-container": "#fefcff",
-              "secondary-container": "#6cf8bb",
-              "on-primary-fixed-variant": "#004395",
-              "surface-container-low": "#f0f3ff",
-              "secondary-fixed": "#6ffbbe",
-              "on-error-container": "#93000a",
-              "background": "#f9f9ff",
-              "on-secondary": "#ffffff",
-              "surface-dim": "#cfdaf2",
-              "on-error": "#ffffff",
-              "outline": "#727785",
-              "on-primary-fixed": "#001a42",
-              "error": "#ba1a1a",
-              "error-container": "#ffdad6",
-              "surface-bright": "#f9f9ff",
-              "on-surface": "#111c2d",
-              "tertiary-fixed-dim": "#b7c8e1"
-            },
-            fontFamily: {
-              "headline": ["Inter", "system-ui"],
-              "body": ["Inter", "system-ui"],
-              "label": ["Inter", "ui-monospace", "monospace"]
-            },
-            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
-          },
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "on-primary-container": "#525151", "surface-variant": "#dbe4e7", "outline": "#737c7f",
+          "surface-tint": "#5f5e5e", "secondary": "#0053dc", "on-secondary-fixed": "#003798",
+          "on-error-container": "#752121", "surface-container-low": "#f1f4f6",
+          "surface-container-highest": "#dbe4e7", "on-error": "#fff7f6", "surface-dim": "#d1dce0",
+          "background": "#f8f9fa", "surface": "#f8f9fa", "secondary-container": "#dbe1ff",
+          "on-secondary-fixed-variant": "#0050d4", "surface-container-high": "#e3e9ec",
+          "on-background": "#2b3437", "error-container": "#fe8983", "secondary-dim": "#0049c2",
+          "primary": "#5f5e5e", "error": "#9f403d", "on-secondary-container": "#0048bf",
+          "tertiary-fixed": "#82ff99", "on-surface": "#2b3437", "surface-bright": "#f8f9fa",
+          "on-secondary": "#faf8ff", "primary-container": "#e5e2e1", "inverse-primary": "#ffffff",
+          "tertiary-container": "#82ff99", "tertiary-dim": "#006127", "on-surface-variant": "#586064",
+          "on-tertiary": "#e9ffe6", "surface-container": "#eaeff1", "tertiary": "#006e2e",
+          "on-tertiary-container": "#006127", "outline-variant": "#abb3b7",
+          "inverse-surface": "#0c0f10", "on-primary": "#faf7f6", "surface-container-lowest": "#ffffff",
+          "primary-dim": "#535252",
         },
-      }
-    </script>
+        fontFamily: { "headline": ["Inter"], "body": ["Inter"], "label": ["Inter"] },
+        borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "9999px" },
+      },
+    },
+  }
+</script>
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            vertical-align: middle;
-        }
-        body { font-family: 'Inter', sans-serif; }
-        .lithic-layer { transition: background-color 0.2s ease; }
-    </style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+  body { font-family: 'Inter', 'Microsoft YaHei', sans-serif; }
+</style>
 </head>
-<body class="bg-background text-on-background antialiased overflow-hidden">
-<!-- Side Navigation Bar -->
-<aside class="fixed left-0 top-0 h-full w-[220px] bg-slate-50 dark:bg-slate-900 flex flex-col py-6 z-50">
-<div class="px-6 mb-8 flex items-center gap-3">
-<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary">
-<span class="material-symbols-outlined text-lg">shield_with_heart</span>
-</div>
-<div>
-<h1 class="text-xl font-bold tracking-tighter text-blue-800 dark:text-blue-300">OpsWarden</h1>
-<p class="text-[10px] text-slate-500 font-medium uppercase tracking-widest">IT Sentinel</p>
-</div>
-</div>
-<nav class="flex-1 px-3 space-y-1">
-<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors font-sans text-sm font-medium tracking-tight rounded-lg" href="#">
-<span class="material-symbols-outlined">dashboard</span> Dashboard
-            </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors font-sans text-sm font-medium tracking-tight rounded-lg" href="#">
-<span class="material-symbols-outlined">monitor_heart</span> System Health
-            </a>
-<!-- Active State: Since we are in the ticket/logs ecosystem, Logs/System activity is closest -->
-<a class="flex items-center gap-3 px-3 py-2.5 text-blue-700 dark:text-blue-400 font-semibold border-r-4 border-blue-700 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/20 font-sans text-sm tracking-tight rounded-l-lg" href="#">
-<span class="material-symbols-outlined">terminal</span> Logs
-            </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors font-sans text-sm font-medium tracking-tight rounded-lg" href="#">
-<span class="material-symbols-outlined">lan</span> Network
-            </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors font-sans text-sm font-medium tracking-tight rounded-lg" href="#">
-<span class="material-symbols-outlined">shield_with_heart</span> Security
-            </a>
-<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors font-sans text-sm font-medium tracking-tight rounded-lg" href="#">
-<span class="material-symbols-outlined">settings</span> Settings
-            </a>
-</nav>
-<div class="mt-auto px-6 mb-6">
-<button class="w-full py-2.5 bg-primary text-on-primary rounded-xl font-semibold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 text-sm active:scale-95 transition-transform">
-<span class="material-symbols-outlined text-sm">add</span> New Scan
-            </button>
-</div>
-<div class="px-3 border-t border-slate-200/60 pt-4 space-y-1">
-<a class="flex items-center gap-3 px-3 py-2 text-slate-500 font-sans text-sm hover:text-blue-600 transition-colors" href="#">
-<span class="material-symbols-outlined">help</span> Support
-            </a>
-<a class="flex items-center gap-3 px-3 py-2 text-slate-500 font-sans text-sm hover:text-red-600 transition-colors" href="#">
-<span class="material-symbols-outlined">logout</span> Logout
-            </a>
-</div>
+<body class="bg-background text-on-surface antialiased overflow-hidden">
+
+<!-- Sidebar -->
+<aside class="w-[200px] h-full fixed left-0 top-0 bg-[#F1F4F6] flex flex-col py-4 justify-between z-50">
+  <div class="flex flex-col gap-1">
+    <div class="px-6 mb-8 flex items-center gap-2">
+      <div class="w-6 h-6 bg-primary rounded-lg flex items-center justify-center">
+        <span class="material-symbols-outlined text-[14px] text-white">security</span>
+      </div>
+      <span class="text-[14px] font-medium text-[#2B3437]">OpsWarden</span>
+    </div>
+    <nav class="flex flex-col">
+      <a class="px-6 py-2.5 flex items-center gap-3 text-[#5F5E5E] hover:bg-[#DBE4E7] transition-colors text-[14px] font-medium tracking-tight" href="#">
+        <span class="material-symbols-outlined">dashboard</span>仪表盘
+      </a>
+      <a class="px-6 py-2.5 flex items-center gap-3 text-[#5F5E5E] hover:bg-[#DBE4E7] transition-colors text-[14px] font-medium tracking-tight" href="#">
+        <span class="material-symbols-outlined">smart_toy</span>AI 问答
+      </a>
+      <a class="px-6 py-2.5 flex items-center gap-3 text-[#5F5E5E] hover:bg-[#DBE4E7] transition-colors text-[14px] font-medium tracking-tight" href="#">
+        <span class="material-symbols-outlined">manage_accounts</span>账号管理
+      </a>
+      <a class="px-6 py-2.5 flex items-center gap-3 bg-[#F0F4FF] text-[#2563EB] border-l-2 border-[#2563EB] text-[14px] font-medium tracking-tight" href="#">
+        <span class="material-symbols-outlined">confirmation_number</span>工单系统
+      </a>
+      <a class="px-6 py-2.5 flex items-center gap-3 text-[#5F5E5E] hover:bg-[#DBE4E7] transition-colors text-[14px] font-medium tracking-tight" href="#">
+        <span class="material-symbols-outlined">auto_stories</span>知识库
+      </a>
+    </nav>
+  </div>
+  <div class="px-6">
+    <a class="py-2.5 flex items-center gap-3 text-[#5F5E5E] hover:bg-[#DBE4E7] transition-colors text-[14px] font-medium tracking-tight" href="#">
+      <span class="material-symbols-outlined">logout</span>退出登录
+    </a>
+  </div>
 </aside>
-<!-- Top Navigation Bar -->
-<header class="fixed top-0 right-0 h-14 bg-white dark:bg-slate-950 flex items-center justify-between px-6 ml-[220px] w-[calc(100%-220px)] z-40 shadow-sm dark:shadow-none">
-<div class="flex items-center gap-8">
-<div class="relative w-64 group">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg group-focus-within:text-primary transition-colors">search</span>
-<input class="w-full bg-surface-container-low border-none rounded-full py-1.5 pl-10 pr-4 text-xs focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all" placeholder="Search system logs..." type="text"/>
-</div>
-<nav class="flex items-center gap-6">
-<a class="text-blue-700 dark:text-blue-400 font-bold border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-sans text-sm tracking-normal" href="#">Infrastructure</a>
-<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 cursor-pointer font-sans text-sm tracking-normal transition-transform active:scale-95" href="#">Applications</a>
-<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 cursor-pointer font-sans text-sm tracking-normal transition-transform active:scale-95" href="#">Cloud</a>
-</nav>
-</div>
-<div class="flex items-center gap-4">
-<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors relative">
-<span class="material-symbols-outlined text-slate-600">notifications</span>
-<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
-</button>
-<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
-<span class="material-symbols-outlined text-slate-600">help_outline</span>
-</button>
-<div class="h-8 w-[1px] bg-slate-200 mx-1"></div>
-<div class="flex items-center gap-3 pl-2">
-<div class="text-right">
-<p class="text-xs font-bold text-on-background">Admin Warden</p>
-<p class="text-[10px] text-slate-500 font-medium">Ops Level 4</p>
-</div>
-<img alt="User Avatar" class="w-8 h-8 rounded-full bg-surface-container-high border border-slate-200" data-alt="minimalist avatar of a professional it administrator with glasses and a friendly expression, vector art style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYIwkQrT4ZYoIr8NI_-EN8D0rs7y070IR7WMoZOuEESut3WZuj2wEii7qoRpjJt6-9xC4QxtIGVCQ8f2gwMZ0pMwYUuESIAQUPUEXtnoDECHAKGC15XNKmi4F3_6poRJoo2Gkk2PMx1bk2FreaT9Ke_y5PVRaeA-oI1JdA77-9GLGVJQTkpiigpgDW7blP9JyxJYQjoeTn0_mMBKr4hv9PHYFE_YXPW_-Vmfx-alHf7W6GNpqEpNE-2oj4JvvpEgsDnyX0W3rPeJk"/>
-</div>
-</div>
+
+<!-- Top Bar -->
+<header class="h-[52px] fixed top-0 right-0 left-[200px] z-40 bg-white/80 backdrop-blur-md border-b border-[#ABB3B7]/15 flex justify-between items-center px-6">
+  <span class="text-[15px] font-medium text-[#1A1A1A]">工单中心</span>
+  <button id="new-ticket-btn" class="px-4 py-2 bg-[#1A1A1A] hover:bg-primary-dim text-white rounded-lg text-[14px] font-medium flex items-center gap-2 transition-all">
+    <span class="material-symbols-outlined text-[18px]">add</span>新建工单
+  </button>
 </header>
-<!-- Main Content Area -->
-<main class="ml-[220px] pt-14 h-screen flex flex-col">
-<!-- Ticket Header & Filters -->
-<div class="px-8 py-6 bg-surface flex items-end justify-between">
-<div class="space-y-1">
-<div class="flex items-center gap-2 text-primary font-bold">
-<span class="material-symbols-outlined text-xl">confirmation_number</span>
-<h2 class="text-2xl font-headline font-extrabold tracking-tight">工单系统</h2>
-</div>
-<p class="text-sm text-on-surface-variant font-medium">查看并处理当前的系统维护与故障报告</p>
-</div>
-<div class="flex gap-2 p-1 bg-surface-container-low rounded-xl">
-<button class="px-4 py-1.5 text-xs font-semibold bg-white text-primary rounded-lg shadow-sm">全部</button>
-<button class="px-4 py-1.5 text-xs font-medium text-on-surface-variant hover:bg-white/50 rounded-lg transition-colors">待处理 (4)</button>
-<button class="px-4 py-1.5 text-xs font-medium text-on-surface-variant hover:bg-white/50 rounded-lg transition-colors">处理中 (2)</button>
-<button class="px-4 py-1.5 text-xs font-medium text-on-surface-variant hover:bg-white/50 rounded-lg transition-colors">已解决</button>
-<button class="px-4 py-1.5 text-xs font-medium text-on-surface-variant hover:bg-white/50 rounded-lg transition-colors">已关闭</button>
-</div>
-</div>
-<!-- Split Panel Layout -->
-<div class="flex-1 flex overflow-hidden px-8 pb-8 gap-6">
-<!-- Left Panel: Ticket List -->
-<div id="ticket-list" class="w-1/3 flex flex-col gap-4 overflow-y-auto pr-2 custom-scrollbar">
-<!-- Active Card -->
-<div class="group relative bg-white rounded-xl p-4 border-2 border-primary shadow-sm active:scale-[0.98] transition-all cursor-pointer">
-<div class="absolute left-0 top-4 bottom-4 w-1 bg-primary rounded-r"></div>
-<div class="flex justify-between items-start mb-2">
-<span class="text-[10px] font-label font-bold text-primary tracking-wider uppercase">TK-2026031501</span>
-<span class="text-[10px] px-2 py-0.5 bg-error-container text-on-error-container rounded font-bold">紧急</span>
-</div>
-<h3 class="text-sm font-bold text-on-surface mb-1 truncate">VPN连接失败：北京办公室出口网关异常</h3>
-<p class="text-xs text-on-surface-variant line-clamp-2 leading-relaxed mb-3">自 09:15 起，北京办公室无法建立外部VPN隧道，报错代码 ERR_CONN_TIMEOUT...</p>
-<div class="flex items-center justify-between mt-auto">
-<div class="flex -space-x-1.5">
-<img class="w-5 h-5 rounded-full border border-white" data-alt="small user avatar icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANALSDcHJe3WAnXB-dg3T7JQUGBYQjbIrMhmpTJd1zZBBoHFzXPnp0xFWdEHa6xOQqh6WRqEmojjSIPVEMwCJ3UDvCP7htPqjIuH98LqPgVVEpTlQMyHsD49C7UShL-bBl-ogQGxtjgQ9Ng0Yrar32O2VUmMr9VCpYCKtwrBBR4ahrj5cEL28w-wiQ-V_IPDIDoDrqPpfk0lgsGXErlcH1-AhFD89GOPaA8M5OT1uBh7BsrFCrO0expW2akIMo88IW5zd_rYJ8-WU"/>
-<img class="w-5 h-5 rounded-full border border-white" data-alt="small user avatar icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKB8lFd1zyeOdxa_kveXBNEE_EouLuAPpzanIBPtHHVw0K6WYYK8s4VZIKhWZ5x6qzHrfUewmzoYzlh2jGynxdQxw8StitSvpooA1n8waabDxDJKMAYEwHkvYr_1m2PZrPHjnfr0zIt-Ai52SPSt7xMGnvXGnneG33dfTwGF_lkVA_b6DqEmeBoJWJOia_O_Ib0DRdaYDLRi25EEd-kBT2dPXqk6QVTVat6zceVvsZHi1pkax6_Swbg51w9KWT8j9yfL5F0v3c4Sg"/>
-</div>
-<span class="text-[10px] font-medium text-slate-400">14 分钟前</span>
-</div>
-</div>
-<!-- Regular Card 1 -->
-<div class="group relative bg-surface-container-lowest rounded-xl p-4 border border-transparent hover:bg-white hover:shadow-md transition-all cursor-pointer">
-<div class="absolute left-0 top-4 bottom-4 w-1 bg-amber-500 rounded-r"></div>
-<div class="flex justify-between items-start mb-2">
-<span class="text-[10px] font-label font-bold text-tertiary tracking-wider uppercase">TK-2026031505</span>
-<span class="text-[10px] px-2 py-0.5 bg-surface-container-high text-on-surface-variant rounded font-bold">一般</span>
-</div>
-<h3 class="text-sm font-bold text-on-surface mb-1 truncate">SSL 证书即将到期预警</h3>
-<p class="text-xs text-on-surface-variant line-clamp-2 leading-relaxed mb-3">域名 *.ops-warden.io 的 SSL 证书将于 72 小时内到期，请及时更新。</p>
-<div class="flex items-center justify-between mt-auto">
-<div class="flex items-center gap-1.5 text-amber-600">
-<span class="material-symbols-outlined text-[14px]">pending</span>
-<span class="text-[10px] font-bold">处理中</span>
-</div>
-<span class="text-[10px] font-medium text-slate-400">1 小时前</span>
-</div>
-</div>
-<!-- Regular Card 2 -->
-<div class="group relative bg-surface-container-lowest rounded-xl p-4 border border-transparent hover:bg-white hover:shadow-md transition-all cursor-pointer">
-<div class="absolute left-0 top-4 bottom-4 w-1 bg-emerald-500 rounded-r"></div>
-<div class="flex justify-between items-start mb-2">
-<span class="text-[10px] font-label font-bold text-tertiary tracking-wider uppercase">TK-2026031489</span>
-<span class="text-[10px] px-2 py-0.5 bg-surface-container-high text-on-surface-variant rounded font-bold">低</span>
-</div>
-<h3 class="text-sm font-bold text-on-surface mb-1 truncate">新员工账号权限开通申请</h3>
-<p class="text-xs text-on-surface-variant line-clamp-2 leading-relaxed mb-3">开发部门入职新员工 3 名，需要开通 GitHub 及内部灰度测试环境权限。</p>
-<div class="flex items-center justify-between mt-auto">
-<div class="flex items-center gap-1.5 text-secondary">
-<span class="material-symbols-outlined text-[14px]">check_circle</span>
-<span class="text-[10px] font-bold">已解决</span>
-</div>
-<span class="text-[10px] font-medium text-slate-400">昨天 16:45</span>
-</div>
-</div>
-</div>
-<!-- Right Panel: Ticket Detail -->
-<div class="flex-1 flex flex-col bg-white rounded-2xl shadow-sm overflow-hidden">
-<!-- Detail Header -->
-<div class="px-6 py-5 bg-surface-container-lowest border-b border-surface-container flex justify-between items-center">
-<div class="flex items-center gap-4" id="detail-header">
-<h2 id="detail-no" class="text-lg font-bold font-label text-on-background">请选择工单</h2>
-<span id="detail-status" class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full border border-blue-100 uppercase tracking-wide hidden"></span>
-<span id="detail-priority" class="px-2 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded-full uppercase tracking-wide hidden"></span>
-</div>
-<div class="flex items-center gap-2">
-<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined">share</span></button>
-<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
-</div>
-</div>
-<!-- Scrollable Content -->
-<div id="detail-body" class="flex-1 overflow-y-auto px-6 py-6 space-y-8 custom-scrollbar">
-<!-- Section: Problem Description -->
-<section class="space-y-3">
-<div class="flex items-center gap-2 text-on-surface font-bold text-sm">
-<span class="material-symbols-outlined text-primary text-lg">description</span>
-                            问题描述
-                        </div>
-<div class="bg-surface-container-low p-4 rounded-xl">
-<p class="text-sm text-on-surface-variant leading-relaxed">
-                                北京办公室反映部分研发人员无法连接至海外测试节点。初步排查发现由于北京出口网关的 IPsec VPN 隧道协议握手超时。该问题影响了约 50 名员工的日常开发调试工作。
-                            </p>
-<div class="mt-3 flex gap-2">
-<span class="text-[10px] font-label bg-white px-2 py-1 rounded border border-outline-variant text-on-surface-variant">VPN_GATEWAY_PEER_DOWN</span>
-<span class="text-[10px] font-label bg-white px-2 py-1 rounded border border-outline-variant text-on-surface-variant">TIMEOUT_408</span>
-</div>
-</div>
-</section>
-<!-- Section: Scope -->
-<section class="space-y-3">
-<div class="flex items-center gap-2 text-on-surface font-bold text-sm">
-<span class="material-symbols-outlined text-primary text-lg">hub</span>
-                            影响范围
-                        </div>
-<div class="grid grid-cols-3 gap-4">
-<div class="p-3 bg-surface rounded-lg border border-surface-container">
-<p class="text-[10px] text-on-surface-variant mb-1">受影响区域</p>
-<p class="text-sm font-bold">北京/望京园区</p>
-</div>
-<div class="p-3 bg-surface rounded-lg border border-surface-container">
-<p class="text-[10px] text-on-surface-variant mb-1">关键业务</p>
-<p class="text-sm font-bold text-error">核心代码同步</p>
-</div>
-<div class="p-3 bg-surface rounded-lg border border-surface-container">
-<p class="text-[10px] text-on-surface-variant mb-1">关联资产</p>
-<p class="text-sm font-bold">GW-BJ-01-VX</p>
-</div>
-</div>
-</section>
-<!-- Section: AI Diagnosis (Bento Style) -->
-<section class="space-y-3">
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-2 text-on-surface font-bold text-sm">
-<span class="material-symbols-outlined text-primary text-lg">smart_toy</span>
-                                AI 自动排查诊断
-                            </div>
-<span class="text-[10px] font-bold text-primary bg-primary-fixed px-2 py-0.5 rounded-full"> Warden Core 4.0 已介入</span>
-</div>
-<div class="bg-blue-50/60 border border-blue-100 p-5 rounded-2xl relative overflow-hidden">
-<div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-200/20 blur-3xl rounded-full"></div>
-<div class="relative z-10 space-y-4">
-<div class="flex items-start gap-3">
-<span class="material-symbols-outlined text-blue-600 mt-1">insights</span>
-<div class="space-y-2">
-<p class="text-sm font-bold text-blue-900 leading-tight">通过深度日志分析，发现出口公网 IP (202.x.x.x) 被远端防火墙误判为暴力探测。</p>
-<ul class="text-xs text-blue-800/80 space-y-1.5 list-disc list-inside">
-<li>建议手动重启隧道并触发密钥重交换 (Rekeying)</li>
-<li>验证 ACL 列表是否包含最近更新的 CIDR</li>
-<li>已自动为此工单匹配相似历史工单 <a class="underline font-bold" href="#">#TK-20251104</a></li>
-</ul>
-</div>
-</div>
-<div class="flex gap-2">
-<button class="bg-primary text-on-primary text-xs font-bold px-4 py-2 rounded-lg shadow-md shadow-primary/20 flex items-center gap-2">
-<span class="material-symbols-outlined text-sm">auto_fix_high</span> 执行自动建议
-                                    </button>
-<button class="bg-white text-primary text-xs font-bold px-4 py-2 rounded-lg border border-blue-200">生成诊断报告</button>
-</div>
-</div>
-</div>
-</section>
-<!-- Section: Timeline -->
-<section class="space-y-5">
-<div class="flex items-center gap-2 text-on-surface font-bold text-sm">
-<span class="material-symbols-outlined text-primary text-lg">history</span>
-                            处理记录
-                        </div>
-<div class="relative pl-6 space-y-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-surface-container">
-<!-- Timeline Item 1 -->
-<div class="relative">
-<div class="absolute -left-[19px] top-1 w-4 h-4 rounded-full bg-primary border-4 border-white"></div>
-<div class="flex items-center gap-3 mb-1">
-<span class="text-xs font-bold text-on-background">Warden-AI</span>
-<span class="text-[10px] text-slate-400">09:16</span>
-</div>
-<p class="text-xs text-on-surface-variant">系统检测到 VPN 隧道故障，自动创建工单并分配给网络运维组。</p>
-</div>
-<!-- Timeline Item 2 -->
-<div class="relative">
-<div class="absolute -left-[19px] top-1 w-4 h-4 rounded-full bg-slate-300 border-4 border-white"></div>
-<div class="flex items-center gap-3 mb-1">
-<span class="text-xs font-bold text-on-background">张晓明 (网管部)</span>
-<span class="text-[10px] text-slate-400">09:30</span>
-</div>
-<p class="text-xs text-on-surface-variant">正在查看网关防火墙配置，尝试从内网 ping 远端 Peer 地址，目前不通。</p>
-</div>
-</div>
-</section>
-</div>
-<!-- Footer Action Bar -->
-<div class="px-6 py-6 bg-surface border-t border-surface-container shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
-<div class="mb-4">
-<textarea id="solution-textarea" class="w-full bg-white border-outline-variant rounded-xl p-3 text-sm focus:ring-primary focus:border-primary placeholder:text-slate-400 transition-all" placeholder="填写处理方案..." rows="3"></textarea>
-</div>
-<div class="flex items-center justify-between">
-<label class="flex items-center gap-2 cursor-pointer group">
-<input id="writeback-checkbox" class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox" checked/>
-<span class="text-xs text-on-surface-variant group-hover:text-on-surface transition-colors">解决后自动写入知识库</span>
-</label>
-<div class="flex items-center gap-3">
-<button id="btn-process" class="px-5 py-2 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-colors hidden">标记处理中</button>
-<button id="btn-resolve" class="px-5 py-2 text-xs font-bold bg-secondary text-on-secondary rounded-xl shadow-lg shadow-secondary/20 hover:opacity-90 active:scale-95 transition-all hidden">标记解决</button>
-<button id="btn-close" class="px-5 py-2 text-xs font-bold border border-error text-error hover:bg-error/5 rounded-xl transition-all hidden">关闭工单</button>
-</div>
-</div>
-</div>
-</div>
-</div>
+
+<!-- Main -->
+<main class="ml-[200px] mt-[52px] h-[calc(100vh-52px)] overflow-hidden flex flex-col">
+
+  <!-- Status Tabs -->
+  <section class="px-8 pt-6 pb-0 bg-background">
+    <div class="flex gap-6 border-b border-outline-variant/15">
+      <button class="tab-btn pb-3 text-[14px] text-on-surface-variant hover:text-on-surface border-b-2 border-transparent transition-all" data-status="">全部</button>
+      <button class="tab-btn pb-3 text-[14px] text-secondary border-b-2 border-secondary font-medium transition-all" data-status="pending">待处理</button>
+      <button class="tab-btn pb-3 text-[14px] text-on-surface-variant hover:text-on-surface border-b-2 border-transparent transition-all" data-status="processing">处理中</button>
+      <button class="tab-btn pb-3 text-[14px] text-on-surface-variant hover:text-on-surface border-b-2 border-transparent transition-all" data-status="resolved">已解决</button>
+      <button class="tab-btn pb-3 text-[14px] text-on-surface-variant hover:text-on-surface border-b-2 border-transparent transition-all" data-status="closed">已关闭</button>
+    </div>
+  </section>
+
+  <!-- Split Layout -->
+  <section class="flex flex-1 gap-4 px-8 py-4 overflow-hidden">
+
+    <!-- LEFT: List -->
+    <div class="w-[38%] bg-surface-container-lowest rounded-xl flex flex-col overflow-hidden shadow-sm">
+      <div class="p-4 border-b border-outline-variant/10">
+        <div class="relative flex items-center">
+          <span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">search</span>
+          <input id="search-input" class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-[14px] focus:ring-1 focus:ring-secondary/30 outline-none" placeholder="搜索工单 ID 或关键词..." type="text"/>
+        </div>
+      </div>
+      <div id="ticket-list" class="flex-1 overflow-y-auto">
+        <div id="list-loading" class="p-8 text-center text-[14px] text-on-surface-variant">加载中...</div>
+      </div>
+      <div class="px-4 py-3 border-t border-outline-variant/10 flex justify-between items-center bg-surface-container-low/30">
+        <span id="list-info" class="text-[12px] text-on-surface-variant">-</span>
+        <div class="flex gap-1">
+          <button id="prev-btn" class="p-1 rounded hover:bg-surface-container-highest transition-colors disabled:opacity-30" disabled>
+            <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+          </button>
+          <button id="next-btn" class="p-1 rounded hover:bg-surface-container-highest transition-colors disabled:opacity-30" disabled>
+            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Detail -->
+    <div class="w-[62%] bg-surface-container-lowest rounded-xl flex flex-col overflow-hidden shadow-sm">
+      <!-- Empty state -->
+      <div id="detail-empty" class="flex-1 flex flex-col items-center justify-center text-on-surface-variant gap-3">
+        <span class="material-symbols-outlined text-[48px] opacity-30">inbox</span>
+        <p class="text-[14px]">点击左侧工单查看详情</p>
+      </div>
+      <!-- Detail content -->
+      <div id="detail-content" class="hidden flex-col h-full overflow-hidden" style="display:none">
+        <div class="px-6 py-4 flex items-center justify-between border-b border-outline-variant/10 flex-shrink-0">
+          <div class="flex items-center gap-3">
+            <span id="d-ticket-no" class="text-[13px] font-bold text-on-surface-variant"></span>
+            <span id="d-status-badge" class="px-2 py-0.5 text-[10px] font-bold rounded-full"></span>
+          </div>
+          <button id="close-ticket-btn" class="px-3 py-1.5 border border-outline-variant/30 hover:bg-surface-container-high text-on-surface rounded-lg text-[13px] font-medium transition-all">关闭工单</button>
+        </div>
+        <div class="flex-1 overflow-y-auto px-6 py-6">
+          <div class="mb-6">
+            <h2 id="d-title" class="text-[18px] font-semibold text-on-surface mb-4"></h2>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="space-y-1">
+                <p class="text-[11px] text-outline uppercase tracking-wider">提单人</p>
+                <p id="d-reporter" class="text-[14px] text-on-surface">-</p>
+              </div>
+              <div class="space-y-1">
+                <p class="text-[11px] text-outline uppercase tracking-wider">提单时间</p>
+                <p id="d-created" class="text-[14px] text-on-surface">-</p>
+              </div>
+              <div class="space-y-1">
+                <p class="text-[11px] text-outline uppercase tracking-wider">优先级</p>
+                <p id="d-priority" class="text-[14px] text-on-surface">-</p>
+              </div>
+            </div>
+          </div>
+          <div class="h-px bg-outline-variant/15 my-4"></div>
+          <div class="mb-6">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="w-1 h-4 bg-secondary rounded-full"></span>
+              <h3 class="text-[14px] font-semibold text-on-surface">问题描述</h3>
+            </div>
+            <div class="bg-surface-container-low p-4 rounded-lg">
+              <p id="d-description" class="text-[14px] text-on-surface-variant leading-relaxed whitespace-pre-wrap">-</p>
+            </div>
+          </div>
+          <div id="d-solution-section" class="hidden mb-6">
+            <div class="h-px bg-outline-variant/15 my-4"></div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="w-1 h-4 bg-tertiary rounded-full"></span>
+              <h3 class="text-[14px] font-semibold text-on-surface">解决方案</h3>
+            </div>
+            <div class="bg-green-50 border border-green-100 p-4 rounded-lg">
+              <p id="d-solution" class="text-[14px] text-on-surface-variant leading-relaxed whitespace-pre-wrap">-</p>
+            </div>
+          </div>
+          <div class="h-px bg-outline-variant/15 my-4"></div>
+          <div class="mb-6">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="w-1 h-4 bg-secondary rounded-full"></span>
+              <h3 class="text-[14px] font-semibold text-on-surface">处理记录</h3>
+            </div>
+            <div id="d-logs" class="space-y-4 relative ml-2">
+              <div class="text-[13px] text-on-surface-variant">加载中...</div>
+            </div>
+          </div>
+          <div id="resolve-form">
+            <div class="h-px bg-outline-variant/15 my-4"></div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="w-1 h-4 bg-secondary rounded-full"></span>
+              <h3 class="text-[14px] font-semibold text-on-surface">填写处理方案</h3>
+            </div>
+            <textarea id="solution-input" class="w-full p-4 bg-surface-container-lowest border border-outline-variant/30 rounded-xl text-[14px] focus:ring-1 focus:ring-secondary/30 focus:border-secondary outline-none transition-all" placeholder="请详细描述处理过程及最终结果..." rows="4"></textarea>
+            <div class="flex items-center gap-2 mt-3">
+              <input class="w-4 h-4 rounded border-outline-variant text-secondary focus:ring-secondary/30" id="writeback-cb" type="checkbox" checked/>
+              <label class="text-[14px] text-on-surface-variant cursor-pointer" for="writeback-cb">处理后写入知识库（Auto-KB）</label>
+            </div>
+            <div id="resolve-error" class="hidden text-[13px] text-error mt-2"></div>
+            <button id="resolve-btn" class="mt-4 w-full px-6 py-2.5 bg-primary text-on-primary hover:bg-primary-dim rounded-lg text-[14px] font-medium transition-all flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">check_circle</span>标记解决
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
 </main>
-<!-- Floating AI Assistant Widget -->
-<div class="fixed bottom-8 right-8 z-[60]">
-<button class="w-14 h-14 bg-gradient-to-br from-primary to-primary-container rounded-full shadow-2xl flex items-center justify-center text-white ring-4 ring-white active:scale-90 transition-all group" onclick="window.location.href='ai_chat.html'">
-<span class="material-symbols-outlined text-3xl group-hover:rotate-12 transition-transform">bolt</span>
-</button>
+
+<!-- New Ticket Modal -->
+<div id="new-ticket-modal" class="hidden fixed inset-0 bg-on-surface/20 backdrop-blur-sm z-[60] flex items-center justify-center">
+  <div class="bg-surface-container-lowest rounded-xl shadow-2xl w-full max-w-[480px]">
+    <div class="px-8 py-6 border-b border-outline-variant/15 flex justify-between items-center">
+      <h2 class="text-[18px] font-medium text-on-surface">新建工单</h2>
+      <button id="close-modal-btn" class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="px-8 py-6 space-y-5">
+      <div class="space-y-1.5">
+        <label class="block text-[14px] font-medium text-on-surface">标题 <span class="text-error">*</span></label>
+        <input id="m-title" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/30 rounded-lg text-[14px] focus:ring-1 focus:ring-secondary focus:border-secondary outline-none" placeholder="请简要描述问题" type="text"/>
+      </div>
+      <div class="space-y-1.5">
+        <label class="block text-[14px] font-medium text-on-surface">描述</label>
+        <textarea id="m-description" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/30 rounded-lg text-[14px] focus:ring-1 focus:ring-secondary focus:border-secondary outline-none" placeholder="详细说明问题背景..." rows="3"></textarea>
+      </div>
+      <div class="space-y-1.5">
+        <label class="block text-[14px] font-medium text-on-surface">优先级</label>
+        <select id="m-priority" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/30 rounded-lg text-[14px] focus:ring-1 focus:ring-secondary focus:border-secondary outline-none appearance-none">
+          <option value="medium">中</option>
+          <option value="high">高</option>
+          <option value="urgent">紧急</option>
+          <option value="low">低</option>
+        </select>
+      </div>
+      <div id="modal-error" class="hidden text-[13px] text-error"></div>
+    </div>
+    <div class="px-8 py-5 border-t border-outline-variant/15 flex gap-3">
+      <button id="modal-cancel-btn" class="flex-1 px-4 py-2.5 border border-outline-variant/30 rounded-lg text-[14px] text-on-surface-variant hover:bg-surface-container-low transition-colors">取消</button>
+      <button id="modal-save-btn" class="flex-1 px-4 py-2.5 bg-[#1A1A1A] text-white rounded-lg text-[14px] font-medium hover:bg-primary-dim transition-colors">创建工单</button>
+    </div>
+  </div>
 </div>
+
 <script src="api.js"></script>
 <script>
-  const user = requireAuth();
-  if (!user) throw new Error('redirect');
+  requireAuth();
   bindSidebar();
 
-  const ticketList = document.getElementById('ticket-list');
-  const detailBody = document.getElementById('detail-body');
-  let activeTicketId = null;
-  let currentFilter = {};
+  let currentStatus = 'pending';
+  let currentPage = 1;
+  const pageSize = 15;
+  let currentTicketId = null;
+  let searchTimer = null;
 
-  // ── 筛选按钮 ──────────────────────────────────────────────────────────────────
-  document.querySelectorAll('.flex.gap-2.p-1.bg-surface-container-low button').forEach(btn => {
+  // Tab 切换
+  document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.flex.gap-2.p-1.bg-surface-container-low button').forEach(b => {
-        b.classList.remove('bg-white', 'text-primary', 'shadow-sm');
-        b.classList.add('text-on-surface-variant');
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.className = 'tab-btn pb-3 text-[14px] text-on-surface-variant hover:text-on-surface border-b-2 border-transparent transition-all';
       });
-      btn.classList.add('bg-white', 'text-primary', 'shadow-sm');
-      btn.classList.remove('text-on-surface-variant');
-      const txt = btn.textContent.trim();
-      currentFilter = txt === '全部' ? {} :
-        txt.includes('待处理') ? { status: 'pending' } :
-        txt.includes('处理中') ? { status: 'processing' } :
-        txt.includes('已解决') ? { status: 'resolved' } :
-        { status: 'closed' };
+      btn.className = 'tab-btn pb-3 text-[14px] text-secondary border-b-2 border-secondary font-medium transition-all';
+      currentStatus = btn.dataset.status;
+      currentPage = 1;
+      currentTicketId = null;
+      showEmpty();
       loadTickets();
     });
   });
 
-  // ── 工单列表渲染 ──────────────────────────────────────────────────────────────
-  function ticketCard(t, active = false) {
-    const p = TICKET_PRIORITY[t.priority] || { label: t.priority, cls: '' };
-    const s = TICKET_STATUS[t.status] || { label: t.status, cls: '' };
-    const borderColor = { urgent: 'bg-error', high: 'bg-amber-500', medium: 'bg-primary', low: 'bg-secondary' }[t.priority] || 'bg-slate-300';
-    return `<div class="group relative ${active ? 'bg-white border-2 border-primary shadow-sm' : 'bg-surface-container-lowest border border-transparent hover:bg-white hover:shadow-md'} rounded-xl p-4 transition-all cursor-pointer" data-id="${t.id}">
-      <div class="absolute left-0 top-4 bottom-4 w-1 ${borderColor} rounded-r"></div>
-      <div class="flex justify-between items-start mb-2">
-        <span class="text-[10px] font-label font-bold ${active ? 'text-primary' : 'text-tertiary'} tracking-wider uppercase">${t.ticket_no}</span>
-        <span class="text-[10px] px-2 py-0.5 ${p.cls.replace('text-', 'text-').replace('bg-', '')} bg-surface-container-high text-on-surface-variant rounded font-bold">${p.label}</span>
-      </div>
-      <h3 class="text-sm font-bold text-on-surface mb-1 truncate">${t.title}</h3>
-      <p class="text-xs text-on-surface-variant line-clamp-2 leading-relaxed mb-3">${t.description || '无描述'}</p>
-      <div class="flex items-center justify-between">
-        <span class="text-[10px] px-2 py-0.5 rounded font-bold ${s.cls}">${s.label}</span>
-        <span class="text-[10px] font-medium text-slate-400">${fmtDate(t.created_at)}</span>
-      </div>
-    </div>`;
-  }
+  // 搜索
+  document.getElementById('search-input').addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { currentPage = 1; loadTickets(); }, 400);
+  });
+
+  // 翻页
+  document.getElementById('prev-btn').addEventListener('click', () => { currentPage--; loadTickets(); });
+  document.getElementById('next-btn').addEventListener('click', () => { currentPage++; loadTickets(); });
 
   async function loadTickets() {
+    const keyword = document.getElementById('search-input').value.trim();
+    const params = { page: currentPage, page_size: pageSize };
+    if (currentStatus) params.status = currentStatus;
+    if (keyword) params.keyword = keyword;
+    document.getElementById('list-loading').style.display = 'block';
     try {
-      const res = await getTickets({ page: 1, page_size: 20, ...currentFilter });
-      const items = res.data.items;
-      ticketList.innerHTML = items.length
-        ? items.map(t => ticketCard(t, t.id === activeTicketId)).join('')
-        : `<div class="text-center text-on-surface-variant text-sm py-10">暂无工单</div>`;
-      ticketList.querySelectorAll('[data-id]').forEach(el => {
-        el.addEventListener('click', () => loadDetail(parseInt(el.dataset.id)));
-      });
+      const res = await getTickets(params);
+      const d = res.data;
+      renderList(d.items, d.total);
+      const start = (currentPage - 1) * pageSize + 1;
+      const end = Math.min(currentPage * pageSize, d.total);
+      document.getElementById('list-info').textContent = d.total ? `第 ${start}–${end} 条，共 ${d.total} 条` : '暂无工单';
+      document.getElementById('prev-btn').disabled = currentPage <= 1;
+      document.getElementById('next-btn').disabled = currentPage * pageSize >= d.total;
     } catch (e) {
-      ticketList.innerHTML = `<div class="text-center text-error text-sm py-10">${e.message}</div>`;
+      document.getElementById('ticket-list').innerHTML = `<div class="p-8 text-center text-[13px] text-error">${e.message}</div>`;
+    } finally {
+      document.getElementById('list-loading').style.display = 'none';
     }
   }
 
-  // ── 工单详情渲染 ──────────────────────────────────────────────────────────────
-  async function loadDetail(id) {
-    activeTicketId = id;
-    loadTickets(); // 刷新列表以更新高亮
+  function renderList(items, total) {
+    const list = document.getElementById('ticket-list');
+    if (!items.length) {
+      list.innerHTML = '<div class="p-8 text-center text-[13px] text-on-surface-variant">暂无工单</div>';
+      return;
+    }
+    list.innerHTML = items.map(t => {
+      const st = TICKET_STATUS[t.status] || { label: t.status, cls: 'bg-slate-50 text-slate-500 border border-slate-100' };
+      const pr = TICKET_PRIORITY[t.priority] || { label: t.priority, cls: '' };
+      const isActive = t.id === currentTicketId;
+      return `<div class="ticket-item p-4 border-l-4 ${isActive ? 'bg-[#F0F4FF] border-[#2563EB]' : 'border-transparent hover:bg-surface-container-low'} transition-colors cursor-pointer" data-id="${t.id}">
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-[11px] font-bold ${isActive ? 'text-[#2563EB]' : 'text-on-surface-variant'} uppercase tracking-wider">${escHtml(t.ticket_no)}</span>
+          <span class="text-[11px] text-outline">${fmtDate(t.created_at)}</span>
+        </div>
+        <h3 class="text-[14px] font-medium text-on-surface mb-2 line-clamp-2">${escHtml(t.title)}</h3>
+        <div class="flex items-center justify-between">
+          <span class="text-[12px] text-on-surface-variant">${escHtml(t.reporter_name || '—')}</span>
+          <div class="flex items-center gap-1.5">
+            <span class="px-2 py-0.5 text-[10px] font-medium rounded-full ${st.cls}">${st.label}</span>
+            <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-surface-container-highest text-on-surface-variant">${pr.label}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    list.querySelectorAll('.ticket-item').forEach(el => {
+      el.addEventListener('click', () => openDetail(parseInt(el.dataset.id)));
+    });
+  }
+
+  async function loadTabCounts() {
+    const statuses = ['pending', 'processing', 'resolved', 'closed'];
+    const labels = { pending: '待处理', processing: '处理中', resolved: '已解决', closed: '已关闭' };
+    try {
+      const [allRes, ...results] = await Promise.all([
+        getTickets({ page_size: 1 }),
+        ...statuses.map(s => getTickets({ status: s, page_size: 1 }))
+      ]);
+      document.querySelector('.tab-btn[data-status=""]').textContent = `全部 ${allRes.data.total}`;
+      statuses.forEach((s, i) => {
+        const btn = document.querySelector(`.tab-btn[data-status="${s}"]`);
+        if (btn) btn.textContent = `${labels[s]} ${results[i].data.total}`;
+      });
+    } catch (_) {}
+  }
+
+  async function openDetail(id) {
+    currentTicketId = id;
+    // 更新列表高亮
+    document.querySelectorAll('.ticket-item').forEach(el => {
+      const active = parseInt(el.dataset.id) === id;
+      el.className = `ticket-item p-4 border-l-4 ${active ? 'bg-[#F0F4FF] border-[#2563EB]' : 'border-transparent hover:bg-surface-container-low'} transition-colors cursor-pointer`;
+      el.querySelector('span.text-\\[11px\\]')?.classList.toggle('text-[#2563EB]', active);
+    });
+    showDetailContent();
     try {
       const [ticketRes, logsRes] = await Promise.all([getTicket(id), getTicketLogs(id)]);
       const t = ticketRes.data;
       const logs = logsRes.data;
 
-      // 更新右侧面板头部
-      document.getElementById('detail-no').textContent = t.ticket_no;
-      const statusEl = document.getElementById('detail-status');
-      const priorityEl = document.getElementById('detail-priority');
-      const s = TICKET_STATUS[t.status] || { label: t.status, cls: '' };
-      const p = TICKET_PRIORITY[t.priority] || { label: t.priority, cls: '' };
-      statusEl.textContent = s.label;
-      statusEl.className = `px-2 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wide ${s.cls}`;
-      statusEl.classList.remove('hidden');
-      priorityEl.textContent = p.label;
-      priorityEl.className = `px-2 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wide bg-error-container text-on-error-container`;
-      priorityEl.classList.remove('hidden');
+      document.getElementById('d-ticket-no').textContent = t.ticket_no;
+      const st = TICKET_STATUS[t.status] || { label: t.status, cls: 'bg-slate-50 text-slate-500' };
+      const badge = document.getElementById('d-status-badge');
+      badge.className = `px-2 py-0.5 text-[10px] font-bold rounded-full ${st.cls}`;
+      badge.textContent = st.label;
+      document.getElementById('d-title').textContent = t.title;
+      document.getElementById('d-reporter').textContent = t.reporter_name || '—';
+      document.getElementById('d-created').textContent = fmtDate(t.created_at);
+      document.getElementById('d-priority').textContent = (TICKET_PRIORITY[t.priority] || { label: t.priority }).label;
+      document.getElementById('d-description').textContent = t.description || '—';
 
-      // 操作按钮显隐
-      const canAct = (user.role === 'admin' || user.role === 'operator');
-      document.getElementById('btn-process').classList.toggle('hidden', !canAct || t.status !== 'pending');
-      document.getElementById('btn-resolve').classList.toggle('hidden', !canAct || t.status === 'resolved' || t.status === 'closed');
-      document.getElementById('btn-close').classList.toggle('hidden', !canAct || t.status === 'closed');
+      if (t.solution) {
+        document.getElementById('d-solution-section').classList.remove('hidden');
+        document.getElementById('d-solution').textContent = t.solution;
+      } else {
+        document.getElementById('d-solution-section').classList.add('hidden');
+      }
 
-      // 详情主体
-      detailBody.innerHTML = `
-        <section class="space-y-3">
-          <div class="flex items-center gap-2 text-on-surface font-bold text-sm">
-            <span class="material-symbols-outlined text-primary text-lg">description</span>问题描述
-          </div>
-          <div class="bg-surface-container-low p-4 rounded-xl">
-            <p class="text-sm text-on-surface-variant leading-relaxed">${t.description || '无描述'}</p>
-          </div>
-        </section>
-        <section class="space-y-3">
-          <div class="flex items-center gap-2 text-on-surface font-bold text-sm">
-            <span class="material-symbols-outlined text-primary text-lg">info</span>工单信息
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div class="p-3 bg-surface rounded-lg border border-surface-container">
-              <p class="text-[10px] text-on-surface-variant mb-1">来源</p>
-              <p class="text-sm font-bold">{{ ${{ t.source === 'ai_auto' ? 'AI 自动' : t.source === 'feishu' ? '飞书' : '手动' }} }}</p>
-            </div>
-            <div class="p-3 bg-surface rounded-lg border border-surface-container">
-              <p class="text-[10px] text-on-surface-variant mb-1">提单人</p>
-              <p class="text-sm font-bold">${t.reporter_name || '-'}</p>
-            </div>
-            <div class="p-3 bg-surface rounded-lg border border-surface-container">
-              <p class="text-[10px] text-on-surface-variant mb-1">创建时间</p>
-              <p class="text-sm font-bold">${fmtDate(t.created_at)}</p>
-            </div>
-            <div class="p-3 bg-surface rounded-lg border border-surface-container">
-              <p class="text-[10px] text-on-surface-variant mb-1">解决方案</p>
-              <p class="text-sm font-bold">${t.solution || '待填写'}</p>
-            </div>
-          </div>
-        </section>
-        <section class="space-y-5">
-          <div class="flex items-center gap-2 text-on-surface font-bold text-sm">
-            <span class="material-symbols-outlined text-primary text-lg">history</span>处理记录
-          </div>
-          <div class="relative pl-6 space-y-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-surface-container">
-            ${logs.length ? logs.map(l => `
-              <div class="relative">
-                <div class="absolute -left-[19px] top-1 w-4 h-4 rounded-full bg-primary border-4 border-white"></div>
-                <div class="flex items-center gap-3 mb-1">
-                  <span class="text-xs font-bold text-on-background">${l.operator_name || '系统'}</span>
-                  <span class="text-[10px] text-slate-400">${fmtDate(l.created_at)}</span>
-                  <span class="text-[10px] px-1.5 py-0.5 bg-surface-container rounded text-tertiary">${l.action}</span>
-                </div>
-                <p class="text-xs text-on-surface-variant">${l.content || ''}</p>
-              </div>`).join('') : '<p class="text-xs text-on-surface-variant">暂无处理记录</p>'}
-          </div>
-        </section>`;
+      const resolveForm = document.getElementById('resolve-form');
+      if (t.status === 'resolved' || t.status === 'closed') {
+        resolveForm.style.display = 'none';
+      } else {
+        resolveForm.style.display = '';
+        document.getElementById('solution-input').value = '';
+        document.getElementById('resolve-error').classList.add('hidden');
+      }
+      document.getElementById('close-ticket-btn').disabled = t.status === 'closed';
 
-      // 修正工单来源显示（替换模板字符串中的双括号）
-      detailBody.querySelectorAll('p.text-sm.font-bold').forEach(el => {
-        if (el.textContent.includes('${{')) {
-          const src = t.source === 'ai_auto' ? 'AI 自动' : t.source === 'feishu' ? '飞书' : '手动';
-          el.textContent = src;
-        }
-      });
+      renderLogs(logs);
     } catch (e) {
-      detailBody.innerHTML = `<p class="text-error text-sm">${e.message}</p>`;
+      document.getElementById('d-title').textContent = '加载失败：' + e.message;
     }
   }
 
-  // ── 操作按钮 ──────────────────────────────────────────────────────────────────
-  document.getElementById('btn-process').addEventListener('click', async () => {
-    if (!activeTicketId) return;
-    try { await updateTicket(activeTicketId, { status: 'processing' }); loadTickets(); loadDetail(activeTicketId); }
-    catch (e) { alert(e.message); }
+  function renderLogs(logs) {
+    const el = document.getElementById('d-logs');
+    if (!logs.length) { el.innerHTML = '<p class="text-[13px] text-on-surface-variant">暂无操作记录</p>'; return; }
+    const actionMap = { created: '工单创建', updated: '工单更新', resolved: '工单解决', closed: '工单关闭', callback: '工单回访', writeback: '回写知识库' };
+    el.innerHTML = `<div class="absolute top-0 bottom-0 left-[7px] w-0.5 bg-outline-variant/20"></div>` +
+      [...logs].reverse().map(log => `
+        <div class="relative pl-8">
+          <div class="absolute left-0 top-1 w-4 h-4 rounded-full bg-secondary-container border-2 border-white"></div>
+          <div class="flex justify-between items-start mb-0.5">
+            <span class="text-[13px] font-medium text-on-surface">${escHtml(actionMap[log.action] || log.action)}</span>
+            <span class="text-[11px] text-outline">${fmtDate(log.created_at)}</span>
+          </div>
+          ${log.operator_name ? `<p class="text-[12px] text-on-surface-variant">操作人：${escHtml(log.operator_name)}</p>` : ''}
+          ${log.content ? `<p class="text-[12px] text-on-surface-variant mt-0.5">${escHtml(log.content)}</p>` : ''}
+        </div>`).join('');
+  }
+
+  function showEmpty() {
+    document.getElementById('detail-empty').style.display = '';
+    document.getElementById('detail-content').style.display = 'none';
+  }
+
+  function showDetailContent() {
+    document.getElementById('detail-empty').style.display = 'none';
+    document.getElementById('detail-content').style.display = 'flex';
+  }
+
+  // 标记解决
+  document.getElementById('resolve-btn').addEventListener('click', async () => {
+    const solution = document.getElementById('solution-input').value.trim();
+    const errEl = document.getElementById('resolve-error');
+    if (!solution) { errEl.textContent = '请填写处理方案'; errEl.classList.remove('hidden'); return; }
+    errEl.classList.add('hidden');
+    try {
+      document.getElementById('resolve-btn').disabled = true;
+      await resolveTicket(currentTicketId, solution, document.getElementById('writeback-cb').checked);
+      await openDetail(currentTicketId);
+      loadTabCounts();
+    } catch (e) {
+      errEl.textContent = e.message; errEl.classList.remove('hidden');
+    } finally {
+      document.getElementById('resolve-btn').disabled = false;
+    }
   });
 
-  document.getElementById('btn-resolve').addEventListener('click', async () => {
-    if (!activeTicketId) return;
-    const solution = document.getElementById('solution-textarea').value.trim();
-    if (!solution) { alert('请填写处理方案后再标记解决'); return; }
-    const writeBack = document.getElementById('writeback-checkbox').checked;
-    try { await resolveTicket(activeTicketId, solution, writeBack); loadTickets(); loadDetail(activeTicketId); }
-    catch (e) { alert(e.message); }
+  // 关闭工单
+  document.getElementById('close-ticket-btn').addEventListener('click', async () => {
+    if (!currentTicketId) return;
+    try {
+      await closeTicket(currentTicketId);
+      await openDetail(currentTicketId);
+      loadTabCounts();
+    } catch (e) { alert(e.message); }
   });
 
-  document.getElementById('btn-close').addEventListener('click', async () => {
-    if (!activeTicketId) return;
-    if (!confirm('确认关闭此工单？')) return;
-    try { await closeTicket(activeTicketId); loadTickets(); loadDetail(activeTicketId); }
-    catch (e) { alert(e.message); }
+  // 新建工单 Modal
+  const modal = document.getElementById('new-ticket-modal');
+  document.getElementById('new-ticket-btn').addEventListener('click', () => modal.classList.remove('hidden'));
+  document.getElementById('close-modal-btn').addEventListener('click', () => modal.classList.add('hidden'));
+  document.getElementById('modal-cancel-btn').addEventListener('click', () => modal.classList.add('hidden'));
+  document.getElementById('modal-save-btn').addEventListener('click', async () => {
+    const title = document.getElementById('m-title').value.trim();
+    const description = document.getElementById('m-description').value.trim();
+    const priority = document.getElementById('m-priority').value;
+    const errEl = document.getElementById('modal-error');
+    if (!title) { errEl.textContent = '请填写标题'; errEl.classList.remove('hidden'); return; }
+    errEl.classList.add('hidden');
+    try {
+      document.getElementById('modal-save-btn').disabled = true;
+      await createManualTicket(title, description, priority);
+      modal.classList.add('hidden');
+      document.getElementById('m-title').value = '';
+      document.getElementById('m-description').value = '';
+      currentPage = 1;
+      loadTickets();
+      loadTabCounts();
+    } catch (e) {
+      errEl.textContent = e.message; errEl.classList.remove('hidden');
+    } finally {
+      document.getElementById('modal-save-btn').disabled = false;
+    }
   });
 
+  function escHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // 初始化
   loadTickets();
+  loadTabCounts();
 </script>
-</body></html>
+</body>
+</html>
