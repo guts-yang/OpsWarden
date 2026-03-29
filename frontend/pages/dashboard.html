@@ -1,504 +1,191 @@
 <!DOCTYPE html>
-
-<html class="light" lang="zh-CN"><head>
+<html lang="zh-Hans"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>OpsWarden - IT Sentinel Dashboard</title>
+<title>仪表盘 - OpsWarden</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "on-primary": "#ffffff",
-                        "surface-variant": "#d8e3fb",
-                        "surface-container-lowest": "#ffffff",
-                        "surface-container-high": "#dee8ff",
-                        "primary-fixed": "#d8e2ff",
-                        "surface-container": "#e7eeff",
-                        "primary": "#0058be",
-                        "outline-variant": "#c2c6d6",
-                        "inverse-surface": "#263143",
-                        "on-tertiary-fixed": "#0b1c30",
-                        "tertiary-container": "#66768d",
-                        "inverse-primary": "#adc6ff",
-                        "tertiary": "#4d5d73",
-                        "inverse-on-surface": "#ecf1ff",
-                        "surface-tint": "#005ac2",
-                        "on-tertiary-container": "#fdfcff",
-                        "on-secondary-fixed-variant": "#005236",
-                        "secondary-fixed-dim": "#4edea3",
-                        "primary-container": "#2170e4",
-                        "on-secondary-fixed": "#002113",
-                        "on-background": "#111c2d",
-                        "tertiary-fixed": "#d3e4fe",
-                        "surface-container-highest": "#d8e3fb",
-                        "surface": "#f9f9ff",
-                        "on-surface-variant": "#424754",
-                        "primary-fixed-dim": "#adc6ff",
-                        "on-secondary-container": "#00714d",
-                        "on-tertiary": "#ffffff",
-                        "on-tertiary-fixed-variant": "#38485d",
-                        "secondary": "#006c49",
-                        "on-primary-container": "#fefcff",
-                        "secondary-container": "#6cf8bb",
-                        "on-primary-fixed-variant": "#004395",
-                        "surface-container-low": "#f0f3ff",
-                        "secondary-fixed": "#6ffbbe",
-                        "on-error-container": "#93000a",
-                        "background": "#f9f9ff",
-                        "on-secondary": "#ffffff",
-                        "surface-dim": "#cfdaf2",
-                        "on-error": "#ffffff",
-                        "outline": "#727785",
-                        "on-primary-fixed": "#001a42",
-                        "error": "#ba1a1a",
-                        "error-container": "#ffdad6",
-                        "surface-bright": "#f9f9ff",
-                        "on-surface": "#111c2d",
-                        "tertiary-fixed-dim": "#b7c8e1"
-                    },
-                    fontFamily: {
-                        "headline": ["Inter", "sans-serif"],
-                        "body": ["Inter", "sans-serif"],
-                        "label": ["Inter", "sans-serif"]
-                    },
-                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
-                },
-            },
-        }
-    </script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-primary-container": "#525151","surface-variant": "#dbe4e7","outline": "#737c7f",
+            "surface-tint": "#5f5e5e","secondary": "#0053dc","on-secondary-fixed": "#003798",
+            "on-error-container": "#752121","surface-container-low": "#f1f4f6",
+            "surface-container-highest": "#dbe4e7","on-error": "#fff7f6","surface-dim": "#d1dce0",
+            "background": "#f8f9fa","surface": "#f8f9fa","secondary-container": "#dbe1ff",
+            "on-secondary-fixed-variant": "#0050d4","surface-container-high": "#e3e9ec",
+            "on-background": "#2b3437","error-container": "#fe8983","secondary-dim": "#0049c2",
+            "primary": "#5f5e5e","error": "#9f403d","on-secondary-container": "#0048bf",
+            "tertiary-fixed": "#82ff99","on-surface": "#2b3437","surface-bright": "#f8f9fa",
+            "on-secondary": "#faf8ff","primary-container": "#e5e2e1","inverse-primary": "#ffffff",
+            "tertiary-container": "#82ff99","tertiary-dim": "#006127","on-surface-variant": "#586064",
+            "on-tertiary": "#e9ffe6","surface-container": "#eaeff1","tertiary": "#006e2e",
+            "on-tertiary-container": "#006127","outline-variant": "#abb3b7",
+            "inverse-surface": "#0c0f10","on-primary": "#faf7f6","surface-container-lowest": "#ffffff"
+          },
+          fontFamily: { "headline": ["Inter"], "body": ["Inter"], "label": ["Inter"] },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
 <style>
-        body { font-family: 'Inter', sans-serif; }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .lithic-border {
-            outline: 1px solid rgba(194, 198, 214, 0.2);
-        }
-    </style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; line-height: 1; text-transform: none; letter-spacing: normal; word-wrap: normal; white-space: nowrap; direction: ltr; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8f9fa; color: #2b3437; }
+  </style>
 </head>
-<body class="bg-background text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed">
-<!-- SideNavBar (Authority: JSON) -->
-<aside class="fixed left-0 top-0 h-full w-[220px] bg-slate-50 flex flex-col py-6 lithic-border z-50">
-<div class="px-6 mb-8 flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white">
-<span class="material-symbols-outlined text-sm" data-icon="security" style="font-variation-settings: 'FILL' 1;">security</span>
+<body class="bg-background text-on-surface flex min-h-screen">
+<aside class="w-[200px] h-screen fixed left-0 top-0 bg-[#F1F4F6] flex flex-col justify-between py-4 z-50">
+<div class="flex flex-col gap-6">
+<div class="px-6 py-2">
+<span class="text-[14px] font-medium text-[#2B3437] tracking-tight">OpsWarden</span>
 </div>
-<div>
-<h1 class="text-xl font-bold tracking-tighter text-blue-800">OpsWarden</h1>
-<p class="text-[10px] text-tertiary uppercase tracking-widest font-bold">IT Sentinel</p>
-</div>
-</div>
-<nav class="flex-1 px-3 space-y-1">
-<!-- Dashboard is Active -->
-<a class="flex items-center gap-3 px-3 py-2 text-sm font-semibold text-blue-700 bg-blue-50/50 border-r-4 border-blue-700 transition-all duration-150" href="#">
-<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-<span>Dashboard</span>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-6 py-2.5 bg-[#F0F4FF] text-[#2563EB] border-l-2 border-[#2563EB] font-['Inter'] text-[14px] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span><span>仪表盘</span>
 </a>
-<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-500 hover:text-blue-600 hover:bg-slate-200/50 transition-colors" href="#">
-<span class="material-symbols-outlined" data-icon="monitor_heart">monitor_heart</span>
-<span>System Health</span>
+<a class="flex items-center gap-3 px-6 py-2.5 text-[#5F5E5E] hover:bg-[#DBE4E7] font-['Inter'] text-[14px] font-medium tracking-tight transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span><span>AI 问答</span>
 </a>
-<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-500 hover:text-blue-600 hover:bg-slate-200/50 transition-colors" href="#">
-<span class="material-symbols-outlined" data-icon="lan">lan</span>
-<span>Network</span>
+<a class="flex items-center gap-3 px-6 py-2.5 text-[#5F5E5E] hover:bg-[#DBE4E7] font-['Inter'] text-[14px] font-medium tracking-tight transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">manage_accounts</span><span>账号管理</span>
 </a>
-<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-500 hover:text-blue-600 hover:bg-slate-200/50 transition-colors" href="#">
-<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
-<span>Logs</span>
+<a class="flex items-center gap-3 px-6 py-2.5 text-[#5F5E5E] hover:bg-[#DBE4E7] font-['Inter'] text-[14px] font-medium tracking-tight transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">confirmation_number</span><span>工单系统</span>
 </a>
-<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-500 hover:text-blue-600 hover:bg-slate-200/50 transition-colors" href="#">
-<span class="material-symbols-outlined" data-icon="shield_with_heart">shield_with_heart</span>
-<span>Security</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-500 hover:text-blue-600 hover:bg-slate-200/50 transition-colors" href="#">
-<span class="material-symbols-outlined" data-icon="settings">settings</span>
-<span>Settings</span>
+<a class="flex items-center gap-3 px-6 py-2.5 text-[#5F5E5E] hover:bg-[#DBE4E7] font-['Inter'] text-[14px] font-medium tracking-tight transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">auto_stories</span><span>知识库</span>
 </a>
 </nav>
-<div class="px-6 mt-4">
-<button class="w-full py-2 bg-gradient-to-r from-primary to-primary-container text-white text-xs font-bold rounded-xl shadow-sm active:scale-95 transition-transform">
-                New Scan
-            </button>
 </div>
-<div class="mt-auto px-3 space-y-1">
-<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-500 hover:text-blue-600 hover:bg-slate-200/50 transition-colors" href="#">
-<span class="material-symbols-outlined" data-icon="help">help</span>
-<span>Support</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-500 hover:text-blue-600 hover:bg-slate-200/50 transition-colors" href="#">
-<span class="material-symbols-outlined" data-icon="logout">logout</span>
-<span>Logout</span>
+<div class="px-2">
+<a class="flex items-center gap-3 px-4 py-2 text-[#5F5E5E] hover:bg-[#DBE4E7] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+<span class="text-[14px] font-medium">退出登录</span>
 </a>
 </div>
 </aside>
-<!-- TopNavBar (Authority: JSON) -->
-<header class="fixed top-0 right-0 h-14 bg-white flex items-center justify-between px-6 ml-[220px] w-[calc(100%-220px)] border-b border-slate-100 z-40">
-<div class="flex items-center gap-8">
-<div class="relative group">
-<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 group-focus-within:text-primary transition-colors">
-<span class="material-symbols-outlined text-lg" data-icon="search">search</span>
-</span>
-<input class="block w-64 pl-10 pr-3 py-1.5 border-none bg-surface-container-low focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary rounded-xl text-sm transition-all" placeholder="搜索基础设施..." type="text"/>
-</div>
-<nav class="hidden md:flex gap-6">
-<a class="text-sm font-bold text-blue-700 border-b-2 border-blue-700 pb-1" href="#">Infrastructure</a>
-<a class="text-sm font-medium text-slate-600 hover:text-blue-600 cursor-pointer transition-colors" href="#">Applications</a>
-<a class="text-sm font-medium text-slate-600 hover:text-blue-600 cursor-pointer transition-colors" href="#">Cloud</a>
-</nav>
-</div>
+<div class="flex-1 ml-[200px] flex flex-col min-h-screen">
+<header class="h-[52px] fixed top-0 right-0 left-[200px] z-40 bg-white/80 backdrop-blur-md border-b border-[#ABB3B7]/15 flex justify-between items-center px-6">
+<h1 class="font-['Inter'] text-[15px] font-medium text-[#1A1A1A]">仪表盘</h1>
 <div class="flex items-center gap-4">
-<button class="text-slate-500 hover:text-blue-600 active:scale-95 transition-all">
-<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-</button>
-<button class="text-slate-500 hover:text-blue-600 active:scale-95 transition-all">
-<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
-</button>
-<div class="h-8 w-8 rounded-full overflow-hidden bg-surface-container-high border-2 border-white shadow-sm ring-1 ring-slate-100">
-<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEay26EZwRcTmR5F--v9pDUfe30vz4YBqlpS4F2aPFkmPTwJHiCM9ZingQ9eGH4SwCGov9Gnv6OvEqF5QkkZTDZmCv8KElflIMRAl06VLwkhLNgQy5VJfmVobVhs_1qefrMUPA7fUP4TdDkipkzN9f-Kmg9Ex1xSiSL7FFWwwSmCRj8vcJRWDuiJqxN0zFpDvXlIGLrO5fKbXNufV8fwEiJbhXDEi3AnyC2BYRV-3b2u6o2X3Xt1s3mkEx1X8jwZy8_4ArzgXe6R8"/>
+<div class="flex items-center gap-2 pl-2 border-l border-outline-variant/20">
+  <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-secondary text-[13px] font-bold" id="user-avatar">A</div>
+  <span class="text-[13px] text-on-surface" id="user-name">加载中...</span>
 </div>
 </div>
 </header>
-<!-- Main Content Canvas -->
-<main class="ml-[220px] pt-14 min-h-screen">
-<div class="p-8 max-w-7xl mx-auto space-y-8">
-<!-- Page Header -->
-<div class="flex items-end justify-between">
-<div>
-<h2 class="text-2xl font-bold tracking-tight text-on-background">运维概览</h2>
-<p class="text-on-surface-variant text-sm mt-1">实时监控系统状态与工单流转</p>
-</div>
-<div class="text-xs font-mono text-tertiary bg-surface-container-low px-3 py-1 rounded-full lithic-border">
-                    Last sync: 2023-10-27 14:32:01
-                </div>
-</div>
-<!-- Stats Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-<!-- Stat 1 -->
-<div class="bg-surface-container-lowest p-5 rounded-xl lithic-border shadow-sm flex flex-col justify-between">
-<div class="flex items-start justify-between">
-<span class="text-sm font-medium text-on-surface-variant">今日问答</span>
-<div class="w-8 h-8 rounded-lg bg-blue-50 text-primary flex items-center justify-center">
-<span class="material-symbols-outlined text-sm" data-icon="chat">chat</span>
+<main class="mt-[52px] p-6 flex flex-col gap-6">
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#ABB3B7]/15 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary"></div>
+<p class="text-on-surface-variant text-[13px] font-medium mb-1">今日问答</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-semibold text-on-surface tracking-tight" id="stat-daily-qa">-</span>
+<span class="text-[12px] font-medium text-tertiary flex items-center">次</span>
 </div>
 </div>
-<div class="mt-4 flex items-end gap-3">
-<span class="text-3xl font-bold tracking-tight">247</span>
-<span class="text-xs font-bold text-secondary flex items-center mb-1">
-<span class="material-symbols-outlined text-xs mr-0.5" data-icon="trending_up">trending_up</span>
-                            +12%
-                        </span>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#ABB3B7]/15 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-error"></div>
+<p class="text-on-surface-variant text-[13px] font-medium mb-1">待处理工单</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-semibold text-on-surface tracking-tight" id="stat-pending">-</span>
+<span class="px-2 py-0.5 bg-error-container text-on-error-container text-[11px] rounded-full font-medium hidden" id="stat-overdue-badge"></span>
 </div>
 </div>
-<!-- Stat 2 -->
-<div class="bg-surface-container-lowest p-5 rounded-xl lithic-border shadow-sm">
-<div class="flex items-start justify-between">
-<span class="text-sm font-medium text-on-surface-variant">待处理工单</span>
-<div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-<span class="material-symbols-outlined text-sm" data-icon="assignment_late">assignment_late</span>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#ABB3B7]/15 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<p class="text-on-surface-variant text-[13px] font-medium mb-1">账号总数</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-semibold text-on-surface tracking-tight" id="stat-accounts">-</span>
+<span class="text-[12px] font-medium text-secondary" id="stat-accounts-new"></span>
 </div>
 </div>
-<div class="mt-4 flex items-center gap-4">
-<span class="text-3xl font-bold tracking-tight text-amber-600">8</span>
-<div class="flex flex-col">
-<span class="text-[10px] font-bold text-error uppercase tracking-tighter">3 Overdue</span>
-<div class="h-1 w-12 bg-error-container rounded-full overflow-hidden mt-0.5">
-<div class="h-full bg-error w-3/4"></div>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#ABB3B7]/15 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-tertiary"></div>
+<p class="text-on-surface-variant text-[13px] font-medium mb-1">知识库条目</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-semibold text-on-surface tracking-tight" id="stat-kb">-</span>
+<span class="text-[12px] font-medium text-tertiary" id="stat-kb-new"></span>
 </div>
 </div>
-</div>
-</div>
-<!-- Stat 3 -->
-<div class="bg-surface-container-lowest p-5 rounded-xl lithic-border shadow-sm">
-<div class="flex items-start justify-between">
-<span class="text-sm font-medium text-on-surface-variant">账号总数</span>
-<div class="w-8 h-8 rounded-lg bg-slate-50 text-slate-600 flex items-center justify-center">
-<span class="material-symbols-outlined text-sm" data-icon="group">group</span>
-</div>
-</div>
-<div class="mt-4">
-<span class="text-3xl font-bold tracking-tight">1,284</span>
-<div class="mt-2 text-[10px] text-tertiary flex items-center gap-1 font-mono">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> 1,210 Active
-                        </div>
-</div>
-</div>
-<!-- Stat 4 -->
-<div class="bg-surface-container-lowest p-5 rounded-xl lithic-border shadow-sm">
-<div class="flex items-start justify-between">
-<span class="text-sm font-medium text-on-surface-variant">知识库条目</span>
-<div class="w-8 h-8 rounded-lg bg-emerald-50 text-secondary flex items-center justify-center">
-<span class="material-symbols-outlined text-sm" data-icon="book">book</span>
-</div>
-</div>
-<div class="mt-4">
-<span class="text-3xl font-bold tracking-tight">312</span>
-<p class="text-[10px] text-tertiary mt-2">更新于 2 小时前</p>
-</div>
-</div>
-</div>
-<!-- Charts Section -->
-<div class="grid grid-cols-1 lg:grid-cols-10 gap-6">
-<!-- Trend Chart Area (60%) -->
-<div class="lg:col-span-6 bg-surface-container-lowest p-6 rounded-xl lithic-border shadow-sm space-y-6">
-<div class="flex items-center justify-between">
-<h3 class="font-bold text-on-background">近7日问答趋势</h3>
-<div class="flex gap-2">
-<span class="w-2 h-2 rounded-full bg-primary mt-1.5"></span>
-<span class="text-xs text-on-surface-variant font-medium">Daily Queries</span>
-</div>
-</div>
-<div class="relative h-64 w-full flex items-end justify-between gap-1 pt-8 px-2">
-<!-- Custom Data Visualization Component (Editorial Clarity) -->
-<div class="flex-1 bg-surface-container-low relative group">
-<div class="absolute bottom-0 w-full bg-primary/20 h-[40%]" style="clip-path: polygon(0 100%, 100% 100%, 100% 20%, 0 40%);"></div>
-<div class="absolute bottom-[40%] w-full h-0.5 bg-primary"></div>
-<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono opacity-0 group-hover:opacity-100 transition-opacity">142</div>
-</div>
-<div class="flex-1 bg-surface-container-low relative group">
-<div class="absolute bottom-0 w-full bg-primary/20 h-[55%]" style="clip-path: polygon(0 80%, 100% 100%, 100% 20%, 0 20%);"></div>
-<div class="absolute bottom-[55%] w-full h-0.5 bg-primary"></div>
-<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono opacity-0 group-hover:opacity-100 transition-opacity">189</div>
-</div>
-<div class="flex-1 bg-surface-container-low relative group">
-<div class="absolute bottom-0 w-full bg-primary/20 h-[45%]" style="clip-path: polygon(0 100%, 100% 100%, 100% 0%, 0 20%);"></div>
-<div class="absolute bottom-[45%] w-full h-0.5 bg-primary"></div>
-<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono opacity-0 group-hover:opacity-100 transition-opacity">156</div>
-</div>
-<div class="flex-1 bg-surface-container-low relative group">
-<div class="absolute bottom-0 w-full bg-primary/20 h-[70%]" style="clip-path: polygon(0 60%, 100% 100%, 100% 10%, 0 0%);"></div>
-<div class="absolute bottom-[70%] w-full h-0.5 bg-primary"></div>
-<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono opacity-0 group-hover:opacity-100 transition-opacity">231</div>
-</div>
-<div class="flex-1 bg-surface-container-low relative group">
-<div class="absolute bottom-0 w-full bg-primary/20 h-[62%]" style="clip-path: polygon(0 100%, 100% 100%, 100% 40%, 0 10%);"></div>
-<div class="absolute bottom-[62%] w-full h-0.5 bg-primary"></div>
-<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono opacity-0 group-hover:opacity-100 transition-opacity">210</div>
-</div>
-<div class="flex-1 bg-surface-container-low relative group">
-<div class="absolute bottom-0 w-full bg-primary/20 h-[85%]" style="clip-path: polygon(0 70%, 100% 100%, 100% 0%, 0 40%);"></div>
-<div class="absolute bottom-[85%] w-full h-0.5 bg-primary"></div>
-<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono opacity-0 group-hover:opacity-100 transition-opacity">288</div>
-</div>
-<div class="flex-1 bg-surface-container-low relative group">
-<div class="absolute bottom-0 w-full bg-primary/20 h-[75%]" style="clip-path: polygon(0 100%, 100% 100%, 100% 20%, 0 0%);"></div>
-<div class="absolute bottom-[75%] w-full h-0.5 bg-primary"></div>
-<div class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-mono opacity-0 group-hover:opacity-100 transition-opacity">247</div>
-</div>
-</div>
-<div class="flex justify-between px-2 text-[10px] font-medium text-tertiary">
-<span>10-21</span>
-<span>10-22</span>
-<span>10-23</span>
-<span>10-24</span>
-<span>10-25</span>
-<span>10-26</span>
-<span class="text-primary font-bold">Today</span>
-</div>
-</div>
-<!-- Donut Chart Area (40%) -->
-<div class="lg:col-span-4 bg-surface-container-lowest p-6 rounded-xl lithic-border shadow-sm flex flex-col">
-<h3 class="font-bold text-on-background mb-8">工单状态分布</h3>
-<div class="flex-1 flex flex-col items-center justify-center relative">
-<!-- Custom SVG Donut -->
-<svg class="w-48 h-48 transform -rotate-90" viewbox="0 0 36 36">
-<circle class="stroke-slate-100" cx="18" cy="18" fill="none" r="16" stroke-width="3.5"></circle>
-<!-- Amber: 35% (待处理) -->
-<circle class="stroke-amber-400" cx="18" cy="18" fill="none" r="16" stroke-dasharray="35 100" stroke-dashoffset="0" stroke-width="3.5"></circle>
-<!-- Blue: 25% (处理中) -->
-<circle class="stroke-primary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="25 100" stroke-dashoffset="-35" stroke-width="3.5"></circle>
-<!-- Emerald: 30% (已解决) -->
-<circle class="stroke-secondary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="30 100" stroke-dashoffset="-60" stroke-width="3.5"></circle>
-<!-- Gray: 10% (已关闭) -->
-<circle class="stroke-slate-300" cx="18" cy="18" fill="none" r="16" stroke-dasharray="10 100" stroke-dashoffset="-90" stroke-width="3.5"></circle>
-</svg>
-<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-<span class="text-3xl font-extrabold tracking-tight">42</span>
-<span class="text-[10px] text-tertiary font-bold uppercase tracking-widest">Total Active</span>
-</div>
-</div>
-<div class="mt-8 grid grid-cols-2 gap-4">
-<div class="flex items-center gap-2">
-<span class="w-2.5 h-2.5 rounded-sm bg-amber-400"></span>
-<span class="text-xs text-on-surface-variant font-medium">待处理 (35%)</span>
-</div>
-<div class="flex items-center gap-2">
-<span class="w-2.5 h-2.5 rounded-sm bg-primary"></span>
-<span class="text-xs text-on-surface-variant font-medium">处理中 (25%)</span>
-</div>
-<div class="flex items-center gap-2">
-<span class="w-2.5 h-2.5 rounded-sm bg-secondary"></span>
-<span class="text-xs text-on-surface-variant font-medium">已解决 (30%)</span>
-</div>
-<div class="flex items-center gap-2">
-<span class="w-2.5 h-2.5 rounded-sm bg-slate-300"></span>
-<span class="text-xs text-on-surface-variant font-medium">已关闭 (10%)</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Table Section -->
-<div class="bg-surface-container-lowest rounded-xl lithic-border shadow-sm overflow-hidden">
-<div class="p-6 flex items-center justify-between border-b border-slate-50">
-<h3 class="font-bold text-on-background">最近工单</h3>
-<button class="text-primary text-xs font-bold hover:underline">查看全部</button>
+</section>
+<section class="bg-surface-container-lowest rounded-xl border border-[#ABB3B7]/15 overflow-hidden">
+<div class="px-6 py-4 border-b border-[#ABB3B7]/15 flex justify-between items-center">
+<h3 class="text-[15px] font-semibold text-on-surface">最近工单</h3>
+<button class="text-secondary text-[13px] font-medium hover:underline" onclick="window.location.href='tickets.html'">查看全部</button>
 </div>
 <div class="overflow-x-auto">
 <table class="w-full text-left border-collapse">
-<thead class="bg-surface-container-low text-[11px] font-bold text-tertiary uppercase tracking-wider">
-<tr>
-<th class="px-6 py-4">工单 ID</th>
-<th class="px-6 py-4">主题</th>
-<th class="px-6 py-4">提单人</th>
-<th class="px-6 py-4">优先级</th>
-<th class="px-6 py-4">状态</th>
-<th class="px-6 py-4 text-right">创建时间</th>
+<thead>
+<tr class="bg-surface-container-low/30">
+<th class="px-6 py-3 text-[12px] font-medium text-on-surface-variant uppercase tracking-wider">编号</th>
+<th class="px-6 py-3 text-[12px] font-medium text-on-surface-variant uppercase tracking-wider">摘要</th>
+<th class="px-6 py-3 text-[12px] font-medium text-on-surface-variant uppercase tracking-wider">报障人</th>
+<th class="px-6 py-3 text-[12px] font-medium text-on-surface-variant uppercase tracking-wider">状态</th>
+<th class="px-6 py-3 text-[12px] font-medium text-on-surface-variant uppercase tracking-wider">时间</th>
 </tr>
 </thead>
-<tbody class="text-sm divide-y divide-slate-50">
-<tr class="hover:bg-surface-container-high/30 transition-colors">
-<td class="px-6 py-4 font-mono text-xs">#TK-8821</td>
-<td class="px-6 py-4 font-medium text-on-surface">内网访问异常 - 上海机房</td>
-<td class="px-6 py-4 flex items-center gap-2">
-<div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px] font-bold text-primary">ZH</div>
-<span>张伟</span>
-</td>
-<td class="px-6 py-4">
-<span class="flex items-center gap-1.5 text-error font-bold text-[10px]">
-<span class="w-1.5 h-1.5 rounded-full bg-error"></span> 紧急
-                                    </span>
-</td>
-<td class="px-6 py-4">
-<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-600 border border-amber-100">待处理</span>
-</td>
-<td class="px-6 py-4 text-right font-mono text-xs text-on-surface-variant">10-27 12:45</td>
-</tr>
-<tr class="hover:bg-surface-container-high/30 transition-colors">
-<td class="px-6 py-4 font-mono text-xs">#TK-8819</td>
-<td class="px-6 py-4 font-medium text-on-surface">数据库连接池配置优化建议</td>
-<td class="px-6 py-4 flex items-center gap-2">
-<div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-600">LX</div>
-<span>李想</span>
-</td>
-<td class="px-6 py-4">
-<span class="flex items-center gap-1.5 text-on-surface-variant font-bold text-[10px]">
-<span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span> 中
-                                    </span>
-</td>
-<td class="px-6 py-4">
-<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-600 border border-blue-100">处理中</span>
-</td>
-<td class="px-6 py-4 text-right font-mono text-xs text-on-surface-variant">10-27 10:21</td>
-</tr>
-<tr class="hover:bg-surface-container-high/30 transition-colors">
-<td class="px-6 py-4 font-mono text-xs">#TK-8815</td>
-<td class="px-6 py-4 font-medium text-on-surface">新入职员工权限开通 - 开发部</td>
-<td class="px-6 py-4 flex items-center gap-2">
-<div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-[10px] font-bold text-secondary">WM</div>
-<span>王敏</span>
-</td>
-<td class="px-6 py-4">
-<span class="flex items-center gap-1.5 text-on-surface-variant font-bold text-[10px]">
-<span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span> 低
-                                    </span>
-</td>
-<td class="px-6 py-4">
-<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-secondary border border-emerald-100">已解决</span>
-</td>
-<td class="px-6 py-4 text-right font-mono text-xs text-on-surface-variant">10-26 16:50</td>
-</tr>
+<tbody id="recent-tickets-body" class="divide-y divide-[#ABB3B7]/10">
+<tr><td colspan="5" class="px-6 py-8 text-center text-on-surface-variant text-[13px]">加载中...</td></tr>
 </tbody>
 </table>
 </div>
-</div>
-<!-- Footer Meta -->
-<footer class="flex items-center justify-between text-[11px] text-tertiary pt-4">
-<div class="flex items-center gap-6">
-<span class="flex items-center gap-1.5">
-<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                        System Online: 142 days uptime
-                    </span>
-<span>Version 4.2.0-stable</span>
-</div>
-<div>
-                    © 2023 OpsWarden. Built for Operational Excellence.
-                </div>
-</footer>
-</div>
+</section>
 </main>
-<!-- Contextual FAB (Semantic Mapping: Home/Dashboard) -->
-<button class="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group" onclick="window.location.href='tickets.html'">
-<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
-<span class="absolute right-16 bg-on-background text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">创建新工单</span>
-</button>
+</div>
 <script src="api.js"></script>
 <script>
-  const user = requireAuth();
+  requireAuth();
+  bindSidebar();
+
+  // 显示用户信息
+  const user = getUser();
   if (user) {
-    bindSidebar();
-    // 顶栏"查看全部"按钮跳转
-    document.querySelector('button.text-primary.text-xs')?.addEventListener('click', () => { window.location.href = 'tickets.html'; });
-
-    // 渲染工单行
-    function ticketRow(t) {
-      const s = TICKET_STATUS[t.status] || { label: t.status, cls: '' };
-      const p = TICKET_PRIORITY[t.priority] || { label: t.priority, cls: 'text-on-surface-variant' };
-      const init = t.reporter_name ? t.reporter_name.slice(0, 1) : '?';
-      return `<tr class="hover:bg-surface-container-high/30 transition-colors">
-        <td class="px-6 py-4 font-mono text-xs">${t.ticket_no}</td>
-        <td class="px-6 py-4 font-medium text-on-surface">${t.title}</td>
-        <td class="px-6 py-4">
-          <div class="flex items-center gap-2">
-            <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px] font-bold text-primary">${init}</div>
-            <span>${t.reporter_name || '系统'}</span>
-          </div>
-        </td>
-        <td class="px-6 py-4"><span class="flex items-center gap-1.5 ${p.cls} font-bold text-[10px]"><span class="w-1.5 h-1.5 rounded-full bg-current"></span>${p.label}</span></td>
-        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${s.cls}">${s.label}</span></td>
-        <td class="px-6 py-4 text-right font-mono text-xs text-on-surface-variant">${fmtDate(t.created_at)}</td>
-      </tr>`;
-    }
-
-    async function loadDashboard() {
-      try {
-        const [recent, pending, processing] = await Promise.all([
-          getTickets({ page: 1, page_size: 5 }),
-          getTickets({ status: 'pending', page_size: 1 }),
-          getTickets({ status: 'processing', page_size: 1 }),
-        ]);
-
-        // 更新"待处理工单"数字
-        const statCards = document.querySelectorAll('.bg-surface-container-lowest');
-        statCards.forEach(card => {
-          const label = card.querySelector('.text-on-surface-variant');
-          if (label?.textContent.trim() === '待处理工单') {
-            const num = card.querySelector('.text-3xl');
-            if (num) num.textContent = pending.data.total;
-          }
-        });
-
-        // 更新最近工单表格
-        const tbody = document.querySelector('tbody');
-        if (tbody) {
-          tbody.innerHTML = recent.data.items.length
-            ? recent.data.items.map(ticketRow).join('')
-            : `<tr><td colspan="6" class="px-6 py-10 text-center text-on-surface-variant text-sm">暂无工单数据</td></tr>`;
-        }
-
-        // 更新时间戳
-        const ts = document.querySelector('.font-mono.text-tertiary');
-        if (ts) ts.textContent = `Last sync: ${new Date().toLocaleString('zh-CN')}`;
-      } catch (e) {
-        console.error('加载 Dashboard 失败', e);
-      }
-    }
-
-    loadDashboard();
+    document.getElementById('user-name').textContent = user.name || user.username;
+    document.getElementById('user-avatar').textContent = (user.name || user.username || 'U')[0].toUpperCase();
   }
+
+  // 加载统计数据
+  getAnalyticsSummary().then(res => {
+    const d = res.data;
+    document.getElementById('stat-daily-qa').textContent = d.daily_qa;
+    document.getElementById('stat-pending').textContent = d.pending_tickets;
+    if (d.overdue_count > 0) {
+      const badge = document.getElementById('stat-overdue-badge');
+      badge.textContent = d.overdue_count + '个超时';
+      badge.classList.remove('hidden');
+    }
+    document.getElementById('stat-accounts').textContent = d.total_accounts.toLocaleString();
+    if (d.new_accounts_month > 0) document.getElementById('stat-accounts-new').textContent = '+' + d.new_accounts_month;
+    document.getElementById('stat-kb').textContent = d.kb_entries;
+    if (d.kb_new_week > 0) document.getElementById('stat-kb-new').textContent = '+' + d.kb_new_week;
+  }).catch(() => {});
+
+  // 加载最近工单
+  getTickets({ page_size: 5 }).then(res => {
+    const tickets = res.data.items;
+    const tbody = document.getElementById('recent-tickets-body');
+    if (!tickets.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-on-surface-variant text-[13px]">暂无工单</td></tr>';
+      return;
+    }
+    tbody.innerHTML = tickets.map(t => {
+      const st = TICKET_STATUS[t.status] || { label: t.status, cls: 'bg-slate-100 text-slate-600' };
+      return `<tr class="hover:bg-surface-container-low/20 transition-colors cursor-pointer" onclick="window.location.href='tickets.html'">
+        <td class="px-6 py-4 text-[13px] font-mono text-secondary">${t.ticket_no}</td>
+        <td class="px-6 py-4 text-[13px] font-medium text-on-surface">${t.title}</td>
+        <td class="px-6 py-4 text-[13px] text-on-surface-variant">${t.reporter_name || '-'}</td>
+        <td class="px-6 py-4"><span class="px-2.5 py-0.5 rounded-full text-[11px] font-medium ${st.cls}">${st.label}</span></td>
+        <td class="px-6 py-4 text-[13px] text-on-surface-variant">${fmtDate(t.created_at)}</td>
+      </tr>`;
+    }).join('');
+  }).catch(() => {
+    document.getElementById('recent-tickets-body').innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-on-surface-variant text-[13px]">加载失败</td></tr>';
+  });
 </script>
 </body></html>

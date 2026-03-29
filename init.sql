@@ -76,5 +76,24 @@ CREATE TABLE IF NOT EXISTS ticket_logs (
 INSERT INTO accounts (employee_id, username, password_hash, name, department, role, status)
 VALUES ('ADMIN001', 'admin', '$2b$12$y3JGlrKh27jfkD2Cpiij/OoTie4H4Az4BSx2A.5mfLUFNEtPawrF2', '系统管理员', '运维管理部', 'admin', 'active');
 
+-- ==========================================
+-- 知识库表
+-- ==========================================
+CREATE TABLE IF NOT EXISTS kb_entries (
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    category    VARCHAR(64)  NOT NULL               COMMENT '分类',
+    question    TEXT         NOT NULL               COMMENT '问题',
+    solution    TEXT         NOT NULL               COMMENT '解决方案',
+    tags        VARCHAR(256) DEFAULT NULL           COMMENT '标签（逗号分隔）',
+    source      ENUM('manual','ticket_writeback') NOT NULL DEFAULT 'manual' COMMENT '来源',
+    match_score FLOAT        NOT NULL DEFAULT 0.8  COMMENT '匹配得分',
+    created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FULLTEXT INDEX ft_question (question),
+    INDEX idx_category (category),
+    INDEX idx_source (source)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='知识库条目表';
+
 GRANT ALL PRIVILEGES ON opswarden.* TO 'ops'@'%';
 FLUSH PRIVILEGES;

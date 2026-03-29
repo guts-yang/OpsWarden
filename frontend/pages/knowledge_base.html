@@ -1,399 +1,335 @@
 <!DOCTYPE html>
-
-<html lang="zh-CN"><head>
+<html class="light" lang="zh-CN"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>知识库 - OpsWarden</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
-        body { font-family: 'Inter', sans-serif; }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .lithic-shadow {
-            box-shadow: 0 12px 40px rgba(17, 28, 45, 0.08);
-        }
-        .glass-panel {
-            backdrop-filter: blur(12px);
-            background: rgba(255, 255, 255, 0.8);
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-    </style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
             colors: {
-              "on-primary": "#ffffff",
-              "surface-variant": "#d8e3fb",
-              "surface-container-lowest": "#ffffff",
-              "surface-container-high": "#dee8ff",
-              "primary-fixed": "#d8e2ff",
-              "surface-container": "#e7eeff",
-              "primary": "#0058be",
-              "outline-variant": "#c2c6d6",
-              "inverse-surface": "#263143",
-              "on-tertiary-fixed": "#0b1c30",
-              "tertiary-container": "#66768d",
-              "inverse-primary": "#adc6ff",
-              "tertiary": "#4d5d73",
-              "inverse-on-surface": "#ecf1ff",
-              "surface-tint": "#005ac2",
-              "on-tertiary-container": "#fdfcff",
-              "on-secondary-fixed-variant": "#005236",
-              "secondary-fixed-dim": "#4edea3",
-              "primary-container": "#2170e4",
-              "on-secondary-fixed": "#002113",
-              "on-background": "#111c2d",
-              "tertiary-fixed": "#d3e4fe",
-              "surface-container-highest": "#d8e3fb",
-              "surface": "#f9f9ff",
-              "on-surface-variant": "#424754",
-              "primary-fixed-dim": "#adc6ff",
-              "on-secondary-container": "#00714d",
-              "on-tertiary": "#ffffff",
-              "on-tertiary-fixed-variant": "#38485d",
-              "secondary": "#006c49",
-              "on-primary-container": "#fefcff",
-              "secondary-container": "#6cf8bb",
-              "on-primary-fixed-variant": "#004395",
-              "surface-container-low": "#f0f3ff",
-              "secondary-fixed": "#6ffbbe",
-              "on-error-container": "#93000a",
-              "background": "#f9f9ff",
-              "on-secondary": "#ffffff",
-              "surface-dim": "#cfdaf2",
-              "on-error": "#ffffff",
-              "outline": "#727785",
-              "on-primary-fixed": "#001a42",
-              "error": "#ba1a1a",
-              "error-container": "#ffdad6",
-              "surface-bright": "#f9f9ff",
-              "on-surface": "#111c2d",
-              "tertiary-fixed-dim": "#b7c8e1"
+              "on-primary-container": "#525151","surface-variant": "#dbe4e7","outline": "#737c7f",
+              "surface-tint": "#5f5e5e","secondary": "#0053dc","on-secondary-fixed": "#003798",
+              "on-error-container": "#752121","surface-container-low": "#f1f4f6",
+              "surface-container-highest": "#dbe4e7","on-error": "#fff7f6","surface-dim": "#d1dce0",
+              "background": "#f8f9fa","surface": "#f8f9fa","secondary-container": "#dbe1ff",
+              "on-secondary-fixed-variant": "#0050d4","surface-container-high": "#e3e9ec",
+              "on-background": "#2b3437","error-container": "#fe8983","secondary-dim": "#0049c2",
+              "primary": "#5f5e5e","error": "#9f403d","on-secondary-container": "#0048bf",
+              "tertiary-fixed": "#82ff99","on-surface": "#2b3437","surface-bright": "#f8f9fa",
+              "on-secondary": "#faf8ff","primary-container": "#e5e2e1","inverse-primary": "#ffffff",
+              "tertiary-container": "#82ff99","tertiary-dim": "#006127","on-surface-variant": "#586064",
+              "on-tertiary": "#e9ffe6","surface-container": "#eaeff1","tertiary": "#006e2e",
+              "on-tertiary-container": "#006127","outline-variant": "#abb3b7",
+              "inverse-surface": "#0c0f10","on-primary": "#faf7f6","surface-container-lowest": "#ffffff"
             },
-            fontFamily: {
-              "headline": ["Inter"],
-              "body": ["Inter"],
-              "label": ["Inter"]
-            },
+            fontFamily: { "headline": ["Inter"], "body": ["Inter"], "label": ["Inter"] },
             borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
           },
         },
       }
     </script>
+<style>
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+      body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body class="bg-surface text-on-surface antialiased">
-<!-- SideNavBar (Authority: JSON & Design System) -->
-<aside class="fixed left-0 top-0 h-full w-[220px] bg-slate-50 flex flex-col py-6 border-r border-slate-100">
+<body class="bg-background text-on-background">
+<aside class="w-[200px] h-screen fixed left-0 top-0 bg-[#F1F4F6] flex flex-col py-4 justify-between z-50">
+<div>
 <div class="px-6 mb-8">
-<h1 class="text-xl font-bold tracking-tighter text-blue-800">OpsWarden</h1>
-<p class="text-[10px] text-slate-500 font-medium uppercase tracking-widest">IT Sentinel</p>
+<span class="text-[14px] font-medium text-[#2B3437] tracking-tight">OpsWarden</span>
 </div>
-<nav class="flex-1 space-y-1 px-3">
-<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors rounded-lg font-sans text-sm font-medium tracking-tight" href="#">
-<span class="material-symbols-outlined text-lg">dashboard</span>
-                Dashboard
-            </a>
-<!-- System Health represents Knowledge Base here as a logical map -->
-<a class="flex items-center gap-3 px-3 py-2 text-blue-700 font-semibold border-r-4 border-blue-700 bg-blue-50/50 transition-all duration-150 font-sans text-sm tracking-tight" href="#">
-<span class="material-symbols-outlined text-lg">monitor_heart</span>
-                System Health
-            </a>
-<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors rounded-lg font-sans text-sm font-medium tracking-tight" href="#">
-<span class="material-symbols-outlined text-lg">lan</span>
-                Network
-            </a>
-<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors rounded-lg font-sans text-sm font-medium tracking-tight" href="#">
-<span class="material-symbols-outlined text-lg">terminal</span>
-                Logs
-            </a>
-<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors rounded-lg font-sans text-sm font-medium tracking-tight" href="#">
-<span class="material-symbols-outlined text-lg">shield_with_heart</span>
-                Security
-            </a>
-<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors rounded-lg font-sans text-sm font-medium tracking-tight" href="#">
-<span class="material-symbols-outlined text-lg">settings</span>
-                Settings
-            </a>
+<nav class="space-y-1">
+<a class="flex items-center px-6 py-2.5 text-[#5F5E5E] hover:bg-[#DBE4E7] transition-colors font-['Inter'] text-[14px] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span>仪表盘
+</a>
+<a class="flex items-center px-6 py-2.5 text-[#5F5E5E] hover:bg-[#DBE4E7] transition-colors font-['Inter'] text-[14px] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">smart_toy</span>AI 问答
+</a>
+<a class="flex items-center px-6 py-2.5 text-[#5F5E5E] hover:bg-[#DBE4E7] transition-colors font-['Inter'] text-[14px] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">manage_accounts</span>账号管理
+</a>
+<a class="flex items-center px-6 py-2.5 text-[#5F5E5E] hover:bg-[#DBE4E7] transition-colors font-['Inter'] text-[14px] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">confirmation_number</span>工单系统
+</a>
+<a class="flex items-center px-6 py-2.5 bg-[#F0F4FF] text-[#2563EB] border-l-2 border-[#2563EB] font-['Inter'] text-[14px] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">auto_stories</span>知识库
+</a>
 </nav>
-<div class="mt-auto px-6 mb-4">
-<button class="w-full py-2 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-transform">
-                New Scan
-            </button>
 </div>
-<div class="px-3 border-t border-slate-100 pt-4 space-y-1">
-<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 font-sans text-sm font-medium" href="#">
-<span class="material-symbols-outlined text-lg">help</span>
-                Support
-            </a>
-<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-blue-600 font-sans text-sm font-medium" href="#">
-<span class="material-symbols-outlined text-lg">logout</span>
-                Logout
-            </a>
+<div class="px-6">
+<a class="flex items-center py-2.5 text-[#5F5E5E] hover:bg-[#DBE4E7] transition-colors font-['Inter'] text-[14px] font-medium" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">logout</span>退出登录
+</a>
 </div>
 </aside>
-<!-- TopNavBar (Authority: JSON & Design System) -->
-<header class="fixed top-0 right-0 h-14 bg-white shadow-sm flex items-center justify-between px-6 ml-[220px] w-[calc(100%-220px)] z-10">
-<div class="flex items-center gap-6">
-<div class="relative group">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="搜索知识点..." type="text"/>
-</div>
-<nav class="flex items-center gap-4">
-<a class="text-blue-700 font-bold border-b-2 border-blue-700 pb-1 font-sans text-sm tracking-normal" href="#">Infrastructure</a>
-<a class="text-slate-600 hover:text-blue-600 cursor-pointer font-sans text-sm tracking-normal" href="#">Applications</a>
-<a class="text-slate-600 hover:text-blue-600 cursor-pointer font-sans text-sm tracking-normal" href="#">Cloud</a>
-</nav>
-</div>
-<div class="flex items-center gap-4">
-<button class="p-1.5 text-slate-600 hover:bg-slate-50 rounded-full transition-colors active:scale-95">
-<span class="material-symbols-outlined">notifications</span>
-</button>
-<button class="p-1.5 text-slate-600 hover:bg-slate-50 rounded-full transition-colors active:scale-95">
-<span class="material-symbols-outlined">help_outline</span>
-</button>
-<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
-<img alt="User Avatar" class="w-full h-full object-cover" data-alt="close-up portrait of professional software engineer in casual tech environment with soft warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVVefdr344uAZvXR8x-oMhnJ5aH18FrQxYlQddBpor9uVbn5QxXvbCNPZl1iDGc0eHPQUZfD72sbmr2xowgYN3g2rBZjkR6oKdIGXpkh6U5tohjo6n1XlWYxXgHn0l41lTSxUu8EsZdb7RPhEF3eqPGwEkGUp0Nsyk66EYASLuCxRxbf_HnejtWSILE3iVnVozvvgDUyX3GXTHtcNMYvNizNG2evv0NFxYnu-1WV7XwApKRA__z34HeUBaAU9uz5phVjKxxZgPjKw"/>
-</div>
-</div>
+<header class="h-[52px] fixed top-0 right-0 left-[200px] z-40 bg-white/80 backdrop-blur-md flex justify-between items-center px-6 border-b border-[#ABB3B7]/15">
+<h1 class="font-['Inter'] text-[15px] font-medium text-[#1A1A1A]">知识库管理</h1>
 </header>
-<!-- Main Content Canvas -->
-<main class="ml-[220px] pt-14 min-h-screen p-8 bg-surface">
-<!-- Header Section -->
-<div class="flex items-center justify-between mb-8">
+<main class="ml-[200px] pt-[52px] min-h-screen">
+<div class="p-8 max-w-7xl mx-auto">
+<div class="flex justify-between items-end mb-8">
 <div>
-<h2 class="text-3xl font-extrabold tracking-tight text-on-background">知识库管理</h2>
-<p class="text-tertiary text-sm mt-1">集成的智能哨兵知识资产中心</p>
+<div class="flex items-baseline gap-3">
+<h2 class="text-2xl font-medium text-on-background">知识库</h2>
+<span id="kb-total-count" class="text-on-surface-variant text-sm">- 条</span>
 </div>
-<button class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-bold active:scale-95 transition-all shadow-sm">
-<span class="material-symbols-outlined text-lg">add</span>
-                新增条目
-            </button>
+<p class="text-on-surface-variant text-sm mt-1">管理和优化 AI 问答引擎的基础知识储备</p>
 </div>
-<!-- Stats Row (Bento Style) -->
-<div class="grid grid-cols-3 gap-6 mb-10">
-<div class="bg-surface-container-lowest p-6 rounded-2xl border-none lithic-shadow">
-<div class="flex items-center justify-between mb-4">
-<span class="text-sm font-semibold text-tertiary">本周新增</span>
-<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
-<span class="material-symbols-outlined">auto_graph</span>
+<button id="new-entry-btn" class="bg-[#1A1A1A] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm font-medium hover:bg-black transition-all">
+<span class="material-symbols-outlined text-[18px]">add</span>新增条目
+</button>
 </div>
-</div>
-<div class="text-3xl font-extrabold text-on-surface">128</div>
-<div class="mt-2 text-xs text-secondary font-medium flex items-center gap-1">
-<span class="material-symbols-outlined text-xs">trending_up</span>
-                    +14.2% 较上周
-                </div>
-</div>
-<div class="bg-surface-container-lowest p-6 rounded-2xl border-none lithic-shadow">
-<div class="flex items-center justify-between mb-4">
-<span class="text-sm font-semibold text-tertiary">工单回写</span>
-<div class="w-10 h-10 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary">
-<span class="material-symbols-outlined">history_edu</span>
+<div class="grid grid-cols-3 gap-6 mb-8">
+<div class="bg-surface-container-low p-5 rounded-xl">
+<p class="text-on-surface-variant text-xs mb-2">本周新增</p>
+<div class="flex items-baseline gap-2">
+<span id="stat-new-week" class="text-2xl font-semibold">-</span>
+<span class="text-tertiary text-xs font-medium">条</span>
 </div>
 </div>
-<div class="text-3xl font-extrabold text-on-surface">542</div>
-<div class="mt-2 text-xs text-tertiary font-medium">覆盖率 68%</div>
-</div>
-<div class="bg-surface-container-lowest p-6 rounded-2xl border-none lithic-shadow">
-<div class="flex items-center justify-between mb-4">
-<span class="text-sm font-semibold text-tertiary">平均检索得分</span>
-<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
-<span class="material-symbols-outlined">star</span>
+<div class="bg-surface-container-low p-5 rounded-xl">
+<p class="text-on-surface-variant text-xs mb-2">工单回写</p>
+<div class="flex items-baseline gap-2">
+<span id="stat-writeback" class="text-2xl font-semibold">-</span>
+<span class="text-on-surface-variant text-xs">条</span>
 </div>
 </div>
-<div class="text-3xl font-extrabold text-on-surface">4.85<span class="text-sm font-medium text-slate-400">/5.0</span></div>
-<div class="mt-2 text-xs text-secondary font-medium">处于行业领先水平</div>
+<div class="bg-surface-container-low p-5 rounded-xl">
+<p class="text-on-surface-variant text-xs mb-2">平均匹配分</p>
+<div class="flex items-baseline gap-2">
+<span id="stat-avg-score" class="text-2xl font-semibold">-</span>
 </div>
 </div>
-<!-- Filters & Tabs -->
-<div class="flex items-center justify-between mb-6">
-<div class="flex items-center gap-2 bg-surface-container-low p-1 rounded-xl overflow-x-auto no-scrollbar">
-<button class="px-5 py-2 rounded-lg text-sm font-bold bg-white text-primary shadow-sm">全部</button>
-<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">账号管理</button>
-<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">权限管理</button>
-<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">网络问题</button>
-<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">服务器运维</button>
-<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">日志审计</button>
-<button class="px-5 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">工单回写</button>
+</div>
+<div class="flex flex-col gap-6 mb-8">
+<div class="flex items-center gap-6 border-b border-outline-variant/15" id="cat-tabs">
+<button class="cat-tab pb-3 text-sm font-medium border-b-2 border-secondary text-secondary" data-cat="">全部条目</button>
+<button class="cat-tab pb-3 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors border-b-2 border-transparent" data-cat="基础架构">基础架构</button>
+<button class="cat-tab pb-3 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors border-b-2 border-transparent" data-cat="网络安全">网络安全</button>
+<button class="cat-tab pb-3 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors border-b-2 border-transparent" data-cat="数据库">数据库</button>
+<button class="cat-tab pb-3 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors border-b-2 border-transparent" data-cat="中间件">中间件</button>
+</div>
+<div class="flex gap-4">
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input id="kb-search" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-secondary transition-colors" placeholder="搜索问题或关键字..." type="text"/>
+</div>
+<select id="kb-source-filter" class="bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-4 py-2 text-sm focus:outline-none">
+<option value="">所有来源</option>
+<option value="manual">人工录入</option>
+<option value="ticket_writeback">工单回写</option>
+</select>
 </div>
 </div>
-<!-- Knowledge Cards Grid -->
-<div class="grid grid-cols-2 gap-6">
-<!-- Card 1: Ticket Backfill -->
-<div class="bg-surface-container-lowest p-6 rounded-2xl border-l-4 border-secondary/40 lithic-shadow hover:translate-y-[-4px] transition-transform cursor-pointer group">
-<div class="flex justify-between items-start mb-4">
-<div class="flex gap-2">
-<span class="px-2.5 py-1 bg-surface-container text-primary text-[10px] font-bold uppercase rounded tracking-wider">网络问题</span>
-<span class="px-2.5 py-1 bg-secondary-container/20 text-secondary text-[10px] font-bold uppercase rounded tracking-wider">工单回写</span>
-</div>
-<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">arrow_outward</span>
-</div>
-<h3 class="text-base font-bold text-on-surface mb-2">如何解决堡垒机连接超时问题 (ErrorCode: 504)</h3>
-<p class="text-sm text-on-surface-variant line-clamp-2 mb-4 leading-relaxed">
-                    在高峰时段，VPN与内网网关之间的握手协议可能因带宽竞争导致504超时。建议先检查SSH Config中的AliveInterval参数，并重置网卡驱动。
-                </p>
-<div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
-<span>ID: KB-2023-0892</span>
-<span>更新于: 2023.10.24</span>
-</div>
-</div>
-<!-- Card 2: Manual -->
-<div class="bg-surface-container-lowest p-6 rounded-2xl lithic-shadow hover:translate-y-[-4px] transition-transform cursor-pointer group">
-<div class="flex justify-between items-start mb-4">
-<div class="flex gap-2">
-<span class="px-2.5 py-1 bg-surface-container text-primary text-[10px] font-bold uppercase rounded tracking-wider">账号管理</span>
-<span class="px-2.5 py-1 bg-surface-container-high text-tertiary text-[10px] font-bold uppercase rounded tracking-wider">人工录入</span>
-</div>
-<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">arrow_outward</span>
-</div>
-<h3 class="text-base font-bold text-on-surface mb-2">新员工入职账号权限矩阵模板</h3>
-<p class="text-sm text-on-surface-variant line-clamp-2 mb-4 leading-relaxed">
-                    标准化的权限分配流程，包含GitLab、Jira及运维平台的默认权限集。请确保在LDAP同步完成后进行映射。
-                </p>
-<div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
-<span>ID: KB-2023-0102</span>
-<span>更新于: 2023.11.02</span>
-</div>
-</div>
-<!-- Card 3: Ticket Backfill -->
-<div class="bg-surface-container-lowest p-6 rounded-2xl border-l-4 border-secondary/40 lithic-shadow hover:translate-y-[-4px] transition-transform cursor-pointer group">
-<div class="flex justify-between items-start mb-4">
-<div class="flex gap-2">
-<span class="px-2.5 py-1 bg-surface-container text-primary text-[10px] font-bold uppercase rounded tracking-wider">服务器运维</span>
-<span class="px-2.5 py-1 bg-secondary-container/20 text-secondary text-[10px] font-bold uppercase rounded tracking-wider">工单回写</span>
-</div>
-<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">arrow_outward</span>
-</div>
-<h3 class="text-base font-bold text-on-surface mb-2">CentOS 7 升级至 8 后的内核兼容性修复</h3>
-<p class="text-sm text-on-surface-variant line-clamp-2 mb-4 leading-relaxed">
-                    处理升级后常见的XFS文件系统报错问题。需要手动更新 grub 引导项并禁用旧版的 kernel-devel。
-                </p>
-<div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
-<span>ID: KB-2023-1144</span>
-<span>更新于: 2023.11.05</span>
-</div>
-</div>
-<!-- Card 4: Manual -->
-<div class="bg-surface-container-lowest p-6 rounded-2xl lithic-shadow hover:translate-y-[-4px] transition-transform cursor-pointer group">
-<div class="flex justify-between items-start mb-4">
-<div class="flex gap-2">
-<span class="px-2.5 py-1 bg-surface-container text-primary text-[10px] font-bold uppercase rounded tracking-wider">日志审计</span>
-<span class="px-2.5 py-1 bg-surface-container-high text-tertiary text-[10px] font-bold uppercase rounded tracking-wider">人工录入</span>
-</div>
-<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">arrow_outward</span>
-</div>
-<h3 class="text-base font-bold text-on-surface mb-2">ELK Stack 索引生命周期管理策略</h3>
-<p class="text-sm text-on-surface-variant line-clamp-2 mb-4 leading-relaxed">
-                    配置Hot-Warm-Cold架构，确保旧日志在30天后自动转入压缩存储，90天后自动删除。
-                </p>
-<div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
-<span>ID: KB-2023-0421</span>
-<span>更新于: 2023.11.07</span>
-</div>
+<div id="kb-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="col-span-2 text-center text-on-surface-variant text-sm py-12">加载中...</div>
 </div>
 </div>
 </main>
-<!-- Slide-in Panel (新增知识条目) -->
-<div id="panel-overlay" class="fixed inset-0 z-50 pointer-events-none overflow-hidden" style="display:none!important">
-<!-- Backdrop -->
-<div class="absolute inset-0 bg-on-background/10 backdrop-blur-sm pointer-events-auto"></div>
-<!-- Panel -->
-<div class="absolute right-0 top-0 h-full w-[480px] bg-white lithic-shadow pointer-events-auto flex flex-col">
-<div class="px-8 py-6 border-b border-slate-50 flex items-center justify-between">
-<h2 class="text-xl font-extrabold tracking-tight text-on-background">新增知识条目</h2>
-<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
-<span class="material-symbols-outlined">close</span>
+
+<!-- Add/Edit Panel -->
+<div id="kb-panel" class="hidden fixed inset-y-0 right-0 w-[480px] bg-surface-container-lowest z-[60] flex flex-col shadow-2xl ring-1 ring-outline-variant/20">
+<div class="h-[52px] px-6 border-b border-outline-variant/15 flex items-center justify-between">
+<h3 id="panel-title" class="font-medium text-sm">新增知识库条目</h3>
+<button id="panel-close" class="p-1 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-[20px]">close</span>
 </button>
 </div>
-<div class="flex-1 overflow-y-auto p-8 space-y-8 no-scrollbar">
-<!-- Category Select -->
+<div class="flex-1 overflow-y-auto p-8 space-y-5 no-scrollbar">
+<input type="hidden" id="edit-entry-id"/>
 <div class="space-y-2">
-<label class="text-xs font-bold text-tertiary uppercase tracking-wider">分类</label>
-<select class="w-full bg-surface-container-low border-none rounded-xl text-sm px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all">
-<option>网络问题</option>
-<option>账号管理</option>
-<option>服务器运维</option>
-<option>日志审计</option>
+<label class="text-xs font-medium text-on-surface-variant">分类 *</label>
+<select id="f-category" class="w-full bg-white border border-outline-variant/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-secondary">
+<option value="基础架构">基础架构</option>
+<option value="网络安全">网络安全</option>
+<option value="数据库">数据库</option>
+<option value="中间件">中间件</option>
+<option value="其他">其他</option>
 </select>
 </div>
-<!-- Question -->
 <div class="space-y-2">
-<label class="text-xs font-bold text-tertiary uppercase tracking-wider">问题</label>
-<input class="w-full bg-surface-container-low border-none rounded-xl text-sm px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all" placeholder="输入核心问题或故障表现..." type="text"/>
+<label class="text-xs font-medium text-on-surface-variant">问题 *</label>
+<textarea id="f-question" class="w-full bg-white border border-outline-variant/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-secondary resize-none" placeholder="描述常见故障现象或咨询问题..." rows="3"></textarea>
 </div>
-<!-- Solution -->
 <div class="space-y-2">
-<label class="text-xs font-bold text-tertiary uppercase tracking-wider">解决方案</label>
-<textarea class="w-full bg-surface-container-low border-none rounded-xl text-sm px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all resize-none" placeholder="详细说明处理步骤及注意事项..." rows="6"></textarea>
+<label class="text-xs font-medium text-on-surface-variant">解决方案 *</label>
+<textarea id="f-solution" class="w-full bg-white border border-outline-variant/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-secondary resize-none" placeholder="提供详细的排查步骤、操作指令或解决建议..." rows="8"></textarea>
 </div>
-<!-- Tags -->
 <div class="space-y-2">
-<label class="text-xs font-bold text-tertiary uppercase tracking-wider">标签</label>
-<div class="flex flex-wrap gap-2 mb-3">
-<span class="px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full flex items-center gap-1">
-                            #VPN <button class="material-symbols-outlined text-[14px]">close</button>
-</span>
-<span class="px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full flex items-center gap-1">
-                            #Timeout <button class="material-symbols-outlined text-[14px]">close</button>
-</span>
+<label class="text-xs font-medium text-on-surface-variant">标签（逗号分隔）</label>
+<input id="f-tags" class="w-full bg-white border border-outline-variant/30 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-secondary" placeholder="K8s, 磁盘, 故障排查..." type="text"/>
 </div>
-<input class="w-full bg-surface-container-low border-none rounded-xl text-sm px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all" placeholder="添加新标签..." type="text"/>
+<div id="panel-error" class="hidden text-[13px] text-red-600 bg-red-50 px-3 py-2 rounded-lg"></div>
 </div>
-<!-- Source -->
-<div class="space-y-2">
-<label class="text-xs font-bold text-tertiary uppercase tracking-wider">来源</label>
-<div class="flex gap-4">
-<label class="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low rounded-xl cursor-pointer border-2 border-transparent hover:border-primary/20 transition-all has-[:checked]:border-primary has-[:checked]:bg-white">
-<input checked="" class="hidden" name="source" type="radio"/>
-<span class="material-symbols-outlined text-lg">person</span>
-<span class="text-sm font-bold">人工录入</span>
-</label>
-<label class="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low rounded-xl cursor-pointer border-2 border-transparent hover:border-primary/20 transition-all has-[:checked]:border-primary has-[:checked]:bg-white">
-<input class="hidden" name="source" type="radio"/>
-<span class="material-symbols-outlined text-lg">auto_awesome</span>
-<span class="text-sm font-bold">工单回写</span>
-</label>
+<div class="p-6 bg-white border-t border-outline-variant/15 flex gap-3">
+<button id="panel-save" class="flex-1 bg-[#1A1A1A] text-white py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors">确认保存</button>
+<button id="panel-cancel" class="px-6 py-2 border border-outline-variant/30 rounded-lg text-sm font-medium hover:bg-surface-container-high transition-colors text-on-surface-variant">取消</button>
 </div>
 </div>
-</div>
-<!-- Panel Footer -->
-<div class="p-8 border-t border-slate-50 flex items-center justify-end gap-4">
-<button class="px-6 py-2.5 text-sm font-bold text-tertiary hover:bg-slate-50 rounded-xl transition-colors">取消</button>
-<button class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all">
-<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">auto_fix_high</span>
-                    保存并向量化
-                </button>
-</div>
-</div>
-</div>
+<!-- Panel overlay -->
+<div id="kb-overlay" class="hidden fixed inset-0 bg-black/5 z-[55]" onclick="closePanel()"></div>
+
 <script src="api.js"></script>
 <script>
   requireAuth();
   bindSidebar();
 
-  const overlay = document.getElementById('panel-overlay');
+  let activeCategory = '';
 
-  // Open panel
-  document.querySelector('button.bg-gradient-to-br').addEventListener('click', () => {
-    overlay.style.removeProperty('display');
-    overlay.classList.remove('pointer-events-none');
+  // Load stats
+  getKBStats().then(res => {
+    const d = res.data;
+    document.getElementById('stat-new-week').textContent = d.new_this_week;
+    document.getElementById('stat-writeback').textContent = d.ticket_writeback;
+    document.getElementById('stat-avg-score').textContent = d.avg_match_score;
+  }).catch(() => {});
+
+  // Category tabs
+  document.querySelectorAll('.cat-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-tab').forEach(b => {
+        b.classList.remove('border-secondary', 'text-secondary');
+        b.classList.add('text-on-surface-variant', 'border-transparent');
+      });
+      btn.classList.add('border-secondary', 'text-secondary');
+      btn.classList.remove('text-on-surface-variant', 'border-transparent');
+      activeCategory = btn.dataset.cat;
+      loadEntries();
+    });
   });
 
-  // Close panel
-  overlay.querySelector('button').addEventListener('click', () => {
-    overlay.style.setProperty('display', 'none', 'important');
-    overlay.classList.add('pointer-events-none');
+  let searchDebounce;
+  document.getElementById('kb-search').addEventListener('input', () => { clearTimeout(searchDebounce); searchDebounce = setTimeout(loadEntries, 400); });
+  document.getElementById('kb-source-filter').addEventListener('change', loadEntries);
+
+  function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  async function loadEntries() {
+    const keyword = document.getElementById('kb-search').value.trim();
+    const source = document.getElementById('kb-source-filter').value;
+    const params = { page_size: 50 };
+    if (activeCategory) params.category = activeCategory;
+    if (source) params.source = source;
+    if (keyword) params.keyword = keyword;
+    try {
+      const res = await getKBEntries(params);
+      const d = res.data;
+      document.getElementById('kb-total-count').textContent = d.total + ' 条';
+      const grid = document.getElementById('kb-grid');
+      if (!d.items.length) {
+        grid.innerHTML = '<div class="col-span-2 text-center text-on-surface-variant text-sm py-12">暂无知识库条目</div>';
+        return;
+      }
+      grid.innerHTML = d.items.map(e => {
+        const srcCls = e.source === 'ticket_writeback'
+          ? 'bg-tertiary-container text-on-tertiary-container'
+          : 'bg-primary-container text-on-primary-container';
+        const srcLabel = e.source === 'ticket_writeback' ? '工单回写' : '人工录入';
+        return `<div class="group bg-surface-container-lowest p-6 rounded-xl relative transition-all hover:ring-1 hover:ring-outline-variant/20">
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex gap-2">
+              <span class="px-2 py-0.5 bg-surface-container-high text-on-surface-variant text-[10px] font-medium rounded-full">${escHtml(e.category)}</span>
+              <span class="px-2 py-0.5 ${srcCls} text-[10px] font-medium rounded-full">${srcLabel}</span>
+            </div>
+            <div class="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button onclick="openEditPanel(${e.id})" class="text-on-surface-variant hover:text-secondary text-xs font-medium">编辑</button>
+              <button onclick="doDelete(${e.id})" class="text-on-surface-variant hover:text-error text-xs font-medium">删除</button>
+            </div>
+          </div>
+          <h3 class="text-[13px] font-semibold text-on-background mb-2 leading-snug">${escHtml(e.question)}</h3>
+          <p class="text-on-surface-variant text-[12px] leading-relaxed line-clamp-2">${escHtml(e.solution)}</p>
+          <div class="mt-4 pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+            <span class="text-[10px] text-on-surface-variant">最后更新: ${fmtDate(e.updated_at)}</span>
+            <span class="flex items-center gap-1 text-[10px] text-secondary font-medium">
+              <span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">grade</span>
+              ${e.match_score.toFixed(2)} 匹配度
+            </span>
+          </div>
+        </div>`;
+      }).join('');
+    } catch (err) {
+      document.getElementById('kb-grid').innerHTML = `<div class="col-span-2 text-center text-red-500 text-sm py-12">${err.message}</div>`;
+    }
+  }
+
+  async function doDelete(id) {
+    if (!confirm('确认删除此条目？')) return;
+    try { await deleteKBEntry(id); loadEntries(); getKBStats().then(r => { const d=r.data; document.getElementById('stat-new-week').textContent=d.new_this_week; document.getElementById('stat-writeback').textContent=d.ticket_writeback; }); }
+    catch (err) { alert(err.message); }
+  }
+
+  // Panel
+  const panel = document.getElementById('kb-panel');
+  const overlay = document.getElementById('kb-overlay');
+
+  function openPanel() {
+    document.getElementById('panel-error').classList.add('hidden');
+    panel.classList.remove('hidden');
+    overlay.classList.remove('hidden');
+  }
+
+  function closePanel() {
+    panel.classList.add('hidden');
+    overlay.classList.add('hidden');
+    document.getElementById('edit-entry-id').value = '';
+    document.getElementById('f-question').value = '';
+    document.getElementById('f-solution').value = '';
+    document.getElementById('f-tags').value = '';
+  }
+
+  document.getElementById('new-entry-btn').addEventListener('click', () => {
+    document.getElementById('panel-title').textContent = '新增知识库条目';
+    document.getElementById('panel-save').textContent = '确认保存';
+    document.getElementById('edit-entry-id').value = '';
+    openPanel();
+  });
+  document.getElementById('panel-close').addEventListener('click', closePanel);
+  document.getElementById('panel-cancel').addEventListener('click', closePanel);
+
+  async function openEditPanel(id) {
+    // find in current grid data - re-fetch for accuracy
+    try {
+      const res = await getKBEntries({ page_size: 100 });
+      const entry = res.data.items.find(e => e.id === id);
+      if (!entry) return;
+      document.getElementById('panel-title').textContent = '编辑条目';
+      document.getElementById('panel-save').textContent = '保存更改';
+      document.getElementById('edit-entry-id').value = id;
+      document.getElementById('f-category').value = entry.category;
+      document.getElementById('f-question').value = entry.question;
+      document.getElementById('f-solution').value = entry.solution;
+      document.getElementById('f-tags').value = entry.tags || '';
+      openPanel();
+    } catch (err) { alert(err.message); }
+  }
+
+  document.getElementById('panel-save').addEventListener('click', async () => {
+    const errEl = document.getElementById('panel-error');
+    errEl.classList.add('hidden');
+    const editId = document.getElementById('edit-entry-id').value;
+    const category = document.getElementById('f-category').value;
+    const question = document.getElementById('f-question').value.trim();
+    const solution = document.getElementById('f-solution').value.trim();
+    const tags = document.getElementById('f-tags').value.trim() || undefined;
+
+    if (!question || !solution) { errEl.textContent = '请填写问题和解决方案'; errEl.classList.remove('hidden'); return; }
+    try {
+      if (editId) await updateKBEntry(editId, { category, question, solution, tags });
+      else await createKBEntry({ category, question, solution, tags });
+      closePanel();
+      loadEntries();
+      getKBStats().then(r => { const d=r.data; document.getElementById('stat-new-week').textContent=d.new_this_week; document.getElementById('stat-writeback').textContent=d.ticket_writeback; document.getElementById('stat-avg-score').textContent=d.avg_match_score; }).catch(()=>{});
+    } catch (err) { errEl.textContent = err.message; errEl.classList.remove('hidden'); }
   });
 
-  // Cancel button
-  overlay.querySelector('button.text-tertiary').addEventListener('click', () => {
-    overlay.style.setProperty('display', 'none', 'important');
-    overlay.classList.add('pointer-events-none');
-  });
+  loadEntries();
 </script>
 </body></html>
