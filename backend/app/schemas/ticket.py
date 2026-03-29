@@ -31,6 +31,12 @@ class TicketAutoCreate(BaseModel):
     source: TicketSourceEnum = Field(default=TicketSourceEnum.ai_auto)
 
 
+class TicketManualCreate(BaseModel):
+    title: str = Field(..., min_length=1, max_length=256, description="工单标题")
+    description: Optional[str] = Field(None, description="问题详细描述")
+    priority: TicketPriorityEnum = Field(default=TicketPriorityEnum.medium, description="优先级")
+
+
 class TicketUpdate(BaseModel):
     status: Optional[TicketStatusEnum] = None
     assignee_id: Optional[int] = None

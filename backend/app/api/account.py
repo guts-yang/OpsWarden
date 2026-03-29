@@ -7,14 +7,68 @@ from app.database import get_db
 from app.models.account import Account
 from app.schemas.account import (
     AccountCreate, AccountUpdate, AccountResetPassword,
+    AccountProfileUpdate, AccountChangePassword,
     AccountResponse, AccountListResponse
 )
-from app.utils.security import hash_password
+from app.utils.security import hash_password, verify_password
 from app.utils.response import success
 from app.middleware.auth import get_current_user, require_admin, CurrentUser
 
 router = APIRouter(prefix="/api/accounts", tags=["账号管理"])
 
+
+# ── 个人资料接口（/me，需在 /{account_id} 之前注册，防止路由冲突） ──────────────
+
+@router.get("/me", summary="获取当前登录用户信息")
+def get_me(
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    account = db.query(Account).filter(Account.id == current_user.id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+    return success(data=AccountResponse.model_validate(account))
+
+
+@router.put("/me", summary="修改当前用户个人资料")
+def update_me(
+    req: AccountProfileUpdate,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    account = db.query(Account).filter(Account.id == current_user.id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+
+    update_data = req.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        if value is not None:
+            setattr(account, field, value)
+
+    db.commit()
+    db.refresh(account)
+    return success(data=AccountResponse.model_validate(account), message="资料已更新")
+
+
+@router.patch("/me/password", summary="修改当前用户密码")
+def change_my_password(
+    req: AccountChangePassword,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    account = db.query(Account).filter(Account.id == current_user.id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+
+    if not verify_password(req.old_password, account.password_hash):
+        raise HTTPException(status_code=400, detail="原密码错误")
+
+    account.password_hash = hash_password(req.new_password)
+    db.commit()
+    return success(message="密码已修改")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 
 @router.post("", summary="创建运维账号")
 def create_account(
