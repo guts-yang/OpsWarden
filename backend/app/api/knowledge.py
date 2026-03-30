@@ -3,6 +3,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, or_
 from typing import Optional
 from datetime import datetime, timedelta
+import logging
+
+logger = logging.getLogger(__name__)
 
 from app.database import get_db
 from app.models.knowledge import KBEntry
@@ -81,8 +84,8 @@ def create_entry(
     db.refresh(entry)
     try:
         chroma_add(entry.id, entry.question, entry.solution, entry.category)
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(f"ChromaDB sync failed for new entry {entry.id}: {e}")
     return success(data=KBEntryResponse.model_validate(entry).model_dump(), message="条目已创建")
 
 
@@ -103,8 +106,8 @@ def update_entry(
     db.refresh(entry)
     try:
         chroma_add(entry.id, entry.question, entry.solution, entry.category)
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(f"ChromaDB sync failed for update entry {entry.id}: {e}")
     return success(data=KBEntryResponse.model_validate(entry).model_dump(), message="条目已更新")
 
 
@@ -121,6 +124,6 @@ def delete_entry(
     db.commit()
     try:
         chroma_delete(entry_id)
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(f"ChromaDB delete failed for entry {entry_id}: {e}")
     return success(message="条目已删除")
