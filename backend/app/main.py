@@ -3,25 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy import text
 import logging
-import sys
-import os
 
 logger = logging.getLogger(__name__)
 
-# 确保能找到 app 模块
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from app.database import engine
+from app.api import auth, account, ticket, analytics, knowledge, chat
 
-from database import engine
-from api import auth, account, ticket, analytics, knowledge, chat
-
-# 直接导入异常处理函数
-from middleware.exception import (
+from app.middleware.exception import (
     http_exception_handler,
     validation_exception_handler,
     general_exception_handler
 )
-# 直接导入日志中间件类
-from middleware.logging import RequestLoggingMiddleware
+from app.middleware.logging import RequestLoggingMiddleware
 
 app = FastAPI(
     title="OpsWarden API",
@@ -55,7 +48,7 @@ app.include_router(chat.router)
 
 @app.on_event("startup")
 def startup_event():
-    from database import SessionLocal
+    from app.database import SessionLocal
     from app.rag.faq_loader import load_faq_if_empty
     db = SessionLocal()
     try:
