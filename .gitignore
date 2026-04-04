@@ -18,5 +18,8 @@ node_modules/
 dist/
 .cache/
 
+# ChromaDB runtime data
+backend/chroma_db/
+
 # macOS
 .DS_Store

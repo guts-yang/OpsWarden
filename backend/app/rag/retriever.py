@@ -1,7 +1,7 @@
 import logging
 from app.config import get_settings
 from app.rag.chroma_client import get_collection
-from app.rag.embedder import embed
+from app.rag.embedder import embed_query, embed_document
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ def search(query: str, top_k: int = None, threshold: float = None) -> list[dict]
         if total == 0:
             return []
 
-        query_embedding = embed(query)
+        query_embedding = embed_query(query)
         results = collection.query(
             query_embeddings=[query_embedding],
             n_results=min(top_k, total),
@@ -31,13 +31,14 @@ def search(query: str, top_k: int = None, threshold: float = None) -> list[dict]
             results["distances"][0],
             results["metadatas"][0],
         ):
-            if distance < threshold:
+            score = round(1 - distance, 4)
+            if score >= threshold:
                 docs.append({
                     "id": int(doc_id),
                     "question": metadata.get("question", ""),
                     "solution": metadata.get("solution", ""),
                     "category": metadata.get("category", ""),
-                    "score": round(1 - distance, 4),
+                    "score": score,
                 })
         return docs
     except Exception as e:
@@ -48,7 +49,7 @@ def search(query: str, top_k: int = None, threshold: float = None) -> list[dict]
 def add_entry(entry_id: int, question: str, solution: str, category: str):
     collection = get_collection()
     text = f"{question} {solution}"
-    embedding = embed(text)
+    embedding = embed_document(text)
     collection.upsert(
         ids=[str(entry_id)],
         embeddings=[embedding],

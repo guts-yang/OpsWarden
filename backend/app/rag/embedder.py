@@ -5,6 +5,9 @@ logger = logging.getLogger(__name__)
 
 _model = None
 
+# BGE 模型官方推荐：查询文本加此前缀，文档文本不加
+_QUERY_INSTRUCTION = "为这个句子生成表示以用于检索相关文章："
+
 
 def _get_model():
     global _model
@@ -17,5 +20,13 @@ def _get_model():
     return _model
 
 
-def embed(text: str) -> list[float]:
+def embed_query(text: str) -> list[float]:
+    """Encode query text with retrieval instruction prefix (for search)."""
+    return _get_model().encode(
+        _QUERY_INSTRUCTION + text, normalize_embeddings=True
+    ).tolist()
+
+
+def embed_document(text: str) -> list[float]:
+    """Encode document text without instruction prefix (for indexing)."""
     return _get_model().encode(text, normalize_embeddings=True).tolist()
