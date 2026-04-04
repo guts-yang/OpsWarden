@@ -1,6 +1,9 @@
 # Environment & secrets
 .env
 
+# Runtime logs
+*.log
+
 # ML models (large files, use pip install instead)
 /models
 models/
