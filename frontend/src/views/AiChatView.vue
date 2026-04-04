@@ -1,0 +1,196 @@
+<script setup>
+import { ref, nextTick } from 'vue'
+import { chatApi } from '@/api/chat'
+
+const messages = ref([
+  {
+    id: 0,
+    role: 'ai',
+    text: '您好！我是 OpsWarden AI 助手。请描述您遇到的运维问题，我会尽力为您解答。',
+    source: null,
+    time: new Date(),
+  },
+])
+const input = ref('')
+const loading = ref(false)
+const chatBody = ref(null)
+
+const quickQuestions = ['账号无法登录怎么办？', 'VPN 连接失败如何处理？', '服务器磁盘空间不足', '数据库连接超时']
+
+const MAX_LEN = 500
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')
+}
+
+async function scrollToBottom() {
+  await nextTick()
+  if (chatBody.value) {
+    chatBody.value.scrollTop = chatBody.value.scrollHeight
+  }
+}
+
+async function sendMessage(text) {
+  const q = (text ?? input.value).trim()
+  if (!q || loading.value) return
+  input.value = ''
+
+  messages.value.push({ id: Date.now(), role: 'user', text: q, time: new Date() })
+  await scrollToBottom()
+
+  loading.value = true
+  try {
+    const data = await chatApi.send(q)
+    messages.value.push({
+      id: Date.now() + 1,
+      role: 'ai',
+      text: data.answer,
+      source: data.source,
+      ticketNo: data.ticket_no,
+      time: new Date(),
+    })
+  } catch (e) {
+    messages.value.push({
+      id: Date.now() + 1,
+      role: 'ai',
+      text: `请求失败：${e.message}`,
+      source: 'error',
+      time: new Date(),
+    })
+  } finally {
+    loading.value = false
+    await scrollToBottom()
+  }
+}
+
+function onKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault()
+    sendMessage()
+  }
+}
+
+function clearHistory() {
+  messages.value = [messages.value[0]]
+}
+
+function fmtTime(d) {
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+}
+</script>
+
+<template>
+  <div class="flex flex-col h-full">
+    <!-- Toolbar -->
+    <div class="flex items-center justify-between px-6 py-3 bg-white border-b border-outline">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary-500 text-[20px]">smart_toy</span>
+        <span class="text-sm font-medium text-on-surface">AI 智能问答</span>
+        <span class="text-xs bg-success-container text-success px-2 py-0.5 rounded-full">在线</span>
+      </div>
+      <button
+        class="text-xs text-on-surface-variant hover:text-error flex items-center gap-1"
+        @click="clearHistory"
+      >
+        <span class="material-symbols-outlined text-[14px]">delete_sweep</span>
+        清空记录
+      </button>
+    </div>
+
+    <!-- Messages -->
+    <div ref="chatBody" class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+      <div v-for="msg in messages" :key="msg.id" class="flex" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
+        <!-- AI Avatar -->
+        <div v-if="msg.role === 'ai'" class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0 mr-2 mt-0.5">
+          <span class="material-symbols-outlined text-primary-500 text-[16px]">smart_toy</span>
+        </div>
+
+        <div :class="msg.role === 'user' ? 'max-w-[70%]' : 'max-w-[75%]'">
+          <!-- Bubble -->
+          <div
+            class="px-4 py-3 rounded-2xl text-sm leading-relaxed"
+            :class="
+              msg.role === 'user'
+                ? 'bg-primary-500 text-white rounded-tr-sm'
+                : 'bg-white border border-outline text-on-surface rounded-tl-sm'
+            "
+            v-html="escapeHtml(msg.text)"
+          />
+          <!-- Meta -->
+          <div
+            class="flex items-center gap-2 mt-1"
+            :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
+          >
+            <span class="text-[10px] text-on-surface-variant">{{ fmtTime(msg.time) }}</span>
+            <span
+              v-if="msg.source === 'kb'"
+              class="text-[10px] bg-success-container text-success px-1.5 py-0.5 rounded-full"
+            >
+              知识库命中
+            </span>
+            <span
+              v-else-if="msg.source === 'fallback'"
+              class="text-[10px] bg-warning-container text-warning px-1.5 py-0.5 rounded-full"
+            >
+              工单已创建
+              <template v-if="msg.ticketNo"> · {{ msg.ticketNo }}</template>
+            </span>
+          </div>
+        </div>
+
+        <!-- User Avatar -->
+        <div v-if="msg.role === 'user'" class="w-8 h-8 rounded-full bg-primary-200 flex items-center justify-center flex-shrink-0 ml-2 mt-0.5">
+          <span class="material-symbols-outlined text-primary-700 text-[16px]">person</span>
+        </div>
+      </div>
+
+      <!-- Loading indicator -->
+      <div v-if="loading" class="flex justify-start">
+        <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0 mr-2">
+          <span class="material-symbols-outlined text-primary-500 text-[16px]">smart_toy</span>
+        </div>
+        <div class="bg-white border border-outline rounded-2xl rounded-tl-sm px-4 py-3 flex gap-1.5 items-center">
+          <span class="w-1.5 h-1.5 bg-on-surface-variant rounded-full animate-bounce" style="animation-delay:0s" />
+          <span class="w-1.5 h-1.5 bg-on-surface-variant rounded-full animate-bounce" style="animation-delay:.15s" />
+          <span class="w-1.5 h-1.5 bg-on-surface-variant rounded-full animate-bounce" style="animation-delay:.3s" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick suggestions -->
+    <div class="px-6 pb-2 flex gap-2 flex-wrap">
+      <button
+        v-for="q in quickQuestions"
+        :key="q"
+        class="text-xs px-3 py-1 rounded-full border border-outline text-on-surface-variant hover:bg-surface-container transition-colors"
+        @click="sendMessage(q)"
+      >
+        {{ q }}
+      </button>
+    </div>
+
+    <!-- Input bar -->
+    <div class="px-6 pb-6">
+      <div class="bg-white border border-outline rounded-2xl p-3 flex items-end gap-3 focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500">
+        <textarea
+          v-model="input"
+          rows="2"
+          :maxlength="MAX_LEN"
+          placeholder="描述您的问题... (Enter 发送，Shift+Enter 换行)"
+          class="flex-1 resize-none text-sm text-on-surface bg-transparent focus:outline-none leading-relaxed"
+          @keydown="onKeydown"
+        />
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <span class="text-[10px] text-on-surface-variant">{{ input.length }}/{{ MAX_LEN }}</span>
+          <button
+            class="w-8 h-8 rounded-xl bg-primary-500 hover:bg-primary-600 disabled:opacity-50 flex items-center justify-center transition-colors"
+            :disabled="!input.trim() || loading"
+            @click="sendMessage()"
+          >
+            <span class="material-symbols-outlined text-white text-[18px]">send</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
