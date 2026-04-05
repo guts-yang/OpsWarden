@@ -1,3 +1,8 @@
+import os
+# Remove invalid CA bundle path that blocks HuggingFace model downloads
+os.environ.pop('CURL_CA_BUNDLE', None)
+os.environ.pop('REQUESTS_CA_BUNDLE', None)
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError

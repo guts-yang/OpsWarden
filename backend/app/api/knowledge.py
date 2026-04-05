@@ -82,11 +82,13 @@ def create_entry(
     db.add(entry)
     db.commit()
     db.refresh(entry)
+    emb_warning = None
     try:
         add_entry(entry.id, entry.question, entry.solution, entry.category)
     except Exception as e:
         logger.warning(f"pgvector sync failed for new entry {entry.id}: {e}")
-    return success(data=KBEntryResponse.model_validate(entry).model_dump(), message="条目已创建")
+        emb_warning = "条目已保存，但向量索引生成失败，该条目暂时无法被 AI 检索"
+    return success(data=KBEntryResponse.model_validate(entry).model_dump(), message=emb_warning or "条目已创建")
 
 
 @router.put("/{entry_id}", summary="更新知识库条目")
@@ -104,11 +106,13 @@ def update_entry(
             setattr(entry, field, value)
     db.commit()
     db.refresh(entry)
+    emb_warning = None
     try:
         add_entry(entry.id, entry.question, entry.solution, entry.category)
     except Exception as e:
         logger.warning(f"pgvector sync failed for update entry {entry.id}: {e}")
-    return success(data=KBEntryResponse.model_validate(entry).model_dump(), message="条目已更新")
+        emb_warning = "条目已保存，但向量索引生成失败，该条目暂时无法被 AI 检索"
+    return success(data=KBEntryResponse.model_validate(entry).model_dump(), message=emb_warning or "条目已更新")
 
 
 @router.delete("/{entry_id}", summary="删除知识库条目")
