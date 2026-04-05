@@ -29,7 +29,6 @@ def load_faq_if_empty(db: Session):
         logger.warning("FAQ 解析结果为空，请检查文件格式")
         return
 
-    # Bulk insert into MySQL
     db_entries = []
     for e in entries:
         obj = KBEntry(
@@ -44,17 +43,17 @@ def load_faq_if_empty(db: Session):
 
     db.flush()  # Assign IDs without committing
 
-    # Sync to ChromaDB
-    chroma_ok = 0
+    # Write embeddings to PostgreSQL
+    embed_ok = 0
     for obj in db_entries:
         try:
             add_entry(obj.id, obj.question, obj.solution, obj.category)
-            chroma_ok += 1
+            embed_ok += 1
         except Exception as e:
-            logger.warning(f"ChromaDB sync failed for entry {obj.id}: {e}")
+            logger.warning(f"Embedding sync failed for entry {obj.id}: {e}")
 
     db.commit()
-    logger.info(f"FAQ 已加载：MySQL {len(db_entries)} 条，ChromaDB {chroma_ok} 条")
+    logger.info(f"FAQ 已加载：{len(db_entries)} 条，embedding 写入 {embed_ok} 条")
 
 
 def _parse_faq(text: str) -> list[dict]:

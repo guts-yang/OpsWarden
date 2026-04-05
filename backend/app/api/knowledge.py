@@ -15,7 +15,7 @@ from app.schemas.knowledge import (
 )
 from app.middleware.auth import get_current_user, CurrentUser
 from app.utils.response import success
-from app.rag.retriever import add_entry as chroma_add, delete_entry as chroma_delete
+from app.rag.retriever import add_entry, delete_entry
 
 router = APIRouter(prefix="/api/knowledge", tags=["知识库"])
 
@@ -83,9 +83,9 @@ def create_entry(
     db.commit()
     db.refresh(entry)
     try:
-        chroma_add(entry.id, entry.question, entry.solution, entry.category)
+        add_entry(entry.id, entry.question, entry.solution, entry.category)
     except Exception as e:
-        logger.warning(f"ChromaDB sync failed for new entry {entry.id}: {e}")
+        logger.warning(f"pgvector sync failed for new entry {entry.id}: {e}")
     return success(data=KBEntryResponse.model_validate(entry).model_dump(), message="条目已创建")
 
 
@@ -105,9 +105,9 @@ def update_entry(
     db.commit()
     db.refresh(entry)
     try:
-        chroma_add(entry.id, entry.question, entry.solution, entry.category)
+        add_entry(entry.id, entry.question, entry.solution, entry.category)
     except Exception as e:
-        logger.warning(f"ChromaDB sync failed for update entry {entry.id}: {e}")
+        logger.warning(f"pgvector sync failed for update entry {entry.id}: {e}")
     return success(data=KBEntryResponse.model_validate(entry).model_dump(), message="条目已更新")
 
 
@@ -123,7 +123,7 @@ def delete_entry(
     db.delete(entry)
     db.commit()
     try:
-        chroma_delete(entry_id)
+        delete_entry(entry_id)
     except Exception as e:
-        logger.warning(f"ChromaDB delete failed for entry {entry_id}: {e}")
+        logger.warning(f"pgvector delete failed for entry {entry_id}: {e}")
     return success(message="条目已删除")

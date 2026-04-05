@@ -1,6 +1,9 @@
 import logging
+from sqlalchemy import select, update
+from pgvector.sqlalchemy import Vector
 from app.config import get_settings
-from app.rag.chroma_client import get_collection
+from app.database import SessionLocal
+from app.models.knowledge import KBEntry
 from app.rag.embedder import embed_query, embed_document
 
 logger = logging.getLogger(__name__)
@@ -14,57 +17,57 @@ def search(query: str, top_k: int = None, threshold: float = None) -> list[dict]
         threshold = settings.RAG_SCORE_THRESHOLD
 
     try:
-        collection = get_collection()
-        total = collection.count()
-        if total == 0:
-            return []
+        vec = embed_query(query)
+        with SessionLocal() as db:
+            total = db.query(KBEntry).filter(KBEntry.embedding.isnot(None)).count()
+            if total == 0:
+                return []
 
-        query_embedding = embed_query(query)
-        results = collection.query(
-            query_embeddings=[query_embedding],
-            n_results=min(top_k, total),
-        )
+            # cosine_distance returns 0=identical, 2=opposite; score = 1 - distance
+            distance_expr = KBEntry.embedding.cosine_distance(vec)
+            rows = db.execute(
+                select(KBEntry, (1 - distance_expr).label("score"))
+                .where(KBEntry.embedding.isnot(None))
+                .order_by(distance_expr)
+                .limit(top_k)
+            ).all()
 
-        docs = []
-        for doc_id, distance, metadata in zip(
-            results["ids"][0],
-            results["distances"][0],
-            results["metadatas"][0],
-        ):
-            score = round(1 - distance, 4)
-            if score >= threshold:
-                docs.append({
-                    "id": int(doc_id),
-                    "question": metadata.get("question", ""),
-                    "solution": metadata.get("solution", ""),
-                    "category": metadata.get("category", ""),
-                    "score": score,
-                })
-        return docs
+        return [
+            {
+                "id": row.KBEntry.id,
+                "question": row.KBEntry.question,
+                "solution": row.KBEntry.solution,
+                "category": row.KBEntry.category,
+                "score": round(float(row.score), 4),
+            }
+            for row in rows
+            if float(row.score) >= threshold
+        ]
     except Exception as e:
-        logger.warning(f"ChromaDB search error: {e}")
+        logger.warning(f"pgvector search error: {e}")
         return []
 
 
 def add_entry(entry_id: int, question: str, solution: str, category: str):
-    collection = get_collection()
-    text = f"{question} {solution}"
-    embedding = embed_document(text)
-    collection.upsert(
-        ids=[str(entry_id)],
-        embeddings=[embedding],
-        metadatas=[{"question": question, "solution": solution, "category": category}],
-        documents=[text],
-    )
+    vec = embed_document(f"{question} {solution}")
+    with SessionLocal() as db:
+        db.execute(
+            update(KBEntry).where(KBEntry.id == entry_id).values(embedding=vec)
+        )
+        db.commit()
 
 
 def delete_entry(entry_id: int):
-    collection = get_collection()
-    collection.delete(ids=[str(entry_id)])
+    with SessionLocal() as db:
+        db.execute(
+            update(KBEntry).where(KBEntry.id == entry_id).values(embedding=None)
+        )
+        db.commit()
 
 
 def collection_count() -> int:
     try:
-        return get_collection().count()
+        with SessionLocal() as db:
+            return db.query(KBEntry).filter(KBEntry.embedding.isnot(None)).count()
     except Exception:
         return -1

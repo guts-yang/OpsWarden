@@ -1,25 +1,19 @@
 version: "3.8"
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: opswarden-mysql
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: opswarden-postgres
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root123456
-      MYSQL_DATABASE: opswarden
-      MYSQL_USER: ops
-      MYSQL_PASSWORD: ops123456
+      POSTGRES_PASSWORD: 342802
+      POSTGRES_DB: opswarden
       TZ: Asia/Shanghai
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    command: >
-      --default-authentication-plugin=mysql_native_password
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
 
 volumes:
-  mysql_data:
+  postgres_data:

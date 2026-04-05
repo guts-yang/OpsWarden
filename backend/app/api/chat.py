@@ -35,7 +35,7 @@ async def chat(
     if not query:
         return success(data={"answer": "请输入您的问题。", "source": "fallback"})
 
-    # 1. Semantic search in ChromaDB
+    # 1. Semantic search in PostgreSQL pgvector
     results = rag_search(query)
 
     if results:

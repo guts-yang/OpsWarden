@@ -5,7 +5,7 @@ import BasePagination from '@/components/BasePagination.vue'
 import BaseSlidePanel from '@/components/BaseSlidePanel.vue'
 import { fmtDate } from '@/utils/constants'
 
-const categories = ['全部', '基础架构', '网络安全', '数据库', '中间件', '应用系统', '其他']
+const categories = ['全部', '账号与权限管理', '网络与连接问题', '服务器与系统运维', '应用与数据库', '安全与审计', '监控与告警', '办公设备与环境', '差旅报销与入职离职事务']
 const sourceOptions = [
   { value: '', label: '全部来源' },
   { value: 'manual', label: '手动录入' },

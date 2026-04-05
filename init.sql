@@ -1,99 +1,127 @@
--- OpsWarden 数据库初始化脚本
+-- OpsWarden 数据库初始化脚本 (PostgreSQL)
 
-CREATE DATABASE IF NOT EXISTS opswarden
-    DEFAULT CHARACTER SET utf8mb4
-    DEFAULT COLLATE utf8mb4_unicode_ci;
-
-USE opswarden;
+CREATE EXTENSION IF NOT EXISTS vector;
 
 -- ==========================================
--- OPS-7: 运维账号表
+-- ENUM 类型定义
+-- ==========================================
+DO $$ BEGIN
+    CREATE TYPE account_role   AS ENUM ('admin', 'operator', 'user');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+    CREATE TYPE account_status AS ENUM ('active', 'frozen');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+    CREATE TYPE ticket_source  AS ENUM ('ai_auto', 'manual', 'feishu');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+    CREATE TYPE ticket_status  AS ENUM ('pending', 'processing', 'resolved', 'closed');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+    CREATE TYPE ticket_priority AS ENUM ('low', 'medium', 'high', 'urgent');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+    CREATE TYPE kb_source AS ENUM ('manual', 'ticket_writeback');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+-- ==========================================
+-- 运维账号表
 -- ==========================================
 CREATE TABLE IF NOT EXISTS accounts (
-    id              BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
-    employee_id     VARCHAR(32)  NOT NULL UNIQUE COMMENT '工号',
-    username        VARCHAR(64)  NOT NULL UNIQUE COMMENT '登录用户名',
-    password_hash   VARCHAR(256) NOT NULL COMMENT '密码哈希',
-    name            VARCHAR(64)  NOT NULL COMMENT '姓名',
-    department      VARCHAR(128) DEFAULT NULL COMMENT '部门',
-    email           VARCHAR(128) DEFAULT NULL COMMENT '邮箱',
-    phone           VARCHAR(20)  DEFAULT NULL COMMENT '手机号',
-    role            ENUM('admin', 'operator', 'user') NOT NULL DEFAULT 'user' COMMENT '角色',
-    status          ENUM('active', 'frozen') NOT NULL DEFAULT 'active' COMMENT '状态',
-    last_login_at   DATETIME     DEFAULT NULL COMMENT '最后登录时间',
-    created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    updated_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    employee_id     VARCHAR(32)      NOT NULL UNIQUE,
+    username        VARCHAR(64)      NOT NULL UNIQUE,
+    password_hash   VARCHAR(256)     NOT NULL,
+    name            VARCHAR(64)      NOT NULL,
+    department      VARCHAR(128),
+    email           VARCHAR(128),
+    phone           VARCHAR(20),
+    role            account_role     NOT NULL DEFAULT 'user',
+    status          account_status   NOT NULL DEFAULT 'active',
+    last_login_at   TIMESTAMPTZ,
+    created_at      TIMESTAMPTZ      NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ      NOT NULL DEFAULT NOW()
+);
 
-    INDEX idx_employee_id (employee_id),
-    INDEX idx_name (name),
-    INDEX idx_department (department),
-    INDEX idx_status (status)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运维账号表';
+CREATE INDEX IF NOT EXISTS idx_accounts_employee_id  ON accounts (employee_id);
+CREATE INDEX IF NOT EXISTS idx_accounts_name         ON accounts (name);
+CREATE INDEX IF NOT EXISTS idx_accounts_department   ON accounts (department);
+CREATE INDEX IF NOT EXISTS idx_accounts_status       ON accounts (status);
 
 -- ==========================================
--- OPS-13: 工单表（提前建好，后面直接用）
+-- 运维工单表
 -- ==========================================
 CREATE TABLE IF NOT EXISTS tickets (
-    id              BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
-    ticket_no       VARCHAR(32)  NOT NULL UNIQUE COMMENT '工单编号',
-    title           VARCHAR(256) NOT NULL COMMENT '工单标题',
-    description     TEXT         COMMENT '问题详细描述',
-    source          ENUM('ai_auto', 'manual', 'feishu') NOT NULL DEFAULT 'ai_auto' COMMENT '来源',
-    status          ENUM('pending', 'processing', 'resolved', 'closed') NOT NULL DEFAULT 'pending' COMMENT '状态',
-    priority        ENUM('low', 'medium', 'high', 'urgent') NOT NULL DEFAULT 'medium' COMMENT '优先级',
-    reporter_id     BIGINT       DEFAULT NULL COMMENT '报障人ID',
-    reporter_name   VARCHAR(64)  DEFAULT NULL COMMENT '报障人姓名',
-    assignee_id     BIGINT       DEFAULT NULL COMMENT '处理人ID',
-    solution        TEXT         DEFAULT NULL COMMENT '解决方案',
-    is_written_back TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '是否已回写知识库',
-    callback_note   TEXT         DEFAULT NULL COMMENT '回访备注',
-    callback_at     DATETIME     DEFAULT NULL COMMENT '回访时间',
-    resolved_at     DATETIME     DEFAULT NULL COMMENT '解决时间',
-    closed_at       DATETIME     DEFAULT NULL COMMENT '关闭时间',
-    created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    ticket_no       VARCHAR(32)      NOT NULL UNIQUE,
+    title           VARCHAR(256)     NOT NULL,
+    description     TEXT,
+    source          ticket_source    NOT NULL DEFAULT 'ai_auto',
+    status          ticket_status    NOT NULL DEFAULT 'pending',
+    priority        ticket_priority  NOT NULL DEFAULT 'medium',
+    reporter_id     BIGINT,
+    reporter_name   VARCHAR(64),
+    assignee_id     BIGINT,
+    solution        TEXT,
+    is_written_back BOOLEAN          NOT NULL DEFAULT FALSE,
+    callback_note   TEXT,
+    callback_at     TIMESTAMPTZ,
+    resolved_at     TIMESTAMPTZ,
+    closed_at       TIMESTAMPTZ,
+    created_at      TIMESTAMPTZ      NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ      NOT NULL DEFAULT NOW()
+);
 
-    INDEX idx_ticket_no (ticket_no),
-    INDEX idx_status (status),
-    INDEX idx_assignee (assignee_id),
-    INDEX idx_created (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运维工单表';
-
-CREATE TABLE IF NOT EXISTS ticket_logs (
-    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
-    ticket_id     BIGINT       NOT NULL COMMENT '关联工单ID',
-    action        VARCHAR(64)  NOT NULL COMMENT '操作类型',
-    operator_id   BIGINT       DEFAULT NULL COMMENT '操作人ID',
-    operator_name VARCHAR(64)  DEFAULT NULL COMMENT '操作人姓名',
-    content       TEXT         DEFAULT NULL COMMENT '操作内容',
-    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    INDEX idx_ticket_id (ticket_id),
-    FOREIGN KEY (ticket_id) REFERENCES tickets(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='工单操作日志表';
-
--- 插入默认管理员（密码: admin123 的bcrypt哈希）
-INSERT INTO accounts (employee_id, username, password_hash, name, department, role, status)
-VALUES ('ADMIN001', 'admin', '$2b$12$y3JGlrKh27jfkD2Cpiij/OoTie4H4Az4BSx2A.5mfLUFNEtPawrF2', '系统管理员', '运维管理部', 'admin', 'active');
+CREATE INDEX IF NOT EXISTS idx_tickets_ticket_no ON tickets (ticket_no);
+CREATE INDEX IF NOT EXISTS idx_tickets_status    ON tickets (status);
+CREATE INDEX IF NOT EXISTS idx_tickets_assignee  ON tickets (assignee_id);
+CREATE INDEX IF NOT EXISTS idx_tickets_created   ON tickets (created_at);
 
 -- ==========================================
--- 知识库表
+-- 工单操作日志表
+-- ==========================================
+CREATE TABLE IF NOT EXISTS ticket_logs (
+    id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    ticket_id     BIGINT       NOT NULL REFERENCES tickets(id) ON DELETE CASCADE,
+    action        VARCHAR(64)  NOT NULL,
+    operator_id   BIGINT,
+    operator_name VARCHAR(64),
+    content       TEXT,
+    created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_ticket_logs_ticket_id ON ticket_logs (ticket_id);
+
+-- ==========================================
+-- 知识库条目表
 -- ==========================================
 CREATE TABLE IF NOT EXISTS kb_entries (
-    id          BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
-    category    VARCHAR(64)  NOT NULL               COMMENT '分类',
-    question    TEXT         NOT NULL               COMMENT '问题',
-    solution    TEXT         NOT NULL               COMMENT '解决方案',
-    tags        VARCHAR(256) DEFAULT NULL           COMMENT '标签（逗号分隔）',
-    source      ENUM('manual','ticket_writeback') NOT NULL DEFAULT 'manual' COMMENT '来源',
-    match_score FLOAT        NOT NULL DEFAULT 0.8  COMMENT '匹配得分',
-    created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    category    VARCHAR(64)  NOT NULL,
+    question    TEXT         NOT NULL,
+    solution    TEXT         NOT NULL,
+    tags        VARCHAR(256),
+    source      kb_source    NOT NULL DEFAULT 'manual',
+    match_score FLOAT        NOT NULL DEFAULT 0.8,
+    embedding   vector(512),
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
 
-    FULLTEXT INDEX ft_question (question),
-    INDEX idx_category (category),
-    INDEX idx_source (source)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='知识库条目表';
+CREATE INDEX IF NOT EXISTS idx_kb_category ON kb_entries (category);
+CREATE INDEX IF NOT EXISTS idx_kb_source   ON kb_entries (source);
+-- IVFFlat index for fast approximate nearest-neighbor search
+CREATE INDEX IF NOT EXISTS idx_kb_embedding ON kb_entries
+    USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
 
-GRANT ALL PRIVILEGES ON opswarden.* TO 'ops'@'%';
-FLUSH PRIVILEGES;
+-- ==========================================
+-- 默认管理员账号（密码: admin123）
+-- ==========================================
+INSERT INTO accounts (employee_id, username, password_hash, name, department, role, status)
+VALUES ('ADMIN001', 'admin', '$2b$12$y3JGlrKh27jfkD2Cpiij/OoTie4H4Az4BSx2A.5mfLUFNEtPawrF2', '系统管理员', '运维管理部', 'admin', 'active')
+ON CONFLICT (username) DO NOTHING;
