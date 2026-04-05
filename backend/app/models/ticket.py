@@ -1,4 +1,4 @@
-from sqlalchemy import Column, BigInteger, String, Text, Enum, DateTime, SmallInteger, ForeignKey, func
+from sqlalchemy import Column, BigInteger, String, Text, Enum, DateTime, Boolean, ForeignKey, func
 from app.database import Base
 
 
@@ -16,7 +16,7 @@ class Ticket(Base):
     reporter_name = Column(String(64))
     assignee_id = Column(BigInteger)
     solution = Column(Text)
-    is_written_back = Column(SmallInteger, default=0)
+    is_written_back = Column(Boolean, default=False)
     callback_note = Column(Text)
     callback_at = Column(DateTime)
     resolved_at = Column(DateTime)

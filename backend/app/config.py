@@ -7,7 +7,7 @@ _ENV_FILE = Path(__file__).parent.parent.parent / ".env"
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "mysql+pymysql://root:342802@localhost:3306/opswarden?charset=utf8mb4"
+    DATABASE_URL: str = "postgresql+psycopg://postgres:password@localhost:5432/opswarden"
     SECRET_KEY: str = "ops-warden-secret-key"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
@@ -20,9 +20,7 @@ class Settings(BaseSettings):
     DEEPSEEK_MAX_TOKENS: int = 800
     DEEPSEEK_TIMEOUT: float = 30.0
 
-    # ChromaDB & RAG
-    CHROMA_PATH: str = "./chroma_db"
-    CHROMA_COLLECTION: str = "ops_faq"
+    # RAG
     EMBEDDING_MODEL: str = "BAAI/bge-small-zh-v1.5"
     EMBEDDING_DEVICE: str = "cpu"
     RAG_SCORE_THRESHOLD: float = 0.4

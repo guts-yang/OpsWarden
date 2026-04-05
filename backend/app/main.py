@@ -48,8 +48,12 @@ app.include_router(chat.router)
 
 @app.on_event("startup")
 def startup_event():
-    from app.database import SessionLocal
+    from app.database import SessionLocal, init_extensions
     from app.rag.faq_loader import load_faq_if_empty
+    try:
+        init_extensions()
+    except Exception as e:
+        logger.warning(f"PostgreSQL 扩展初始化失败：{e}")
     db = SessionLocal()
     try:
         load_faq_if_empty(db)
@@ -75,10 +79,10 @@ def health_check():
 
     try:
         from app.rag.retriever import collection_count
-        chroma_docs = collection_count()
-        chroma_status = "connected"
+        vector_docs = collection_count()
+        vector_status = "ok"
     except Exception as e:
-        chroma_status = f"error: {str(e)}"
-        chroma_docs = -1
+        vector_status = f"error: {str(e)}"
+        vector_docs = -1
 
-    return {"status": "healthy", "database": db_status, "chroma": chroma_status, "chroma_docs": chroma_docs}
+    return {"status": "healthy", "database": db_status, "vector_store": vector_status, "vector_docs": vector_docs}
