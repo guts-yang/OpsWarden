@@ -413,7 +413,7 @@ python -c "import secrets; print(secrets.token_hex(32))"
 |---|---|---|
 | **廖晨扬** | AI 核心 / RAG / DeepSeek | `backend/app/rag/` |
 | **吴雨彤** | 后端业务 / 账号 / 工单 / 数据库 | `backend/app/api/` · `backend/app/models/` · `init.sql` |
-| **廖晨扬** | 前端全部页面 | `frontend/` |
+| **廖晨扬+Stitch** | 前端全部页面 | `frontend/` |
 | **丁其彬** | 飞书集成 / Docker / 云服务器 | `docker-compose.yml` · 飞书 Webhook |
 
 ---
