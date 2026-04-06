@@ -43,6 +43,13 @@ OpsWarden 是一套面向企业运维场景的 AI 数字员工系统，核心功
 - **工单系统**：工单全生命周期管理（待处理 → 处理中 → 已解决 → 已关闭），支持解决方案写回知识库
 - **账号管理**：运维账号增删改查、冻结/解冻、重置密码，后台可视化管理
 
+> "Ops" stands for Operations — the domain this system serves. 
+> "Warden" means a guardian or keeper — someone who watches over,
+> manages, and protects. Together, OpsWarden means a guardian of 
+> operations: an AI agent that stands watch over IT workflows, 
+> handles repetitive tasks, and escalates when human judgment is 
+> needed.
+
 **技术栈**
 
 | 层次 | 技术 | 版本/说明 |
