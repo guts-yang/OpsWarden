@@ -14,6 +14,11 @@
 ![JWT](https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+
+---
+
+![系统流程图](docs/canva.png)
+
 ---
 
 ## 目录
