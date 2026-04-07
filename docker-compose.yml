@@ -1,12 +1,10 @@
-version: "3.8"
-
 services:
   postgres:
     image: pgvector/pgvector:pg16
     container_name: opswarden-postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: 342802
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-342802}
       POSTGRES_DB: opswarden
       TZ: Asia/Shanghai
     ports:
@@ -14,6 +12,43 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: opswarden-backend
+    restart: always
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres:${POSTGRES_PASSWORD:-342802}@postgres:5432/opswarden
+    ports:
+      - "8000:8000"
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: opswarden-frontend
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
+  hf_cache:
