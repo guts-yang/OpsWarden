@@ -30,7 +30,6 @@ onMounted(async () => {
   <div class="p-6 space-y-6">
     <!-- Stat Cards -->
     <div class="grid grid-cols-2 xl:grid-cols-4 gap-4">
-<<<<<<< HEAD
       <div class="ops-card-hover p-5 min-h-[124px] flex flex-col">
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0">
@@ -59,41 +58,10 @@ onMounted(async () => {
           </div>
         </div>
         <p class="text-xs text-on-surface-variant mt-auto pt-3 leading-relaxed">
-=======
-      <div class="bg-white rounded-xl border border-outline p-5">
-        <div class="flex items-start justify-between">
-          <div>
-            <p class="text-xs text-on-surface-variant mb-1">今日问答</p>
-            <p class="text-2xl font-semibold text-on-surface">
-              {{ loading ? '—' : (stats?.daily_qa ?? 0) }}
-            </p>
-          </div>
-          <div class="w-9 h-9 rounded-xl bg-primary-50 flex items-center justify-center">
-            <span class="material-symbols-outlined text-primary-500 text-[20px]">smart_toy</span>
-          </div>
-        </div>
-        <p class="text-xs text-on-surface-variant mt-3">AI 自动处理的问题数</p>
-      </div>
-
-      <div class="bg-white rounded-xl border border-outline p-5">
-        <div class="flex items-start justify-between">
-          <div>
-            <p class="text-xs text-on-surface-variant mb-1">待处理工单</p>
-            <p class="text-2xl font-semibold text-on-surface">
-              {{ loading ? '—' : (stats?.pending_tickets ?? 0) }}
-            </p>
-          </div>
-          <div class="w-9 h-9 rounded-xl bg-warning-container flex items-center justify-center">
-            <span class="material-symbols-outlined text-warning text-[20px]">confirmation_number</span>
-          </div>
-        </div>
-        <p class="text-xs text-on-surface-variant mt-3">
->>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
           其中超时 {{ stats?.overdue_count ?? 0 }} 张
         </p>
       </div>
 
-<<<<<<< HEAD
       <div class="ops-card-hover p-5 min-h-[124px] flex flex-col">
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0">
@@ -107,26 +75,10 @@ onMounted(async () => {
           </div>
         </div>
         <p class="text-xs text-on-surface-variant mt-auto pt-3 leading-relaxed">
-=======
-      <div class="bg-white rounded-xl border border-outline p-5">
-        <div class="flex items-start justify-between">
-          <div>
-            <p class="text-xs text-on-surface-variant mb-1">账号总数</p>
-            <p class="text-2xl font-semibold text-on-surface">
-              {{ loading ? '—' : (stats?.total_accounts ?? 0) }}
-            </p>
-          </div>
-          <div class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center">
-            <span class="material-symbols-outlined text-purple-500 text-[20px]">group</span>
-          </div>
-        </div>
-        <p class="text-xs text-on-surface-variant mt-3">
->>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
           本月新增 {{ stats?.new_accounts_month ?? 0 }} 个
         </p>
       </div>
 
-<<<<<<< HEAD
       <div class="ops-card-hover p-5 min-h-[124px] flex flex-col">
         <div class="flex items-start justify-between gap-3">
           <div class="min-w-0">
@@ -140,28 +92,12 @@ onMounted(async () => {
           </div>
         </div>
         <p class="text-xs text-on-surface-variant mt-auto pt-3 leading-relaxed">
-=======
-      <div class="bg-white rounded-xl border border-outline p-5">
-        <div class="flex items-start justify-between">
-          <div>
-            <p class="text-xs text-on-surface-variant mb-1">知识库条目</p>
-            <p class="text-2xl font-semibold text-on-surface">
-              {{ loading ? '—' : (stats?.kb_entries ?? 0) }}
-            </p>
-          </div>
-          <div class="w-9 h-9 rounded-xl bg-success-container flex items-center justify-center">
-            <span class="material-symbols-outlined text-success text-[20px]">menu_book</span>
-          </div>
-        </div>
-        <p class="text-xs text-on-surface-variant mt-3">
->>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
           本周新增 {{ stats?.kb_new_week ?? 0 }} 条
         </p>
       </div>
     </div>
 
     <!-- Recent Tickets -->
-<<<<<<< HEAD
     <div class="ops-card overflow-hidden">
       <div class="flex items-center justify-between px-5 py-4 border-b border-outline bg-surface-dim/50">
         <div>
@@ -170,13 +106,6 @@ onMounted(async () => {
         </div>
         <button
           class="text-xs font-medium text-primary-600 hover:text-primary-700 px-2 py-1 rounded-lg hover:bg-primary-50 transition-colors"
-=======
-    <div class="bg-white rounded-xl border border-outline">
-      <div class="flex items-center justify-between px-5 py-4 border-b border-outline">
-        <h2 class="text-sm font-semibold text-on-surface">最新工单</h2>
-        <button
-          class="text-xs text-primary-500 hover:underline"
->>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
           @click="router.push('/tickets')"
         >
           查看全部
@@ -195,11 +124,7 @@ onMounted(async () => {
         <div
           v-for="ticket in recentTickets"
           :key="ticket.id"
-<<<<<<< HEAD
           class="flex items-center gap-4 px-5 py-3.5 hover:bg-primary-50/40 cursor-pointer transition-colors"
-=======
-          class="flex items-center gap-4 px-5 py-3 hover:bg-surface-dim cursor-pointer"
->>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
           @click="router.push('/tickets')"
         >
           <div class="flex-1 min-w-0">

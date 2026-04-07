@@ -12,7 +12,6 @@
   }
 }
 
-<<<<<<< HEAD
 @layer components {
   /* 与 tailwind 主题色一致的可复用表单/卡片（对齐设计系统式 token） */
   .ops-input {
@@ -27,8 +26,6 @@
   }
 }
 
-=======
->>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
 @layer utilities {
   .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
