@@ -1,5 +1,3 @@
-"""LangGraph 工作流示例与后续业务图入口。"""
+"""LangGraph 工作流包。生产对话编排见 chat_workflow.invoke_chat_with_checkpoint。"""
 
-from app.graphs.demo_workflow import build_demo_graph, run_demo
-
-__all__ = ["build_demo_graph", "run_demo"]
+__all__: list[str] = []
