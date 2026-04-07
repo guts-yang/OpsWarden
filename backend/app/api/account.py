@@ -108,7 +108,7 @@ def list_accounts(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user)
+    current_user: CurrentUser = Depends(require_admin)
 ):
     query = db.query(Account)
 
@@ -139,7 +139,7 @@ def list_accounts(
 def get_account(
     account_id: int,
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user)
+    current_user: CurrentUser = Depends(require_admin)
 ):
     account = db.query(Account).filter(Account.id == account_id).first()
     if not account:

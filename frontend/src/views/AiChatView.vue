@@ -2,7 +2,10 @@
 import { ref, nextTick, onMounted } from 'vue'
 import { chatApi } from '@/api/chat'
 import { knowledgeApi } from '@/api/knowledge'
+import { useAuthStore } from '@/stores/auth'
 import { loadChatSession, saveChatSession, resetChatSession } from '@/utils/chatSessionStorage'
+
+const auth = useAuthStore()
 
 const initialSession = loadChatSession()
 const messages = ref(initialSession.messages)
@@ -44,6 +47,10 @@ function pickQuickQuestionsFromKb(items, max) {
 
 onMounted(async () => {
   await scrollToBottom()
+  if (!auth.canAccessKnowledge) {
+    quickQuestions.value = [...FALLBACK_QUICK_QUESTIONS]
+    return
+  }
   try {
     const data = await knowledgeApi.list({ page: 1, page_size: 24 })
     const picked = pickQuickQuestionsFromKb(data?.items, QUICK_FROM_KB_MAX)

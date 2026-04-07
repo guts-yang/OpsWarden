@@ -11,6 +11,10 @@ export const useAuthStore = defineStore('auth', () => {
   const isOperator = computed(
     () => user.value?.role === 'admin' || user.value?.role === 'operator',
   )
+  const canAccessKnowledge = computed(
+    () => user.value?.role === 'admin' || user.value?.role === 'operator',
+  )
+  const canAccessAccounts = computed(() => user.value?.role === 'admin')
 
   async function login(username, password) {
     const data = await authApi.login(username, password)
@@ -32,5 +36,15 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('ow_user')
   }
 
-  return { token, user, isLoggedIn, isAdmin, isOperator, login, logout }
+  return {
+    token,
+    user,
+    isLoggedIn,
+    isAdmin,
+    isOperator,
+    canAccessKnowledge,
+    canAccessAccounts,
+    login,
+    logout,
+  }
 })

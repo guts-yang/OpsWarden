@@ -23,6 +23,7 @@ const routes = [
         path: 'accounts',
         name: 'Accounts',
         component: () => import('@/views/AccountsView.vue'),
+        meta: { roles: ['admin'] },
       },
       {
         path: 'tickets',
@@ -38,6 +39,7 @@ const routes = [
         path: 'knowledge',
         name: 'Knowledge',
         component: () => import('@/views/KnowledgeBaseView.vue'),
+        meta: { roles: ['admin', 'operator'] },
       },
     ],
   },
@@ -61,6 +63,11 @@ router.beforeEach((to) => {
   }
   // Protected route
   if (!auth.isLoggedIn) return '/login'
+
+  const allowedRoles = to.meta.roles
+  if (allowedRoles?.length && !allowedRoles.includes(auth.user?.role)) {
+    return '/'
+  }
   return true
 })
 
