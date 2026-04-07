@@ -2,19 +2,19 @@
 import { ref, nextTick, onMounted } from 'vue'
 import { chatApi } from '@/api/chat'
 import { knowledgeApi } from '@/api/knowledge'
+import { loadChatSession, saveChatSession, resetChatSession } from '@/utils/chatSessionStorage'
 
-const messages = ref([
-  {
-    id: 0,
-    role: 'ai',
-    text: '您好！我是 OpsWarden AI 助手。请描述您遇到的运维问题，我会尽力为您解答。',
-    source: null,
-    time: new Date(),
-  },
-])
+const initialSession = loadChatSession()
+const messages = ref(initialSession.messages)
 const input = ref('')
 const loading = ref(false)
 const chatBody = ref(null)
+
+const threadId = ref(initialSession.threadId)
+
+function persistSession() {
+  saveChatSession(threadId.value, messages.value)
+}
 
 /** 与知识库列表接口顺序一致：updated_at 降序，取前若干条 question */
 const QUICK_FROM_KB_MAX = 8
@@ -43,6 +43,7 @@ function pickQuickQuestionsFromKb(items, max) {
 }
 
 onMounted(async () => {
+  await scrollToBottom()
   try {
     const data = await knowledgeApi.list({ page: 1, page_size: 24 })
     const picked = pickQuickQuestionsFromKb(data?.items, QUICK_FROM_KB_MAX)
@@ -69,11 +70,12 @@ async function sendMessage(text) {
   input.value = ''
 
   messages.value.push({ id: Date.now(), role: 'user', text: q, time: new Date() })
+  persistSession()
   await scrollToBottom()
 
   loading.value = true
   try {
-    const data = await chatApi.send(q)
+    const data = await chatApi.send({ query: q, thread_id: threadId.value })
     messages.value.push({
       id: Date.now() + 1,
       role: 'ai',
@@ -91,6 +93,7 @@ async function sendMessage(text) {
       time: new Date(),
     })
   } finally {
+    persistSession()
     loading.value = false
     await scrollToBottom()
   }
@@ -104,7 +107,9 @@ function onKeydown(e) {
 }
 
 function clearHistory() {
-  messages.value = [messages.value[0]]
+  const next = resetChatSession()
+  threadId.value = next.threadId
+  messages.value = next.messages
 }
 
 function fmtTime(d) {

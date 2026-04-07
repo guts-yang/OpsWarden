@@ -1,4 +1,6 @@
-FROM python:3.11-slim-bookworm
+# 默认 Docker Hub；若本机 IPv6 访问 hub 失败，在 .env 中设置 DOCKERHUB_PYTHON_IMAGE（见 .env.example）
+ARG PYTHON_BASE_IMAGE=python:3.11-slim-bookworm
+FROM ${PYTHON_BASE_IMAGE}
 
 WORKDIR /app
 

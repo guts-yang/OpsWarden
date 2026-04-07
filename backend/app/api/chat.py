@@ -1,80 +1,95 @@
+import re
+import logging
+
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
-from datetime import datetime
 
 from app.database import get_db
-from app.models.ticket import Ticket, TicketLog
 from app.middleware.auth import get_current_user, CurrentUser
 from app.utils.response import success
-from app.rag.retriever import search as rag_search
-from app.rag.llm import generate_answer
+from app.rag.chat_pipeline import run_chat_pipeline
+from app.graphs.chat_workflow import invoke_chat_with_checkpoint
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/chat", tags=["AI问答"])
+
+_THREAD_ID_PATTERN = re.compile(r"^[a-zA-Z0-9_-]{1,128}$")
 
 
 class ChatRequest(BaseModel):
     query: str
+    thread_id: str | None = Field(
+        default=None,
+        description="客户端会话 ID（UUID 等），用于 checkpoint 多轮隔离；缺省为 default",
+    )
 
 
-def _generate_ticket_no(db: Session) -> str:
-    today = datetime.now().strftime("%Y%m%d")
-    prefix = f"T-{today}-"
-    last = db.query(Ticket).filter(Ticket.ticket_no.like(f"{prefix}%")).order_by(Ticket.ticket_no.desc()).first()
-    num = (int(last.ticket_no.split("-")[-1]) + 1) if last else 1
-    return f"{prefix}{num:03d}"
+def _resolve_thread_id(user: CurrentUser, raw: str | None) -> str:
+    if raw is None or not isinstance(raw, str):
+        return f"user-{user.id}-default"
+    s = raw.strip()
+    if not s or not _THREAD_ID_PATTERN.fullmatch(s):
+        return f"user-{user.id}-default"
+    return f"user-{user.id}-{s}"
 
 
-@router.post("", summary="AI问答（RAG语义检索 + DeepSeek生成 + 工单兜底）")
+@router.post("", summary="AI问答（RAG + DeepSeek + 工单兜底，支持 thread checkpoint）")
 async def chat(
     req: ChatRequest,
     db: Session = Depends(get_db),
     current_user: CurrentUser = Depends(get_current_user),
 ):
     query = req.query.strip()
+    thread_id = _resolve_thread_id(current_user, req.thread_id)
+
     if not query:
-        return success(data={"answer": "请输入您的问题。", "source": "fallback"})
+        return success(
+            data={
+                "answer": "请输入您的问题。",
+                "source": "fallback",
+                "thread_id": thread_id,
+                "checkpointed": False,
+            }
+        )
 
-    # 1. Semantic search in PostgreSQL pgvector
-    results = rag_search(query)
+    graph_ok = True
+    try:
+        final = await invoke_chat_with_checkpoint(
+            db=db,
+            user=current_user,
+            thread_id=thread_id,
+            query=query,
+        )
+    except RuntimeError:
+        graph_ok = False
+        final = None
+    except Exception as e:
+        logger.warning("LangGraph 问答失败，回退无 checkpoint 模式：%s", e)
+        graph_ok = False
+        final = None
 
-    if results:
-        # 2. Use DeepSeek to generate a contextual answer; fall back to raw solution if LLM unavailable
-        answer = await generate_answer(query, results) or results[0]["solution"]
-        return success(data={
-            "answer":      answer,
-            "source":      "kb",
-            "kb_entry_id": results[0]["id"],
-            "question":    results[0]["question"],
-            "category":    results[0]["category"],
-        })
+    if not graph_ok or final is None:
+        data = await run_chat_pipeline(db, current_user, query)
+        data["thread_id"] = thread_id
+        data["checkpointed"] = False
+        return success(data=data)
 
-    # 3. No KB match — auto-create ticket
-    ticket = Ticket(
-        ticket_no=_generate_ticket_no(db),
-        title=query[:200],
-        description=query,
-        source="ai_auto",
-        status="pending",
-        priority="medium",
-        reporter_id=current_user.id,
-        reporter_name=current_user.username,
-    )
-    db.add(ticket)
-    db.flush()
-    db.add(TicketLog(
-        ticket_id=ticket.id,
-        action="created",
-        operator_id=current_user.id,
-        operator_name=current_user.username,
-        content=f"AI问答未命中知识库，自动生成工单：{query[:100]}",
-    ))
-    db.commit()
-    db.refresh(ticket)
+    history = final.get("history") or []
+    data = {
+        "answer": final.get("answer", ""),
+        "source": final.get("source", "fallback"),
+        "thread_id": thread_id,
+        "checkpointed": True,
+        "history_turns": len(history) // 2,
+    }
+    if final.get("source") == "kb":
+        data["kb_entry_id"] = final.get("kb_entry_id")
+        data["question"] = final.get("question")
+        data["category"] = final.get("category")
+    if final.get("ticket_no"):
+        data["ticket_no"] = final.get("ticket_no")
+        data["ticket_id"] = final.get("ticket_id")
 
-    return success(data={
-        "answer":    f"抱歉，我暂时无法直接解答该问题。已为您自动创建工单 {ticket.ticket_no}，运维人员将尽快处理。",
-        "source":    "fallback",
-        "ticket_no": ticket.ticket_no,
-        "ticket_id": ticket.id,
-    })
+    return success(data=data)

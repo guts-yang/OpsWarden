@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: pgvector/pgvector:pg16
+    image: ${POSTGRES_IMAGE:-pgvector/pgvector:pg16}
     container_name: opswarden-postgres
     restart: always
     environment:
@@ -23,6 +23,8 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
+      args:
+        PYTHON_BASE_IMAGE: ${DOCKERHUB_PYTHON_IMAGE:-python:3.11-slim-bookworm}
     container_name: opswarden-backend
     restart: always
     env_file:
@@ -42,6 +44,9 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
+      args:
+        NODE_BASE_IMAGE: ${DOCKERHUB_NODE_IMAGE:-node:20-alpine}
+        NGINX_BASE_IMAGE: ${DOCKERHUB_NGINX_IMAGE:-nginx:alpine}
     container_name: opswarden-frontend
     restart: always
     ports:

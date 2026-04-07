@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -12,6 +13,16 @@ ROOT = Path(__file__).resolve().parent.parent
 LOG_PATH = ROOT / "debug-64d860.log"
 SESSION = "64d860"
 RUN_ID = "verify-" + str(int(time.time() * 1000))
+
+
+def _looks_like_registry_ipv6_fail(text: str) -> bool:
+    if not text:
+        return False
+    return (
+        "registry-1.docker.io" in text
+        and ("2a03:2880" in text or "]:443" in text)
+        and ("connectex" in text or "failed to do request" in text)
+    )
 
 
 def log_line(
@@ -80,6 +91,19 @@ def run_cmd(
 
 
 def main() -> int:
+    # H0: record optional hub mirror overrides (no secrets)
+    log_line(
+        "H0",
+        "scripts/docker_verify_log.py:image_overrides",
+        "env_snapshot",
+        {
+            "DOCKERHUB_PYTHON_IMAGE": os.environ.get("DOCKERHUB_PYTHON_IMAGE", ""),
+            "DOCKERHUB_NODE_IMAGE": os.environ.get("DOCKERHUB_NODE_IMAGE", ""),
+            "DOCKERHUB_NGINX_IMAGE": os.environ.get("DOCKERHUB_NGINX_IMAGE", ""),
+            "POSTGRES_IMAGE": os.environ.get("POSTGRES_IMAGE", ""),
+        },
+    )
+
     # H1: docker available
     code, _ = run_cmd("H1", "scripts/docker_verify_log.py:docker_version", ["docker", "version"])
     if code != 0:
@@ -95,13 +119,23 @@ def main() -> int:
         return 2
 
     # H3: build (long)
-    code, _ = run_cmd(
+    code, build_out = run_cmd(
         "H3",
         "scripts/docker_verify_log.py:compose_build",
         ["docker", "compose", "build"],
         timeout=1200,
     )
     if code != 0:
+        if _looks_like_registry_ipv6_fail(build_out):
+            log_line(
+                "H3",
+                "scripts/docker_verify_log.py:compose_build_hint",
+                "registry_ipv6_fail_hint",
+                {
+                    "fixHint": "Docker 解析 Docker Hub 为 IPv6 但本机 IPv6 不可达。可选：(1) Docker Desktop → Docker Engine 合并 docker/engine-ipv4-snippet.json（ipv6:false）；(2) 在 .env 中设置 DOCKERHUB_*_IMAGE 与 POSTGRES_IMAGE 镜像站前缀，见 .env.example。",
+                    "snippetPath": "docker/engine-ipv4-snippet.json",
+                },
+            )
         return 3
 
     # H4: up
