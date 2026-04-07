@@ -135,8 +135,13 @@ async function saveAccount() {
       await accountsApi.update(editingAccount.value.id, payload)
     } else {
       await accountsApi.create({
-        ...form,
+        username: form.username,
+        name: form.name,
+        password: form.password,
         department: form.department || null,
+        email: form.email || null,
+        phone: form.phone || null,
+        role: form.role,
       })
     }
     showPanel.value = false
@@ -294,11 +299,19 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
         <div>
           <label class="block text-xs font-medium text-on-surface-variant mb-1.5">工号</label>
           <input
+            v-if="editingAccount"
             v-model="form.employee_id"
             type="text"
-            :disabled="!!editingAccount"
-            class="w-full border border-outline rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500 disabled:bg-surface-container"
+            disabled
+            class="w-full border border-outline rounded-lg px-3 py-2 text-sm bg-surface-container text-on-surface-variant"
           />
+          <div
+            v-else
+            class="border border-outline rounded-lg px-3 py-2 text-xs text-on-surface-variant leading-relaxed bg-surface-dim"
+          >
+            保存时按所选角色自动生成：管理员 <span class="font-mono">ADM#####</span>、运维
+            <span class="font-mono">OPS#####</span>、普通用户 <span class="font-mono">USR#####</span>
+          </div>
         </div>
         <div>
           <label class="block text-xs font-medium text-on-surface-variant mb-1.5">用户名 <span class="text-error">*</span></label>

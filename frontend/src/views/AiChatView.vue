@@ -1,11 +1,13 @@
 <script setup>
-import { ref, nextTick, onMounted } from 'vue'
+import { ref, nextTick, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { chatApi } from '@/api/chat'
 import { knowledgeApi } from '@/api/knowledge'
 import { useAuthStore } from '@/stores/auth'
 import { loadChatSession, saveChatSession, resetChatSession } from '@/utils/chatSessionStorage'
 
 const auth = useAuthStore()
+const route = useRoute()
 
 const initialSession = loadChatSession(auth.user?.id)
 const messages = ref(initialSession.messages)
@@ -32,16 +34,49 @@ const quickQuestions = ref([...FALLBACK_QUICK_QUESTIONS])
 
 const MAX_LEN = 500
 
+/** 解析 quick-prompts 响应（兼容拦截器已解包或仍带 data 信封） */
+function normalizeQuickQuestionsPayload(raw) {
+  if (!raw || typeof raw !== 'object') return null
+  let qs = raw.questions
+  if (!Array.isArray(qs) && raw.data != null && typeof raw.data === 'object') {
+    qs = raw.data.questions
+  }
+  if (!Array.isArray(qs) || qs.length === 0) return null
+  const out = qs.map((s) => String(s).trim()).filter(Boolean)
+  return out.length ? out : null
+}
+
+async function refreshQuickQuestionsFromKb() {
+  try {
+    const raw = await knowledgeApi.quickPrompts({ limit: QUICK_FROM_KB_MAX })
+    const list = normalizeQuickQuestionsPayload(raw)
+    if (list) {
+      quickQuestions.value = list
+      return
+    }
+  } catch {
+    /* 网络/401 等：回落模板 */
+  }
+  quickQuestions.value = [...FALLBACK_QUICK_QUESTIONS]
+}
+
+watch(
+  () => route.name,
+  (name) => {
+    if (name === 'AiChat') refreshQuickQuestionsFromKb()
+  },
+  { immediate: true },
+)
+
+watch(
+  () => auth.user?.id,
+  () => {
+    if (route.name === 'AiChat') refreshQuickQuestionsFromKb()
+  },
+)
+
 onMounted(async () => {
   await scrollToBottom()
-  try {
-    const data = await knowledgeApi.quickPrompts({ limit: QUICK_FROM_KB_MAX })
-    const qs = data?.questions
-    quickQuestions.value =
-      Array.isArray(qs) && qs.length > 0 ? qs : [...FALLBACK_QUICK_QUESTIONS]
-  } catch {
-    quickQuestions.value = [...FALLBACK_QUICK_QUESTIONS]
-  }
 })
 
 function escapeHtml(str) {

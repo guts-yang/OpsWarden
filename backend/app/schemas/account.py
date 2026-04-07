@@ -26,7 +26,8 @@ class StatusEnum(str, Enum):
 
 
 class AccountCreate(BaseModel):
-    employee_id: str = Field(..., min_length=1, max_length=32)
+    """employee_id 省略或为空时由服务端按 role 自动生成；显式传入则校验长度并保证唯一。"""
+    employee_id: Optional[str] = Field(None, max_length=32)
     username: str = Field(..., min_length=3, max_length=64)
     password: str = Field(..., min_length=6, max_length=128)
     name: str = Field(..., min_length=1, max_length=64)
@@ -34,6 +35,13 @@ class AccountCreate(BaseModel):
     email: Optional[str] = Field(None, max_length=128)
     phone: Optional[str] = Field(None, max_length=20)
     role: RoleEnum = Field(default=RoleEnum.user)
+
+    @field_validator("employee_id", mode="before")
+    @classmethod
+    def employee_id_strip_empty(cls, v):
+        if v is None or (isinstance(v, str) and not v.strip()):
+            return None
+        return v.strip() if isinstance(v, str) else v
 
     @field_validator("department", mode="before")
     @classmethod
