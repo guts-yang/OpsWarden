@@ -31,6 +31,7 @@ async function handleLogin() {
 </script>
 
 <template>
+<<<<<<< HEAD
   <div
     class="min-h-screen flex items-center justify-center p-4 sm:p-6 bg-gradient-to-br from-surface-dim via-white to-primary-50/40"
   >
@@ -50,6 +51,22 @@ async function handleLogin() {
       <div class="ops-card rounded-3xl p-6 sm:p-8 shadow-lift ring-1 ring-outline-variant/60">
         <h2 class="text-sm font-semibold text-on-surface mb-1">账号登录</h2>
         <p class="text-xs text-on-surface-variant mb-5">使用运维账号进入控制台</p>
+=======
+  <div class="min-h-screen bg-surface-dim flex items-center justify-center p-4">
+    <div class="w-full max-w-sm">
+      <!-- Logo / Brand -->
+      <div class="text-center mb-8">
+        <div class="w-14 h-14 bg-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-white text-3xl">shield</span>
+        </div>
+        <h1 class="text-xl font-semibold text-on-surface">OpsWarden</h1>
+        <p class="text-sm text-on-surface-variant mt-1">AI 运维数字员工平台</p>
+      </div>
+
+      <!-- Card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-outline p-6">
+        <h2 class="text-sm font-semibold text-on-surface mb-5">账号登录</h2>
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
 
         <!-- Error -->
         <div
@@ -72,7 +89,11 @@ async function handleLogin() {
                 v-model="username"
                 type="text"
                 placeholder="请输入用户名"
+<<<<<<< HEAD
                 class="w-full pl-9 pr-4 py-2.5 text-sm ops-input"
+=======
+                class="w-full pl-9 pr-4 py-2.5 text-sm border border-outline rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
                 autocomplete="username"
               />
             </div>
@@ -89,7 +110,11 @@ async function handleLogin() {
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
                 placeholder="请输入密码"
+<<<<<<< HEAD
                 class="w-full pl-9 pr-10 py-2.5 text-sm ops-input"
+=======
+                class="w-full pl-9 pr-10 py-2.5 text-sm border border-outline rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
                 autocomplete="current-password"
               />
               <button
@@ -109,7 +134,11 @@ async function handleLogin() {
           <button
             type="submit"
             :disabled="loading"
+<<<<<<< HEAD
             class="w-full py-2.5 bg-primary-500 text-white text-sm font-medium rounded-xl hover:bg-primary-600 disabled:opacity-60 transition-all shadow-sm hover:shadow-md mt-2"
+=======
+            class="w-full py-2.5 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 disabled:opacity-60 transition-colors mt-2"
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
           >
             {{ loading ? '登录中...' : '登录' }}
           </button>

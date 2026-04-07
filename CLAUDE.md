@@ -36,6 +36,7 @@ OpsWarden/
 
 ## 技术栈
 
+<<<<<<< HEAD
 
 | 层    | 技术                                                            |
 | ---- | ------------------------------------------------------------- |
@@ -46,6 +47,16 @@ OpsWarden/
 | 前端   | Vue 3 + Vite 6 + Pinia + Vue Router 4 + TailwindCSS 3（MD3 色板） |
 | HTTP | Axios，响应拦截器解包 `{code, message, data}` 信封                      |
 
+=======
+| 层 | 技术 |
+|----|------|
+| 后端 | Python 3.11 + FastAPI 0.115 + Uvicorn |
+| ORM | SQLAlchemy 2.0，驱动 psycopg3 |
+| 数据库 | PostgreSQL 16 + pgvector（向量索引，cosine distance） |
+| AI | DeepSeek API（生成答案）+ BAAI/bge-small-zh-v1.5（embedding，512 维） |
+| 前端 | Vue 3 + Vite 6 + Pinia + Vue Router 4 + TailwindCSS 3（MD3 色板） |
+| HTTP | Axios，响应拦截器解包 `{code, message, data}` 信封 |
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
 
 ---
 
@@ -104,6 +115,7 @@ POST /api/knowledge {question, solution, ...}
 
 ## API 路由概览
 
+<<<<<<< HEAD
 
 | 路由前缀             | 主要端点                                                      |
 | ---------------- | --------------------------------------------------------- |
@@ -114,6 +126,16 @@ POST /api/knowledge {question, solution, ...}
 | `/api/chat`      | `POST /`（RAG 问答）                                          |
 | `/api/analytics` | `GET /summary`（仪表盘统计）                                     |
 
+=======
+| 路由前缀 | 主要端点 |
+|----------|---------|
+| `/api/auth` | `POST /login`，`POST /register` |
+| `/api/accounts` | CRUD，`/me`，`/freeze`，`/unfreeze`，`/reset-password`（admin） |
+| `/api/tickets` | `POST /auto`（AI 自动），`/manual`（手动），详情/日志/解决/关闭 |
+| `/api/knowledge` | CRUD，`GET /stats` |
+| `/api/chat` | `POST /`（RAG 问答） |
+| `/api/analytics` | `GET /summary`（仪表盘统计） |
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
 
 ---
 
@@ -141,6 +163,7 @@ POST /api/knowledge {question, solution, ...}
 
 ## 环境变量（关键项）
 
+<<<<<<< HEAD
 
 | 变量                            | 说明                          |
 | ----------------------------- | --------------------------- |
@@ -152,6 +175,17 @@ POST /api/knowledge {question, solution, ...}
 | `SECRET_KEY`                  | JWT 签名密钥                    |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | 默认 `480`（8小时）               |
 
+=======
+| 变量 | 说明 |
+|------|------|
+| `DATABASE_URL` | PostgreSQL 连接串，psycopg3 格式 |
+| `DEEPSEEK_API_KEY` | DeepSeek API 密钥，AI 回答必需 |
+| `EMBEDDING_MODEL` | 默认 `BAAI/bge-small-zh-v1.5` |
+| `RAG_SCORE_THRESHOLD` | 默认 `0.4`，低于此值触发工单 |
+| `RAG_TOP_K` | 默认 `3`，返回最相似条数 |
+| `SECRET_KEY` | JWT 签名密钥 |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | 默认 `480`（8小时） |
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
 
 ---
 
@@ -161,4 +195,8 @@ POST /api/knowledge {question, solution, ...}
 
 **登录/注册报错「请求数据格式错误」：** 后端未重启，旧进程仍在运行旧代码。确认 uvicorn 已使用新代码启动。
 
+<<<<<<< HEAD
 **默认管理员账号：** username `admin`，password `admin123`（仅开发环境，生产须修改）。
+=======
+**默认管理员账号：** username `admin`，password `admin123`（仅开发环境，生产须修改）。
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285

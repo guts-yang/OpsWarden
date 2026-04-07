@@ -12,6 +12,7 @@ function getRoleLabel(role) {
 </script>
 
 <template>
+<<<<<<< HEAD
   <header
     class="h-14 bg-white/95 backdrop-blur-sm border-b border-outline flex items-center justify-between px-6 flex-shrink-0 z-10 shadow-shell"
   >
@@ -38,6 +39,18 @@ function getRoleLabel(role) {
           {{ auth.user?.name || auth.user?.username }}
         </span>
       </div>
+=======
+  <header class="h-14 bg-white border-b border-outline flex items-center justify-between px-6 flex-shrink-0">
+    <h1 class="text-sm font-semibold text-on-surface">{{ title }}</h1>
+    <div class="flex items-center gap-2">
+      <span class="text-xs text-on-surface-variant">{{ getRoleLabel(auth.user?.role) }}</span>
+      <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
+        <span class="text-primary-700 text-xs font-semibold">
+          {{ auth.user?.name?.charAt(0) ?? auth.user?.username?.charAt(0) ?? '?' }}
+        </span>
+      </div>
+      <span class="text-sm font-medium text-on-surface">{{ auth.user?.name }}</span>
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
     </div>
   </header>
 </template>

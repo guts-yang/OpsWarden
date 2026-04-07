@@ -25,6 +25,7 @@ function logout() {
 </script>
 
 <template>
+<<<<<<< HEAD
   <aside class="w-[220px] flex-shrink-0 bg-white border-r border-outline flex flex-col h-screen sticky top-0 shadow-shell">
     <!-- Logo -->
     <div class="flex items-center gap-2.5 px-4 py-4 border-b border-outline">
@@ -35,6 +36,13 @@ function logout() {
         <span class="font-semibold text-on-surface text-sm tracking-tight block leading-tight">OpsWarden</span>
         <span class="text-[10px] text-on-surface-variant leading-tight">运维数字员工</span>
       </div>
+=======
+  <aside class="w-[200px] flex-shrink-0 bg-white border-r border-outline flex flex-col h-screen sticky top-0">
+    <!-- Logo -->
+    <div class="flex items-center gap-2 px-4 py-4 border-b border-outline">
+      <span class="material-symbols-outlined text-primary-500">shield</span>
+      <span class="font-semibold text-on-surface text-sm tracking-wide">OpsWarden</span>
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
     </div>
 
     <!-- Nav -->
@@ -43,6 +51,7 @@ function logout() {
         v-for="item in navItems"
         :key="item.path"
         :to="item.path"
+<<<<<<< HEAD
         class="relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors"
         :class="
           isActive(item.path)
@@ -55,6 +64,15 @@ function logout() {
           class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full bg-primary-500"
           aria-hidden="true"
         />
+=======
+        class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors"
+        :class="
+          isActive(item.path)
+            ? 'bg-primary-50 text-primary-700 font-medium'
+            : 'text-on-surface-variant hover:bg-surface-container'
+        "
+      >
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
         <span class="material-symbols-outlined text-[20px]">{{ item.icon }}</span>
         {{ item.label }}
       </RouterLink>

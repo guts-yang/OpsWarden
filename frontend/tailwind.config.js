@@ -14,6 +14,7 @@ export default {
         lg: '0.25rem',
         xl: '0.5rem',
         '2xl': '0.75rem',
+<<<<<<< HEAD
         '3xl': '1rem',
         full: '9999px',
       },
@@ -21,6 +22,10 @@ export default {
         shell: '0 1px 2px rgba(32, 33, 36, 0.06), 0 1px 3px rgba(32, 33, 36, 0.04)',
         lift: '0 2px 8px rgba(32, 33, 36, 0.08), 0 1px 2px rgba(32, 33, 36, 0.06)',
       },
+=======
+        full: '9999px',
+      },
+>>>>>>> 32629c1c2d2595ea4edddeb2b46ff4d551f18285
       colors: {
         primary: {
           DEFAULT: '#1a73e8',
