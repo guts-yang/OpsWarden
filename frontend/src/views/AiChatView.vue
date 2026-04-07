@@ -118,9 +118,9 @@ function fmtTime(d) {
 </script>
 
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col flex-1 min-h-0">
     <!-- Toolbar -->
-    <div class="flex items-center justify-between px-6 py-3 bg-white/95 backdrop-blur-sm border-b border-outline shadow-shell z-[1]">
+    <div class="flex-shrink-0 flex items-center justify-between px-6 py-3 bg-white/95 backdrop-blur-sm border-b border-outline shadow-shell z-[1]">
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-primary-500 text-[20px]">smart_toy</span>
         <span class="text-sm font-medium text-on-surface">AI 智能问答</span>
@@ -136,7 +136,7 @@ function fmtTime(d) {
     </div>
 
     <!-- Messages -->
-    <div ref="chatBody" class="flex-1 overflow-y-auto px-6 py-4 space-y-5 bg-gradient-to-b from-surface-dim/80 to-surface-dim">
+    <div ref="chatBody" class="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-5 bg-gradient-to-b from-surface-dim/80 to-surface-dim">
       <div v-for="msg in messages" :key="msg.id" class="flex" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
         <!-- AI Avatar -->
         <div v-if="msg.role === 'ai'" class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0 mr-2 mt-0.5">
@@ -206,7 +206,7 @@ function fmtTime(d) {
     </div>
 
     <!-- Quick suggestions（文案来自知识库 question，过长时截断，title 显示全文） -->
-    <div class="px-6 pb-2 flex gap-2 flex-wrap">
+    <div class="flex-shrink-0 border-t border-outline px-6 pt-2 pb-2 flex gap-2 flex-wrap bg-surface-dim">
       <button
         v-for="(q, idx) in quickQuestions"
         :key="`${idx}-${q.slice(0, 24)}`"
@@ -220,7 +220,7 @@ function fmtTime(d) {
     </div>
 
     <!-- Input bar -->
-    <div class="px-6 pb-6 pt-1 bg-surface-dim">
+    <div class="flex-shrink-0 px-6 pb-6 pt-1 bg-surface-dim">
       <div
         class="bg-white border border-outline rounded-2xl p-3 flex items-end gap-3 shadow-sm focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-500/20 transition-shadow"
       >

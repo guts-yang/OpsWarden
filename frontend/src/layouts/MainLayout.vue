@@ -15,6 +15,8 @@ const pageTitles = {
 }
 
 const title = computed(() => pageTitles[route.name] ?? 'OpsWarden')
+
+const isAiChat = computed(() => route.name === 'AiChat')
 </script>
 
 <template>
@@ -22,8 +24,20 @@ const title = computed(() => pageTitles[route.name] ?? 'OpsWarden')
     <AppSidebar />
     <div class="flex-1 flex flex-col overflow-hidden min-w-0">
       <AppHeader :title="title" />
-      <main class="flex-1 overflow-auto">
-        <div class="mx-auto w-full max-w-[1440px] min-h-full">
+      <main
+        :class="
+          isAiChat
+            ? 'flex-1 flex flex-col min-h-0 overflow-hidden'
+            : 'flex-1 overflow-auto'
+        "
+      >
+        <div
+          :class="
+            isAiChat
+              ? 'mx-auto w-full max-w-[1440px] flex-1 flex flex-col min-h-0'
+              : 'mx-auto w-full max-w-[1440px] min-h-full'
+          "
+        >
           <RouterView />
         </div>
       </main>
