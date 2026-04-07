@@ -158,22 +158,63 @@ def main() -> int:
     if code != 0:
         return 2
 
-    if os.environ.get("DOCKER_VERIFY_DRY_RUN") == "1":
+    # 干跑：仅 config。若同时设了 SKIP_BUILD，则优先走下方完整 up/HTTP（避免 shell 里残留的 DRY_RUN 误伤）
+    if (
+        os.environ.get("DOCKER_VERIFY_DRY_RUN") == "1"
+        and os.environ.get("DOCKER_VERIFY_SKIP_BUILD") != "1"
+    ):
         log_line(
             "H-dry",
             "scripts/docker_verify_log.py:dry_run",
             "skip_build_up_http",
-            {"hint": "Unset DOCKER_VERIFY_DRY_RUN for full build/up/HTTP checks."},
+            {
+                "hint": "Unset DOCKER_VERIFY_DRY_RUN for full build/up/HTTP checks.",
+                "interpretation": "仅验证 docker 与 compose config；日志里不会出现 H3/H4/H5 不代表镜像已构建或服务已启动。",
+            },
         )
         return 0
 
-    # H3: build (long)
-    code, build_out = run_cmd(
-        "H3",
-        "scripts/docker_verify_log.py:compose_build",
-        ["docker", "compose", "build"],
-        timeout=3600,
-    )
+    # H3: build（镜像已存在时可设 DOCKER_VERIFY_SKIP_BUILD=1 跳过，避免重复长时间 pip）
+    skip_build = os.environ.get("DOCKER_VERIFY_SKIP_BUILD") == "1"
+    if skip_build:
+        br = subprocess.run(
+            ["docker", "images", "-q", "opswarden-backend"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        fr = subprocess.run(
+            ["docker", "images", "-q", "opswarden-frontend"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        have_b = bool((br.stdout or "").strip())
+        have_f = bool((fr.stdout or "").strip())
+        log_line(
+            "H3-skip",
+            "scripts/docker_verify_log.py:compose_build_skip",
+            "skip_due_to_env",
+            {"DOCKER_VERIFY_SKIP_BUILD": True, "have_opswarden_backend": have_b, "have_opswarden_frontend": have_f},
+        )
+        if not (have_b and have_f):
+            log_line(
+                "H3-skip",
+                "scripts/docker_verify_log.py:compose_build_skip_error",
+                "missing_images",
+                {"hint": "本地缺少 opswarden-backend 或 opswarden-frontend 镜像，请先执行 docker compose build 或取消 SKIP_BUILD。"},
+            )
+            return 3
+        code, build_out = 0, ""
+    else:
+        code, build_out = run_cmd(
+            "H3",
+            "scripts/docker_verify_log.py:compose_build",
+            ["docker", "compose", "build"],
+            timeout=3600,
+        )
     if code != 0:
         if _looks_like_registry_ipv6_fail(build_out):
             log_line(
