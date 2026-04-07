@@ -3,20 +3,24 @@
 > AI-Powered Operations Digital Employee Platform
 > 运维数字员工系统 · 基于 DeepSeek + RAG + FastAPI + PostgreSQL
 
-Python
-FastAPI
-SQLAlchemy
-PostgreSQL
-pgvector
-Vue3
-Vite
-TailwindCSS
-JWT
-License
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?logo=sqlalchemy&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![pgvector](https://img.shields.io/badge/pgvector-extension-111111)
+![Vue.js](https://img.shields.io/badge/Vue.js-3-4FC08D?logo=vuedotjs&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-auth-000000?logo=jsonwebtokens&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 ---
 
-系统流程图
+### 系统流程图
+
+![系统流程图](docs/canva.png)
+
+> 当前仓库内 `docs/canva.png` 为占位图；可将导出的高清流程图覆盖该文件以更新下图。
 
 ---
 
@@ -48,6 +52,7 @@ OpsWarden 是一套面向企业运维场景的 AI 数字员工系统，核心功
 > operations: an AI agent that stands watch over IT workflows, 
 > handles repetitive tasks, and escalates when human judgment is 
 > needed.
+
 > **技术栈**
 
 
@@ -321,6 +326,7 @@ OpsWarden/
 │           ├── AppSidebar.vue / AppHeader.vue
 │           ├── BasePagination.vue / BaseModal.vue / BaseSlidePanel.vue
 ├── docs/
+│   ├── canva.png                # 系统流程图（可替换为高分辨率版本）
 │   ├── API_TESTING.md           # API 测试文档
 │   └── backend.md               # 后端设计文档
 ├── init.sql                     # 数据库初始化脚本（PostgreSQL + pgvector）

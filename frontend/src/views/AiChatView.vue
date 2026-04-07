@@ -1,6 +1,7 @@
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, onMounted } from 'vue'
 import { chatApi } from '@/api/chat'
+import { knowledgeApi } from '@/api/knowledge'
 
 const messages = ref([
   {
@@ -15,9 +16,41 @@ const input = ref('')
 const loading = ref(false)
 const chatBody = ref(null)
 
-const quickQuestions = ['账号无法登录怎么办？', 'VPN 连接失败如何处理？', '服务器磁盘空间不足', '数据库连接超时']
+/** 与知识库列表接口顺序一致：updated_at 降序，取前若干条 question */
+const QUICK_FROM_KB_MAX = 8
+const FALLBACK_QUICK_QUESTIONS = [
+  '账号无法登录怎么办？',
+  'VPN 连接失败如何处理？',
+  '服务器磁盘空间不足',
+  '数据库连接超时',
+]
+
+const quickQuestions = ref([...FALLBACK_QUICK_QUESTIONS])
 
 const MAX_LEN = 500
+
+function pickQuickQuestionsFromKb(items, max) {
+  const seen = new Set()
+  const out = []
+  for (const row of items || []) {
+    const t = (row?.question ?? '').trim()
+    if (!t || seen.has(t)) continue
+    seen.add(t)
+    out.push(t)
+    if (out.length >= max) break
+  }
+  return out
+}
+
+onMounted(async () => {
+  try {
+    const data = await knowledgeApi.list({ page: 1, page_size: 24 })
+    const picked = pickQuickQuestionsFromKb(data?.items, QUICK_FROM_KB_MAX)
+    quickQuestions.value = picked.length ? picked : [...FALLBACK_QUICK_QUESTIONS]
+  } catch {
+    quickQuestions.value = [...FALLBACK_QUICK_QUESTIONS]
+  }
+})
 
 function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')
@@ -167,12 +200,14 @@ function fmtTime(d) {
       </div>
     </div>
 
-    <!-- Quick suggestions -->
+    <!-- Quick suggestions（文案来自知识库 question，过长时截断，title 显示全文） -->
     <div class="px-6 pb-2 flex gap-2 flex-wrap">
       <button
-        v-for="q in quickQuestions"
-        :key="q"
-        class="text-xs px-3 py-1 rounded-full border border-outline text-on-surface-variant hover:bg-surface-container transition-colors"
+        v-for="(q, idx) in quickQuestions"
+        :key="`${idx}-${q.slice(0, 24)}`"
+        type="button"
+        :title="q"
+        class="text-xs px-3 py-1 rounded-full border border-outline text-on-surface-variant hover:bg-surface-container transition-colors max-w-[min(100%,14rem)] truncate text-left"
         @click="sendMessage(q)"
       >
         {{ q }}
