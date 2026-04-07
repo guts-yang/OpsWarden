@@ -15,6 +15,9 @@ export const useAuthStore = defineStore('auth', () => {
     () => user.value?.role === 'admin' || user.value?.role === 'operator',
   )
   const canAccessAccounts = computed(() => user.value?.role === 'admin')
+  const canAccessStaffRoutes = computed(
+    () => user.value?.role === 'admin' || user.value?.role === 'operator',
+  )
 
   async function login(username, password) {
     const data = await authApi.login(username, password)
@@ -44,6 +47,7 @@ export const useAuthStore = defineStore('auth', () => {
     isOperator,
     canAccessKnowledge,
     canAccessAccounts,
+    canAccessStaffRoutes,
     login,
     logout,
   }

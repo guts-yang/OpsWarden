@@ -18,6 +18,7 @@ const routes = [
         path: '',
         name: 'Dashboard',
         component: () => import('@/views/DashboardView.vue'),
+        meta: { roles: ['admin', 'operator'] },
       },
       {
         path: 'accounts',
@@ -29,6 +30,7 @@ const routes = [
         path: 'tickets',
         name: 'Tickets',
         component: () => import('@/views/TicketsView.vue'),
+        meta: { roles: ['admin', 'operator'] },
       },
       {
         path: 'chat',
@@ -58,7 +60,9 @@ router.beforeEach((to) => {
 
   if (to.meta.requiresAuth === false) {
     // Public route: redirect to home if already logged in
-    if (auth.isLoggedIn && to.name === 'Login') return '/'
+    if (auth.isLoggedIn && to.name === 'Login') {
+      return auth.user?.role === 'user' ? '/chat' : '/'
+    }
     return true
   }
   // Protected route
@@ -66,7 +70,10 @@ router.beforeEach((to) => {
 
   const allowedRoles = to.meta.roles
   if (allowedRoles?.length && !allowedRoles.includes(auth.user?.role)) {
-    return '/'
+    return auth.user?.role === 'user' ? '/chat' : '/'
+  }
+  if (auth.user?.role === 'user' && (to.name === 'Dashboard' || to.path === '/')) {
+    return '/chat'
   }
   return true
 })

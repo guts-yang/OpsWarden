@@ -10,7 +10,7 @@ from app.schemas.ticket import (
     TicketAutoCreate, TicketManualCreate, TicketUpdate, TicketResolve, TicketCallback,
     TicketResponse, TicketListResponse, TicketLogResponse
 )
-from app.middleware.auth import get_current_user, require_operator, CurrentUser
+from app.middleware.auth import require_operator, CurrentUser
 from app.utils.response import success
 
 router = APIRouter(prefix="/api/tickets", tags=["工单管理"])
@@ -70,7 +70,7 @@ def auto_create_ticket(req: TicketAutoCreate, db: Session = Depends(get_db)):
 def manual_create_ticket(
     req: TicketManualCreate,
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user),
+    current_user: CurrentUser = Depends(require_operator),
 ):
     ticket = Ticket(
         ticket_no=generate_ticket_no(db),
@@ -104,7 +104,7 @@ def list_tickets(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user)
+    current_user: CurrentUser = Depends(require_operator),
 ):
     query = db.query(Ticket)
     if status:
@@ -129,7 +129,7 @@ def list_tickets(
 # 查询单个工单
 @router.get("/{ticket_id}", summary="查询工单详情")
 def get_ticket(ticket_id: int, db: Session = Depends(get_db),
-               current_user: CurrentUser = Depends(get_current_user)):
+               current_user: CurrentUser = Depends(require_operator)):
     ticket = db.query(Ticket).filter(Ticket.id == ticket_id).first()
     if not ticket:
         raise HTTPException(status_code=404, detail="工单不存在")
@@ -139,7 +139,7 @@ def get_ticket(ticket_id: int, db: Session = Depends(get_db),
 # 查询工单日志
 @router.get("/{ticket_id}/logs", summary="查询工单操作日志")
 def get_ticket_logs(ticket_id: int, db: Session = Depends(get_db),
-                    current_user: CurrentUser = Depends(get_current_user)):
+                    current_user: CurrentUser = Depends(require_operator)):
     logs = db.query(TicketLog).filter(TicketLog.ticket_id == ticket_id) \
              .order_by(TicketLog.created_at.asc()).all()
     return success(data=[TicketLogResponse.model_validate(log) for log in logs])
