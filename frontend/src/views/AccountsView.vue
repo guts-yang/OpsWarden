@@ -1,12 +1,36 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { accountsApi } from '@/api/accounts'
 import { useAuthStore } from '@/stores/auth'
 import BasePagination from '@/components/BasePagination.vue'
 import BaseSlidePanel from '@/components/BaseSlidePanel.vue'
-import { ACCOUNT_ROLE, ACCOUNT_STATUS, fmtDate } from '@/utils/constants'
+import {
+  ACCOUNT_ROLE,
+  ACCOUNT_STATUS,
+  ACCOUNT_DEPARTMENTS,
+  ACCOUNT_DEPARTMENT_LABELS,
+  fmtDate,
+} from '@/utils/constants'
 
 const auth = useAuthStore()
+
+const standardDepartmentValues = new Set(
+  ACCOUNT_DEPARTMENTS.map((d) => d.value).filter(Boolean),
+)
+
+function departmentTableLabel(code) {
+  if (!code) return '—'
+  return ACCOUNT_DEPARTMENT_LABELS[code] ?? code
+}
+
+const departmentSelectOptions = computed(() => {
+  const opts = [...ACCOUNT_DEPARTMENTS]
+  const d = form.department
+  if (d && !standardDepartmentValues.has(d)) {
+    return [{ value: d, label: `${d}（历史）` }, ...opts]
+  }
+  return opts
+})
 
 const accounts = ref([])
 const total = ref(0)
@@ -99,14 +123,21 @@ async function saveAccount() {
     if (editingAccount.value) {
       const payload = {
         name: form.name,
-        department: form.department,
         email: form.email,
         phone: form.phone,
         role: form.role,
       }
+      const prevDept = editingAccount.value.department ?? ''
+      const nextDept = form.department ?? ''
+      if (nextDept !== prevDept) {
+        payload.department = nextDept === '' ? null : nextDept
+      }
       await accountsApi.update(editingAccount.value.id, payload)
     } else {
-      await accountsApi.create({ ...form })
+      await accountsApi.create({
+        ...form,
+        department: form.department || null,
+      })
     }
     showPanel.value = false
     await loadAccounts()
@@ -202,7 +233,7 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
             <td class="px-4 py-3 font-medium text-on-surface">{{ account.name }}</td>
             <td class="px-4 py-3 text-on-surface-variant">{{ account.username }}</td>
             <td class="px-4 py-3 font-mono text-on-surface-variant">{{ account.employee_id }}</td>
-            <td class="px-4 py-3 text-on-surface-variant">{{ account.department || '—' }}</td>
+            <td class="px-4 py-3 text-on-surface-variant">{{ departmentTableLabel(account.department) }}</td>
             <td class="px-4 py-3">
               <span
                 class="px-2 py-0.5 rounded-full font-medium"
@@ -303,11 +334,18 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="block text-xs font-medium text-on-surface-variant mb-1.5">部门</label>
-          <input
+          <select
             v-model="form.department"
-            type="text"
-            class="w-full border border-outline rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500"
-          />
+            class="w-full border border-outline rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500 bg-white"
+          >
+            <option
+              v-for="opt in departmentSelectOptions"
+              :key="opt.value === '' ? '_empty' : opt.value"
+              :value="opt.value"
+            >
+              {{ opt.label }}
+            </option>
+          </select>
         </div>
         <div>
           <label class="block text-xs font-medium text-on-surface-variant mb-1.5">角色</label>

@@ -7,7 +7,7 @@ import { loadChatSession, saveChatSession, resetChatSession } from '@/utils/chat
 
 const auth = useAuthStore()
 
-const initialSession = loadChatSession()
+const initialSession = loadChatSession(auth.user?.id)
 const messages = ref(initialSession.messages)
 const input = ref('')
 const loading = ref(false)
@@ -16,7 +16,7 @@ const chatBody = ref(null)
 const threadId = ref(initialSession.threadId)
 
 function persistSession() {
-  saveChatSession(threadId.value, messages.value)
+  saveChatSession(auth.user?.id, threadId.value, messages.value)
 }
 
 /** 与知识库列表接口顺序一致：updated_at 降序，取前若干条 question */
@@ -32,29 +32,13 @@ const quickQuestions = ref([...FALLBACK_QUICK_QUESTIONS])
 
 const MAX_LEN = 500
 
-function pickQuickQuestionsFromKb(items, max) {
-  const seen = new Set()
-  const out = []
-  for (const row of items || []) {
-    const t = (row?.question ?? '').trim()
-    if (!t || seen.has(t)) continue
-    seen.add(t)
-    out.push(t)
-    if (out.length >= max) break
-  }
-  return out
-}
-
 onMounted(async () => {
   await scrollToBottom()
-  if (!auth.canAccessKnowledge) {
-    quickQuestions.value = [...FALLBACK_QUICK_QUESTIONS]
-    return
-  }
   try {
-    const data = await knowledgeApi.list({ page: 1, page_size: 24 })
-    const picked = pickQuickQuestionsFromKb(data?.items, QUICK_FROM_KB_MAX)
-    quickQuestions.value = picked.length ? picked : [...FALLBACK_QUICK_QUESTIONS]
+    const data = await knowledgeApi.quickPrompts({ limit: QUICK_FROM_KB_MAX })
+    const qs = data?.questions
+    quickQuestions.value =
+      Array.isArray(qs) && qs.length > 0 ? qs : [...FALLBACK_QUICK_QUESTIONS]
   } catch {
     quickQuestions.value = [...FALLBACK_QUICK_QUESTIONS]
   }
@@ -114,7 +98,7 @@ function onKeydown(e) {
 }
 
 function clearHistory() {
-  const next = resetChatSession()
+  const next = resetChatSession(auth.user?.id)
   threadId.value = next.threadId
   messages.value = next.messages
 }

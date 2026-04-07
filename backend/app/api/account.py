@@ -1,3 +1,5 @@
+from enum import Enum
+
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
@@ -42,7 +44,14 @@ def update_me(
 
     update_data = req.model_dump(exclude_unset=True)
     for field, value in update_data.items():
-        if value is not None:
+        if isinstance(value, Enum):
+            setattr(account, field, value.value)
+        elif value is None:
+            if field == "department":
+                account.department = None
+            elif field in ("email", "phone"):
+                setattr(account, field, None)
+        else:
             setattr(account, field, value)
 
     db.commit()
@@ -87,7 +96,7 @@ def create_account(
         username=req.username,
         password_hash=hash_password(req.password),
         name=req.name,
-        department=req.department,
+        department=req.department.value if req.department else None,
         email=req.email,
         phone=req.phone,
         role=req.role.value
@@ -160,8 +169,15 @@ def update_account(
 
     update_data = req.model_dump(exclude_unset=True)
     for field, value in update_data.items():
-        if value is not None:
-            setattr(account, field, value.value if hasattr(value, 'value') else value)
+        if isinstance(value, Enum):
+            setattr(account, field, value.value)
+        elif value is None:
+            if field == "department":
+                account.department = None
+            elif field in ("email", "phone"):
+                setattr(account, field, None)
+        else:
+            setattr(account, field, value)
 
     db.commit()
     db.refresh(account)

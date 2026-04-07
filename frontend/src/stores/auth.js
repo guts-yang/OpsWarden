@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authApi } from '@/api/auth'
+import { clearChatSessionStorage } from '@/utils/chatSessionStorage'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('ow_token') || null)
@@ -33,6 +34,8 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function logout() {
+    const uid = user.value?.id
+    if (uid != null) clearChatSessionStorage(uid)
     token.value = null
     user.value = null
     localStorage.removeItem('ow_token')

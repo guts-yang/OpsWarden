@@ -1,7 +1,17 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 from datetime import datetime
 from enum import Enum
+
+
+class DepartmentEnum(str, Enum):
+    infra = "infra"
+    network_security = "network_security"
+    database_middleware = "database_middleware"
+    app_ops = "app_ops"
+    helpdesk = "helpdesk"
+    rnd = "rnd"
+    general = "general"
 
 
 class RoleEnum(str, Enum):
@@ -20,18 +30,32 @@ class AccountCreate(BaseModel):
     username: str = Field(..., min_length=3, max_length=64)
     password: str = Field(..., min_length=6, max_length=128)
     name: str = Field(..., min_length=1, max_length=64)
-    department: Optional[str] = Field(None, max_length=128)
+    department: Optional[DepartmentEnum] = None
     email: Optional[str] = Field(None, max_length=128)
     phone: Optional[str] = Field(None, max_length=20)
     role: RoleEnum = Field(default=RoleEnum.user)
 
+    @field_validator("department", mode="before")
+    @classmethod
+    def department_empty_to_none(cls, v):
+        if v is None or v == "":
+            return None
+        return v
+
 
 class AccountUpdate(BaseModel):
     name: Optional[str] = Field(None, max_length=64)
-    department: Optional[str] = Field(None, max_length=128)
+    department: Optional[DepartmentEnum] = None
     email: Optional[str] = Field(None, max_length=128)
     phone: Optional[str] = Field(None, max_length=20)
     role: Optional[RoleEnum] = None
+
+    @field_validator("department", mode="before")
+    @classmethod
+    def department_empty_to_none(cls, v):
+        if v is None or v == "":
+            return None
+        return v
 
 
 class AccountResetPassword(BaseModel):
@@ -41,9 +65,16 @@ class AccountResetPassword(BaseModel):
 class AccountProfileUpdate(BaseModel):
     """用户修改自己的资料（不含角色）"""
     name: Optional[str] = Field(None, max_length=64)
-    department: Optional[str] = Field(None, max_length=128)
+    department: Optional[DepartmentEnum] = None
     email: Optional[str] = Field(None, max_length=128)
     phone: Optional[str] = Field(None, max_length=20)
+
+    @field_validator("department", mode="before")
+    @classmethod
+    def department_empty_to_none(cls, v):
+        if v is None or v == "":
+            return None
+        return v
 
 
 class AccountChangePassword(BaseModel):

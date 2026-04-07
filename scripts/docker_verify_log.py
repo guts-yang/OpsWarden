@@ -14,6 +14,38 @@ LOG_PATH = ROOT / "debug-64d860.log"
 SESSION = "64d860"
 RUN_ID = "verify-" + str(int(time.time() * 1000))
 
+_DOCKER_MIRROR_KEYS = (
+    "DOCKERHUB_PYTHON_IMAGE",
+    "DOCKERHUB_NODE_IMAGE",
+    "DOCKERHUB_NGINX_IMAGE",
+    "POSTGRES_IMAGE",
+)
+
+
+def _dotenv_mirror_key_status() -> dict:
+    """Parse repo-root .env for mirror keys (no values logged)."""
+    p = ROOT / ".env"
+    if not p.exists():
+        return {"dotenv_exists": False, "repoRoot": str(ROOT)}
+    found = {k: False for k in _DOCKER_MIRROR_KEYS}
+    try:
+        text = p.read_text(encoding="utf-8", errors="replace")
+    except OSError as e:
+        return {"dotenv_exists": True, "read_error": str(e), "repoRoot": str(ROOT)}
+    for line in text.splitlines():
+        s = line.strip()
+        if not s or s.startswith("#"):
+            continue
+        for k in _DOCKER_MIRROR_KEYS:
+            if s.startswith(k + "=") and len(s) > len(k) + 1:
+                found[k] = True
+    return {
+        "dotenv_exists": True,
+        "repoRoot": str(ROOT),
+        **found,
+        "all_mirror_keys_set": all(found.values()),
+    }
+
 
 def _looks_like_registry_ipv6_fail(text: str) -> bool:
     if not text:
@@ -91,6 +123,14 @@ def run_cmd(
 
 
 def main() -> int:
+    # H-env: .env file must define mirror keys so Compose substitutes build args (shell env alone is not enough)
+    log_line(
+        "H-env",
+        "scripts/docker_verify_log.py:dotenv_mirror_keys",
+        "dotenv_scan",
+        _dotenv_mirror_key_status(),
+    )
+
     # H0: record optional hub mirror overrides (no secrets)
     log_line(
         "H0",
@@ -118,12 +158,21 @@ def main() -> int:
     if code != 0:
         return 2
 
+    if os.environ.get("DOCKER_VERIFY_DRY_RUN") == "1":
+        log_line(
+            "H-dry",
+            "scripts/docker_verify_log.py:dry_run",
+            "skip_build_up_http",
+            {"hint": "Unset DOCKER_VERIFY_DRY_RUN for full build/up/HTTP checks."},
+        )
+        return 0
+
     # H3: build (long)
     code, build_out = run_cmd(
         "H3",
         "scripts/docker_verify_log.py:compose_build",
         ["docker", "compose", "build"],
-        timeout=1200,
+        timeout=3600,
     )
     if code != 0:
         if _looks_like_registry_ipv6_fail(build_out):

@@ -123,5 +123,5 @@ CREATE INDEX IF NOT EXISTS idx_kb_embedding ON kb_entries
 -- 默认管理员账号（密码: admin123）
 -- ==========================================
 INSERT INTO accounts (employee_id, username, password_hash, name, department, role, status)
-VALUES ('ADMIN001', 'admin', '$2b$12$y3JGlrKh27jfkD2Cpiij/OoTie4H4Az4BSx2A.5mfLUFNEtPawrF2', '系统管理员', '运维管理部', 'admin', 'active')
+VALUES ('ADMIN001', 'admin', '$2b$12$y3JGlrKh27jfkD2Cpiij/OoTie4H4Az4BSx2A.5mfLUFNEtPawrF2', '系统管理员', 'general', 'admin', 'active')
 ON CONFLICT (username) DO NOTHING;

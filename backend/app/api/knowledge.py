@@ -10,10 +10,14 @@ logger = logging.getLogger(__name__)
 from app.database import get_db
 from app.models.knowledge import KBEntry
 from app.schemas.knowledge import (
-    KBEntryCreate, KBEntryUpdate, KBEntryResponse,
-    KBEntryListResponse, KBStatsResponse
+    KBEntryCreate,
+    KBEntryUpdate,
+    KBEntryResponse,
+    KBEntryListResponse,
+    KBQuickPromptsResponse,
+    KBStatsResponse,
 )
-from app.middleware.auth import require_operator, CurrentUser
+from app.middleware.auth import get_current_user, require_operator, CurrentUser
 from app.utils.response import success
 from app.rag.retriever import add_entry, delete_entry
 
@@ -38,6 +42,31 @@ def get_stats(
         ticket_writeback=writeback,
         avg_match_score=avg_score,
     ).model_dump())
+
+
+@router.get("/quick-prompts", summary="AI问答快捷提示（仅题目，任意登录用户）")
+def quick_prompts(
+    limit: int = Query(8, ge=1, le=24),
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    rows = (
+        db.query(KBEntry.question)
+        .order_by(KBEntry.updated_at.desc())
+        .limit(limit * 3)
+        .all()
+    )
+    seen: set[str] = set()
+    out: list[str] = []
+    for (q,) in rows:
+        t = (q or "").strip()
+        if not t or t in seen:
+            continue
+        seen.add(t)
+        out.append(t)
+        if len(out) >= limit:
+            break
+    return success(data=KBQuickPromptsResponse(questions=out).model_dump())
 
 
 @router.get("", summary="查询知识库列表")

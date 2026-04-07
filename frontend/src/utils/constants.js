@@ -23,6 +23,21 @@ export const ACCOUNT_STATUS = {
   frozen: { label: '已冻结', class: 'bg-error-container text-error' },
 }
 
+/** 账号部门（value 与后端 DepartmentEnum 一致） */
+export const ACCOUNT_DEPARTMENTS = [
+  { value: '', label: '未指定' },
+  { value: 'infra', label: '基础设施运维' },
+  { value: 'network_security', label: '网络与安全' },
+  { value: 'database_middleware', label: '数据库与中间件' },
+  { value: 'app_ops', label: '应用系统运维' },
+  { value: 'helpdesk', label: '终端与帮助台' },
+  { value: 'rnd', label: '研发中心' },
+  { value: 'general', label: '综合管理' },
+]
+
+const _deptLabelEntries = ACCOUNT_DEPARTMENTS.filter((d) => d.value).map((d) => [d.value, d.label])
+export const ACCOUNT_DEPARTMENT_LABELS = Object.fromEntries(_deptLabelEntries)
+
 export function fmtDate(iso) {
   if (!iso) return '-'
   const d = new Date(iso)
