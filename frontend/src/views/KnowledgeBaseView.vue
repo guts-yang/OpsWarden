@@ -149,37 +149,57 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
   <div class="p-6 space-y-5">
     <!-- Stats -->
     <div class="grid grid-cols-2 xl:grid-cols-4 gap-4">
-      <div class="bg-white rounded-xl border border-outline p-4">
-        <p class="text-xs text-on-surface-variant">总条目</p>
-        <p class="text-2xl font-semibold text-on-surface mt-1">{{ stats?.total ?? '—' }}</p>
+      <div class="ops-card-hover p-4 min-h-[100px] flex flex-col">
+        <div class="flex items-start justify-between gap-2">
+          <p class="text-xs font-medium text-on-surface-variant">总条目</p>
+          <div class="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-primary-500 text-[18px]">library_books</span>
+          </div>
+        </div>
+        <p class="text-2xl font-semibold text-on-surface mt-2 tabular-nums">{{ stats?.total ?? '—' }}</p>
       </div>
-      <div class="bg-white rounded-xl border border-outline p-4">
-        <p class="text-xs text-on-surface-variant">本周新增</p>
-        <p class="text-2xl font-semibold text-on-surface mt-1">{{ stats?.new_this_week ?? '—' }}</p>
+      <div class="ops-card-hover p-4 min-h-[100px] flex flex-col">
+        <div class="flex items-start justify-between gap-2">
+          <p class="text-xs font-medium text-on-surface-variant">本周新增</p>
+          <div class="w-8 h-8 rounded-lg bg-success-container flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-success text-[18px]">trending_up</span>
+          </div>
+        </div>
+        <p class="text-2xl font-semibold text-on-surface mt-2 tabular-nums">{{ stats?.new_this_week ?? '—' }}</p>
       </div>
-      <div class="bg-white rounded-xl border border-outline p-4">
-        <p class="text-xs text-on-surface-variant">工单回写</p>
-        <p class="text-2xl font-semibold text-on-surface mt-1">{{ stats?.ticket_writeback ?? '—' }}</p>
+      <div class="ops-card-hover p-4 min-h-[100px] flex flex-col">
+        <div class="flex items-start justify-between gap-2">
+          <p class="text-xs font-medium text-on-surface-variant">工单回写</p>
+          <div class="w-8 h-8 rounded-lg bg-warning-container flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-warning text-[18px]">sync_alt</span>
+          </div>
+        </div>
+        <p class="text-2xl font-semibold text-on-surface mt-2 tabular-nums">{{ stats?.ticket_writeback ?? '—' }}</p>
       </div>
-      <div class="bg-white rounded-xl border border-outline p-4">
-        <p class="text-xs text-on-surface-variant">平均匹配分</p>
-        <p class="text-2xl font-semibold text-on-surface mt-1">
+      <div class="ops-card-hover p-4 min-h-[100px] flex flex-col">
+        <div class="flex items-start justify-between gap-2">
+          <p class="text-xs font-medium text-on-surface-variant">平均匹配分</p>
+          <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-on-surface-variant text-[18px]">analytics</span>
+          </div>
+        </div>
+        <p class="text-2xl font-semibold text-on-surface mt-2 tabular-nums">
           {{ stats?.avg_match_score != null ? (stats.avg_match_score * 100).toFixed(0) + '%' : '—' }}
         </p>
       </div>
     </div>
 
     <!-- Filter bar -->
-    <div class="flex items-center justify-between gap-3 flex-wrap">
-      <div class="flex items-center gap-2 flex-wrap">
+    <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <div class="flex items-center gap-2 flex-wrap min-w-0 overflow-x-auto pb-1 -mb-1 lg:pb-0 lg:mb-0">
         <!-- Category tabs -->
         <button
           v-for="cat in categories"
           :key="cat"
-          class="px-3 py-1.5 text-xs rounded-lg border transition-colors"
+          class="px-3 py-1.5 text-xs rounded-lg border transition-colors shrink-0"
           :class="
             activeCategory === cat
-              ? 'bg-primary-500 text-white border-primary-500'
+              ? 'bg-primary-500 text-white border-primary-500 shadow-sm'
               : 'border-outline text-on-surface-variant hover:bg-surface-container'
           "
           @click="activeCategory = cat"
@@ -190,7 +210,7 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
       <div class="flex items-center gap-2">
         <select
           v-model="sourceFilter"
-          class="text-xs border border-outline rounded-lg px-3 py-1.5 focus:outline-none focus:border-primary-500"
+          class="text-xs ops-input px-3 py-2 cursor-pointer"
         >
           <option v-for="opt in sourceOptions" :key="opt.value" :value="opt.value">
             {{ opt.label }}
@@ -204,7 +224,7 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
             v-model="searchKeyword"
             type="text"
             placeholder="搜索关键词"
-            class="pl-8 pr-3 py-1.5 text-xs border border-outline rounded-lg focus:outline-none focus:border-primary-500 w-48"
+            class="pl-8 pr-3 py-2 text-xs ops-input w-48"
             @input="onSearchInput"
           />
         </div>
@@ -225,7 +245,7 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
       <div
         v-for="entry in entries"
         :key="entry.id"
-        class="bg-white rounded-xl border border-outline p-4 group hover:shadow-sm transition-shadow"
+        class="ops-card-hover p-4 group"
       >
         <div class="flex items-start justify-between gap-3">
           <div class="flex-1 min-w-0">

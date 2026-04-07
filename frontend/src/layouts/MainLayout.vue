@@ -20,10 +20,12 @@ const title = computed(() => pageTitles[route.name] ?? 'OpsWarden')
 <template>
   <div class="flex h-screen overflow-hidden bg-surface-dim">
     <AppSidebar />
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex-1 flex flex-col overflow-hidden min-w-0">
       <AppHeader :title="title" />
       <main class="flex-1 overflow-auto">
-        <RouterView />
+        <div class="mx-auto w-full max-w-[1440px] min-h-full">
+          <RouterView />
+        </div>
       </main>
     </div>
   </div>

@@ -138,23 +138,23 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
 <template>
   <div class="p-6 space-y-4">
     <!-- Filter bar -->
-    <div class="flex items-center justify-between flex-wrap gap-3">
-      <div class="flex items-center gap-2">
+    <div class="ops-card flex flex-wrap items-center justify-between gap-3 p-4">
+      <div class="flex items-center gap-2 flex-wrap">
         <div class="relative">
-          <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant">
+          <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant pointer-events-none">
             search
           </span>
           <input
             v-model="searchName"
             type="text"
             placeholder="搜索姓名..."
-            class="pl-8 pr-3 py-1.5 text-xs border border-outline rounded-lg focus:outline-none focus:border-primary-500 w-48"
+            class="pl-8 pr-3 py-2 text-xs ops-input w-48 sm:w-56"
             @input="onSearchInput"
           />
         </div>
         <select
           v-model="statusFilter"
-          class="text-xs border border-outline rounded-lg px-3 py-1.5 focus:outline-none focus:border-primary-500"
+          class="text-xs ops-input px-3 py-2 bg-white cursor-pointer"
           @change="page = 1; loadAccounts()"
         >
           <option value="">全部状态</option>
@@ -164,7 +164,7 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
       </div>
       <button
         v-if="auth.isAdmin"
-        class="flex items-center gap-1.5 px-3 py-1.5 bg-primary-500 text-white text-xs rounded-lg hover:bg-primary-600"
+        class="flex items-center gap-1.5 px-3 py-2 bg-primary-500 text-white text-xs font-medium rounded-lg hover:bg-primary-600 shadow-sm hover:shadow transition-shadow"
         @click="openCreate"
       >
         <span class="material-symbols-outlined text-[14px]">person_add</span>
@@ -173,7 +173,7 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-xl border border-outline overflow-hidden">
+    <div class="ops-card overflow-hidden">
       <table class="w-full text-xs">
         <thead>
           <tr class="border-b border-outline bg-surface-dim">

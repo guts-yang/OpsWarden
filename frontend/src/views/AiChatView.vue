@@ -82,7 +82,7 @@ function fmtTime(d) {
 <template>
   <div class="flex flex-col h-full">
     <!-- Toolbar -->
-    <div class="flex items-center justify-between px-6 py-3 bg-white border-b border-outline">
+    <div class="flex items-center justify-between px-6 py-3 bg-white/95 backdrop-blur-sm border-b border-outline shadow-shell z-[1]">
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-primary-500 text-[20px]">smart_toy</span>
         <span class="text-sm font-medium text-on-surface">AI 智能问答</span>
@@ -98,7 +98,7 @@ function fmtTime(d) {
     </div>
 
     <!-- Messages -->
-    <div ref="chatBody" class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+    <div ref="chatBody" class="flex-1 overflow-y-auto px-6 py-4 space-y-5 bg-gradient-to-b from-surface-dim/80 to-surface-dim">
       <div v-for="msg in messages" :key="msg.id" class="flex" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
         <!-- AI Avatar -->
         <div v-if="msg.role === 'ai'" class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0 mr-2 mt-0.5">
@@ -108,11 +108,15 @@ function fmtTime(d) {
         <div :class="msg.role === 'user' ? 'max-w-[70%]' : 'max-w-[75%]'">
           <!-- Bubble -->
           <div
-            class="px-4 py-3 rounded-2xl text-sm leading-relaxed"
+            class="px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm"
             :class="
               msg.role === 'user'
-                ? 'bg-primary-500 text-white rounded-tr-sm'
-                : 'bg-white border border-outline text-on-surface rounded-tl-sm'
+                ? 'bg-primary-500 text-white rounded-tr-md shadow-lift'
+                : msg.source === 'error'
+                  ? 'bg-error-container border border-error/20 text-on-surface rounded-tl-md'
+                  : msg.id === 0
+                    ? 'bg-white border border-outline text-on-surface rounded-tl-md ring-1 ring-primary-500/10'
+                    : 'bg-white border border-outline text-on-surface rounded-tl-md'
             "
             v-html="escapeHtml(msg.text)"
           />
@@ -130,10 +134,16 @@ function fmtTime(d) {
             </span>
             <span
               v-else-if="msg.source === 'fallback'"
-              class="text-[10px] bg-warning-container text-warning px-1.5 py-0.5 rounded-full"
+              class="text-[10px] bg-warning-container text-warning px-1.5 py-0.5 rounded-full font-medium"
             >
               工单已创建
               <template v-if="msg.ticketNo"> · {{ msg.ticketNo }}</template>
+            </span>
+            <span
+              v-else-if="msg.source === 'error'"
+              class="text-[10px] bg-error-container text-error px-1.5 py-0.5 rounded-full font-medium"
+            >
+              请求失败
             </span>
           </div>
         </div>
@@ -170,8 +180,10 @@ function fmtTime(d) {
     </div>
 
     <!-- Input bar -->
-    <div class="px-6 pb-6">
-      <div class="bg-white border border-outline rounded-2xl p-3 flex items-end gap-3 focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500">
+    <div class="px-6 pb-6 pt-1 bg-surface-dim">
+      <div
+        class="bg-white border border-outline rounded-2xl p-3 flex items-end gap-3 shadow-sm focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-500/20 transition-shadow"
+      >
         <textarea
           v-model="input"
           rows="2"

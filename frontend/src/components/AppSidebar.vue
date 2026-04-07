@@ -25,11 +25,16 @@ function logout() {
 </script>
 
 <template>
-  <aside class="w-[200px] flex-shrink-0 bg-white border-r border-outline flex flex-col h-screen sticky top-0">
+  <aside class="w-[220px] flex-shrink-0 bg-white border-r border-outline flex flex-col h-screen sticky top-0 shadow-shell">
     <!-- Logo -->
-    <div class="flex items-center gap-2 px-4 py-4 border-b border-outline">
-      <span class="material-symbols-outlined text-primary-500">shield</span>
-      <span class="font-semibold text-on-surface text-sm tracking-wide">OpsWarden</span>
+    <div class="flex items-center gap-2.5 px-4 py-4 border-b border-outline">
+      <div class="w-9 h-9 rounded-xl bg-primary-500 flex items-center justify-center shadow-sm">
+        <span class="material-symbols-outlined text-white text-[22px]">shield</span>
+      </div>
+      <div class="min-w-0">
+        <span class="font-semibold text-on-surface text-sm tracking-tight block leading-tight">OpsWarden</span>
+        <span class="text-[10px] text-on-surface-variant leading-tight">运维数字员工</span>
+      </div>
     </div>
 
     <!-- Nav -->
@@ -38,13 +43,18 @@ function logout() {
         v-for="item in navItems"
         :key="item.path"
         :to="item.path"
-        class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors"
+        class="relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors"
         :class="
           isActive(item.path)
-            ? 'bg-primary-50 text-primary-700 font-medium'
+            ? 'bg-primary-50 text-primary-700 font-medium shadow-sm'
             : 'text-on-surface-variant hover:bg-surface-container'
         "
       >
+        <span
+          v-if="isActive(item.path)"
+          class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full bg-primary-500"
+          aria-hidden="true"
+        />
         <span class="material-symbols-outlined text-[20px]">{{ item.icon }}</span>
         {{ item.label }}
       </RouterLink>
