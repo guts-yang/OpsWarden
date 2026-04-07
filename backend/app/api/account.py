@@ -1,6 +1,9 @@
+from enum import Enum
+
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
+from sqlalchemy.exc import IntegrityError
 from typing import Optional
 
 from app.database import get_db
@@ -12,6 +15,7 @@ from app.schemas.account import (
 )
 from app.utils.security import hash_password, verify_password
 from app.utils.response import success
+from app.utils.employee_id import allocate_employee_id
 from app.middleware.auth import get_current_user, require_admin, CurrentUser
 
 router = APIRouter(prefix="/api/accounts", tags=["账号管理"])
@@ -42,7 +46,14 @@ def update_me(
 
     update_data = req.model_dump(exclude_unset=True)
     for field, value in update_data.items():
-        if value is not None:
+        if isinstance(value, Enum):
+            setattr(account, field, value.value)
+        elif value is None:
+            if field == "department":
+                account.department = None
+            elif field in ("email", "phone"):
+                setattr(account, field, None)
+        else:
             setattr(account, field, value)
 
     db.commit()
@@ -76,27 +87,44 @@ def create_account(
     db: Session = Depends(get_db),
     current_user: CurrentUser = Depends(require_admin)
 ):
-    existing = db.query(Account).filter(
-        or_(Account.employee_id == req.employee_id, Account.username == req.username)
-    ).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="工号或用户名已存在")
+    custom_eid = bool(req.employee_id)
+    employee_id = req.employee_id if custom_eid else allocate_employee_id(db, req.role.value)
 
-    account = Account(
-        employee_id=req.employee_id,
-        username=req.username,
-        password_hash=hash_password(req.password),
-        name=req.name,
-        department=req.department,
-        email=req.email,
-        phone=req.phone,
-        role=req.role.value
-    )
-    db.add(account)
-    db.commit()
-    db.refresh(account)
+    for _ in range(5):
+        existing = db.query(Account).filter(
+            or_(Account.employee_id == employee_id, Account.username == req.username)
+        ).first()
+        if existing:
+            if existing.username == req.username:
+                raise HTTPException(status_code=400, detail="用户名已存在")
+            if existing.employee_id == employee_id:
+                if custom_eid:
+                    raise HTTPException(status_code=400, detail="工号已存在")
+                employee_id = allocate_employee_id(db, req.role.value)
+                continue
 
-    return success(data=AccountResponse.model_validate(account), message="创建成功")
+        try:
+            account = Account(
+                employee_id=employee_id,
+                username=req.username,
+                password_hash=hash_password(req.password),
+                name=req.name,
+                department=req.department.value if req.department else None,
+                email=req.email,
+                phone=req.phone,
+                role=req.role.value,
+            )
+            db.add(account)
+            db.commit()
+            db.refresh(account)
+            return success(data=AccountResponse.model_validate(account), message="创建成功")
+        except IntegrityError:
+            db.rollback()
+            if custom_eid:
+                raise HTTPException(status_code=400, detail="工号或用户名已存在")
+            employee_id = allocate_employee_id(db, req.role.value)
+
+    raise HTTPException(status_code=500, detail="创建失败，请稍后重试")
 
 
 @router.get("", summary="查询账号列表")
@@ -108,7 +136,7 @@ def list_accounts(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user)
+    current_user: CurrentUser = Depends(require_admin)
 ):
     query = db.query(Account)
 
@@ -139,7 +167,7 @@ def list_accounts(
 def get_account(
     account_id: int,
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user)
+    current_user: CurrentUser = Depends(require_admin)
 ):
     account = db.query(Account).filter(Account.id == account_id).first()
     if not account:
@@ -160,8 +188,15 @@ def update_account(
 
     update_data = req.model_dump(exclude_unset=True)
     for field, value in update_data.items():
-        if value is not None:
-            setattr(account, field, value.value if hasattr(value, 'value') else value)
+        if isinstance(value, Enum):
+            setattr(account, field, value.value)
+        elif value is None:
+            if field == "department":
+                account.department = None
+            elif field in ("email", "phone"):
+                setattr(account, field, None)
+        else:
+            setattr(account, field, value)
 
     db.commit()
     db.refresh(account)

@@ -21,7 +21,7 @@ async function handleLogin() {
   loading.value = true
   try {
     await auth.login(username.value, password.value)
-    router.push('/')
+    router.push(auth.user?.role === 'user' ? '/chat' : '/')
   } catch (e) {
     error.value = e.message || '登录失败，请重试'
   } finally {

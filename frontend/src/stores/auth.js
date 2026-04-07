@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authApi } from '@/api/auth'
+import { clearChatSessionStorage } from '@/utils/chatSessionStorage'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('ow_token') || null)
@@ -9,6 +10,13 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = computed(() => !!token.value)
   const isAdmin = computed(() => user.value?.role === 'admin')
   const isOperator = computed(
+    () => user.value?.role === 'admin' || user.value?.role === 'operator',
+  )
+  const canAccessKnowledge = computed(
+    () => user.value?.role === 'admin' || user.value?.role === 'operator',
+  )
+  const canAccessAccounts = computed(() => user.value?.role === 'admin')
+  const canAccessStaffRoutes = computed(
     () => user.value?.role === 'admin' || user.value?.role === 'operator',
   )
 
@@ -26,11 +34,24 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function logout() {
+    const uid = user.value?.id
+    if (uid != null) clearChatSessionStorage(uid)
     token.value = null
     user.value = null
     localStorage.removeItem('ow_token')
     localStorage.removeItem('ow_user')
   }
 
-  return { token, user, isLoggedIn, isAdmin, isOperator, login, logout }
+  return {
+    token,
+    user,
+    isLoggedIn,
+    isAdmin,
+    isOperator,
+    canAccessKnowledge,
+    canAccessAccounts,
+    canAccessStaffRoutes,
+    login,
+    logout,
+  }
 })

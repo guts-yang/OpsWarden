@@ -7,7 +7,7 @@ from app.database import get_db
 from app.models.account import Account
 from app.models.ticket import Ticket
 from app.models.knowledge import KBEntry
-from app.middleware.auth import get_current_user, CurrentUser
+from app.middleware.auth import require_operator, CurrentUser
 from app.utils.response import success
 
 router = APIRouter(prefix="/api/analytics", tags=["数据统计"])
@@ -16,7 +16,7 @@ router = APIRouter(prefix="/api/analytics", tags=["数据统计"])
 @router.get("/summary", summary="仪表盘统计数据")
 def get_summary(
     db: Session = Depends(get_db),
-    current_user: CurrentUser = Depends(get_current_user),
+    current_user: CurrentUser = Depends(require_operator),
 ):
     now = datetime.now()
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)

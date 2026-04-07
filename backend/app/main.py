@@ -67,6 +67,21 @@ def startup_event():
     finally:
         db.close()
 
+    try:
+        from app.checkpointer.runtime import init_checkpointer_pool
+        init_checkpointer_pool()
+    except Exception as e:
+        logger.warning(f"LangGraph Checkpointer 初始化失败（图持久化不可用）：{e}")
+
+
+@app.on_event("shutdown")
+def shutdown_event():
+    try:
+        from app.checkpointer.runtime import close_checkpointer_pool
+        close_checkpointer_pool()
+    except Exception as e:
+        logger.warning(f"Checkpointer 连接池关闭异常：{e}")
+
 
 @app.get("/", tags=["系统"])
 def root():

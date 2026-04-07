@@ -1,20 +1,25 @@
 <script setup>
-import { ref, nextTick, onMounted } from 'vue'
+import { ref, nextTick, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { chatApi } from '@/api/chat'
 import { knowledgeApi } from '@/api/knowledge'
+import { useAuthStore } from '@/stores/auth'
+import { loadChatSession, saveChatSession, resetChatSession } from '@/utils/chatSessionStorage'
 
-const messages = ref([
-  {
-    id: 0,
-    role: 'ai',
-    text: '您好！我是 OpsWarden AI 助手。请描述您遇到的运维问题，我会尽力为您解答。',
-    source: null,
-    time: new Date(),
-  },
-])
+const auth = useAuthStore()
+const route = useRoute()
+
+const initialSession = loadChatSession(auth.user?.id)
+const messages = ref(initialSession.messages)
 const input = ref('')
 const loading = ref(false)
 const chatBody = ref(null)
+
+const threadId = ref(initialSession.threadId)
+
+function persistSession() {
+  saveChatSession(auth.user?.id, threadId.value, messages.value)
+}
 
 /** 与知识库列表接口顺序一致：updated_at 降序，取前若干条 question */
 const QUICK_FROM_KB_MAX = 8
@@ -29,27 +34,49 @@ const quickQuestions = ref([...FALLBACK_QUICK_QUESTIONS])
 
 const MAX_LEN = 500
 
-function pickQuickQuestionsFromKb(items, max) {
-  const seen = new Set()
-  const out = []
-  for (const row of items || []) {
-    const t = (row?.question ?? '').trim()
-    if (!t || seen.has(t)) continue
-    seen.add(t)
-    out.push(t)
-    if (out.length >= max) break
+/** 解析 quick-prompts 响应（兼容拦截器已解包或仍带 data 信封） */
+function normalizeQuickQuestionsPayload(raw) {
+  if (!raw || typeof raw !== 'object') return null
+  let qs = raw.questions
+  if (!Array.isArray(qs) && raw.data != null && typeof raw.data === 'object') {
+    qs = raw.data.questions
   }
-  return out
+  if (!Array.isArray(qs) || qs.length === 0) return null
+  const out = qs.map((s) => String(s).trim()).filter(Boolean)
+  return out.length ? out : null
 }
 
-onMounted(async () => {
+async function refreshQuickQuestionsFromKb() {
   try {
-    const data = await knowledgeApi.list({ page: 1, page_size: 24 })
-    const picked = pickQuickQuestionsFromKb(data?.items, QUICK_FROM_KB_MAX)
-    quickQuestions.value = picked.length ? picked : [...FALLBACK_QUICK_QUESTIONS]
+    const raw = await knowledgeApi.quickPrompts({ limit: QUICK_FROM_KB_MAX })
+    const list = normalizeQuickQuestionsPayload(raw)
+    if (list) {
+      quickQuestions.value = list
+      return
+    }
   } catch {
-    quickQuestions.value = [...FALLBACK_QUICK_QUESTIONS]
+    /* 网络/401 等：回落模板 */
   }
+  quickQuestions.value = [...FALLBACK_QUICK_QUESTIONS]
+}
+
+watch(
+  () => route.name,
+  (name) => {
+    if (name === 'AiChat') refreshQuickQuestionsFromKb()
+  },
+  { immediate: true },
+)
+
+watch(
+  () => auth.user?.id,
+  () => {
+    if (route.name === 'AiChat') refreshQuickQuestionsFromKb()
+  },
+)
+
+onMounted(async () => {
+  await scrollToBottom()
 })
 
 function escapeHtml(str) {
@@ -69,11 +96,12 @@ async function sendMessage(text) {
   input.value = ''
 
   messages.value.push({ id: Date.now(), role: 'user', text: q, time: new Date() })
+  persistSession()
   await scrollToBottom()
 
   loading.value = true
   try {
-    const data = await chatApi.send(q)
+    const data = await chatApi.send({ query: q, thread_id: threadId.value })
     messages.value.push({
       id: Date.now() + 1,
       role: 'ai',
@@ -91,6 +119,7 @@ async function sendMessage(text) {
       time: new Date(),
     })
   } finally {
+    persistSession()
     loading.value = false
     await scrollToBottom()
   }
@@ -104,7 +133,9 @@ function onKeydown(e) {
 }
 
 function clearHistory() {
-  messages.value = [messages.value[0]]
+  const next = resetChatSession(auth.user?.id)
+  threadId.value = next.threadId
+  messages.value = next.messages
 }
 
 function fmtTime(d) {
@@ -113,9 +144,9 @@ function fmtTime(d) {
 </script>
 
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col flex-1 min-h-0">
     <!-- Toolbar -->
-    <div class="flex items-center justify-between px-6 py-3 bg-white/95 backdrop-blur-sm border-b border-outline shadow-shell z-[1]">
+    <div class="flex-shrink-0 flex items-center justify-between px-6 py-3 bg-white/95 backdrop-blur-sm border-b border-outline shadow-shell z-[1]">
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-primary-500 text-[20px]">smart_toy</span>
         <span class="text-sm font-medium text-on-surface">AI 智能问答</span>
@@ -131,7 +162,7 @@ function fmtTime(d) {
     </div>
 
     <!-- Messages -->
-    <div ref="chatBody" class="flex-1 overflow-y-auto px-6 py-4 space-y-5 bg-gradient-to-b from-surface-dim/80 to-surface-dim">
+    <div ref="chatBody" class="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-5 bg-gradient-to-b from-surface-dim/80 to-surface-dim">
       <div v-for="msg in messages" :key="msg.id" class="flex" :class="msg.role === 'user' ? 'justify-end' : 'justify-start'">
         <!-- AI Avatar -->
         <div v-if="msg.role === 'ai'" class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0 mr-2 mt-0.5">
@@ -201,7 +232,7 @@ function fmtTime(d) {
     </div>
 
     <!-- Quick suggestions（文案来自知识库 question，过长时截断，title 显示全文） -->
-    <div class="px-6 pb-2 flex gap-2 flex-wrap">
+    <div class="flex-shrink-0 border-t border-outline px-6 pt-2 pb-2 flex gap-2 flex-wrap bg-surface-dim">
       <button
         v-for="(q, idx) in quickQuestions"
         :key="`${idx}-${q.slice(0, 24)}`"
@@ -215,7 +246,7 @@ function fmtTime(d) {
     </div>
 
     <!-- Input bar -->
-    <div class="px-6 pb-6 pt-1 bg-surface-dim">
+    <div class="flex-shrink-0 px-6 pb-6 pt-1 bg-surface-dim">
       <div
         class="bg-white border border-outline rounded-2xl p-3 flex items-end gap-3 shadow-sm focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-500/20 transition-shadow"
       >

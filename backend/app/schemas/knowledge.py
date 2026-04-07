@@ -41,6 +41,11 @@ class KBEntryListResponse(BaseModel):
     items:     list[KBEntryResponse]
 
 
+class KBQuickPromptsResponse(BaseModel):
+    """AI 问答快捷提示：仅题目，不含答案。"""
+    questions: list[str]
+
+
 class KBStatsResponse(BaseModel):
     total:           int
     new_this_week:   int

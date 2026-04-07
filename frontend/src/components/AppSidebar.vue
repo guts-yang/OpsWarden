@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -6,13 +7,22 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 
-const navItems = [
-  { path: '/', icon: 'dashboard', label: '仪表盘' },
-  { path: '/tickets', icon: 'confirmation_number', label: '工单管理' },
+const allNavItems = [
+  { path: '/', icon: 'dashboard', label: '仪表盘', needsStaff: true },
+  { path: '/tickets', icon: 'confirmation_number', label: '工单管理', needsStaff: true },
   { path: '/chat', icon: 'smart_toy', label: 'AI 问答' },
-  { path: '/knowledge', icon: 'menu_book', label: '知识库' },
-  { path: '/accounts', icon: 'manage_accounts', label: '账号管理' },
+  { path: '/knowledge', icon: 'menu_book', label: '知识库', needsKnowledge: true },
+  { path: '/accounts', icon: 'manage_accounts', label: '账号管理', needsAccounts: true },
 ]
+
+const navItems = computed(() =>
+  allNavItems.filter((item) => {
+    if (item.needsStaff && !auth.canAccessStaffRoutes) return false
+    if (item.needsKnowledge && !auth.canAccessKnowledge) return false
+    if (item.needsAccounts && !auth.canAccessAccounts) return false
+    return true
+  }),
+)
 
 function isActive(path) {
   return path === '/' ? route.path === '/' : route.path.startsWith(path)

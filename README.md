@@ -34,6 +34,8 @@
 - [团队分工](#团队分工)
 - [FAQ / 已知问题](#faq--已知问题)
 
+**更多文档**：[后端设计 docs/backend.md](docs/backend.md) · [API 测试 docs/API_TESTING.md](docs/API_TESTING.md) · 协作者/AI 速览见 [CLAUDE.md](CLAUDE.md)（与 README 有重叠，择一详读即可）
+
 ---
 
 ## 项目简介
@@ -62,6 +64,7 @@ OpsWarden 是一套面向企业运维场景的 AI 数字员工系统，核心功
 | AI 大模型       | DeepSeek API                        | deepseek-chat                |
 | 向量存储         | PostgreSQL pgvector                 | cosine 相似度，与业务数据同库           |
 | Embedding 模型 | BAAI/bge-small-zh-v1.5              | sentence-transformers, 512 维 |
+| 对话编排       | LangGraph + Postgres checkpoint     | 多轮对话状态与 checkpoint 持久化   |
 | 前端           | Vue 3 + Vite + Pinia + Vue Router 4 | Tailwind CSS 3               |
 | 数据库          | PostgreSQL                          | 16（含 pgvector 扩展）            |
 | 运行时          | Python                              | 3.11 (Anaconda)              |
@@ -262,6 +265,7 @@ docker compose down -v
 ```
 OpsWarden/
 ├── backend/
+│   ├── Dockerfile               # 后端容器构建
 │   ├── knowledge_base/
 │   │   └── OpsWarden_FAQ.md     # 知识库原始 Markdown（启动时自动导入）
 │   └── app/
@@ -274,7 +278,7 @@ OpsWarden/
 │       │   ├── ticket.py        # 工单管理
 │       │   ├── analytics.py     # 仪表盘统计
 │       │   ├── knowledge.py     # 知识库 CRUD
-│       │   └── chat.py          # AI 问答入口（RAG + 工单降级）
+│       │   └── chat.py          # AI 问答入口（LangGraph + RAG + 工单降级）
 │       ├── middleware/
 │       │   ├── auth.py          # JWT 鉴权
 │       │   ├── exception.py     # 统一异常处理
@@ -289,13 +293,20 @@ OpsWarden/
 │       │   └── knowledge.py
 │       ├── utils/
 │       │   ├── response.py      # 统一响应格式
-│       │   └── security.py      # 密码哈希 / JWT 工具
+│       │   ├── security.py      # 密码哈希 / JWT 工具
+│       │   └── employee_id.py   # 按角色生成工号（ADM/OPS/USR + 序号）
+│       ├── graphs/
+│       │   └── chat_workflow.py # LangGraph 对话编排（Postgres checkpoint）
+│       ├── checkpointer/        # LangGraph Postgres checkpoint 连接与工具
 │       └── rag/
 │           ├── embedder.py      # Sentence-Transformers 封装
 │           ├── faq_loader.py    # Markdown FAQ 解析 → PostgreSQL
 │           ├── llm.py           # DeepSeek API 调用
-│           └── retriever.py     # pgvector 语义检索 + CRUD
+│           ├── retriever.py     # pgvector 语义检索 + CRUD
+│           └── chat_pipeline.py # RAG 管道（供工作流节点调用）
 ├── frontend/                    # Vue 3 + Vite SPA
+│   ├── Dockerfile               # 前端静态资源 + nginx 容器
+│   ├── nginx.conf
 │   ├── index.html               # Vite 入口
 │   ├── package.json
 │   ├── vite.config.js           # 代理 /api → :8000，构建输出到 dist/
@@ -323,6 +334,10 @@ OpsWarden/
 │       └── components/
 │           ├── AppSidebar.vue / AppHeader.vue
 │           ├── BasePagination.vue / BaseModal.vue / BaseSlidePanel.vue
+├── docker/
+│   └── engine-ipv4-snippet.json # Docker Engine IPv4 优先片段（排障见 scripts）
+├── scripts/
+│   └── docker_verify_log.py     # compose 校验与日志采集
 ├── docs/
 │   ├── canva.png                # 系统流程图（可替换为高分辨率版本）
 │   ├── API_TESTING.md           # API 测试文档
@@ -330,7 +345,7 @@ OpsWarden/
 ├── init.sql                     # 数据库初始化脚本（PostgreSQL + pgvector）
 ├── requirements.txt             # Python 依赖
 ├── docker-compose.yml           # Docker 编排（PostgreSQL + pgvector）
-├── .env                         # 环境变量（按 .env.example 配置）
+├── .env.example                 # 环境变量模板（运行时复制为 .env）
 └── README.md
 ```
 
@@ -360,6 +375,7 @@ OpsWarden/
 | 解冻账号   | PATCH | `/api/accounts/{id}/unfreeze`       | Bearer (admin) |
 | 重置密码   | PATCH | `/api/accounts/{id}/reset-password` | Bearer (admin) |
 
+创建账号时 **`employee_id` 可省略**：服务端按所选角色自动生成工号（`ADM#####` / `OPS#####` / `USR#####`）；也可显式传入自定义工号（须全局唯一）。
 
 **工单系统**
 
