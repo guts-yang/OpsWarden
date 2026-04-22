@@ -9,6 +9,8 @@ class KBEntryCreate(BaseModel):
     solution:    str          = Field(..., min_length=1)
     tags:        Optional[str] = Field(None, max_length=256)
     match_score: Optional[float] = Field(0.8, ge=0.0, le=1.0)
+    doc_id:      str          = Field(default="manual", min_length=1, max_length=128)
+    page_index:  int          = Field(default=1, ge=1)
 
 
 class KBEntryUpdate(BaseModel):
@@ -17,6 +19,8 @@ class KBEntryUpdate(BaseModel):
     solution:    Optional[str]   = None
     tags:        Optional[str]   = Field(None, max_length=256)
     match_score: Optional[float] = Field(None, ge=0.0, le=1.0)
+    doc_id:      Optional[str]   = Field(None, max_length=128)
+    page_index:  Optional[int]   = Field(None, ge=1)
 
 
 class KBEntryResponse(BaseModel):
@@ -27,6 +31,9 @@ class KBEntryResponse(BaseModel):
     tags:        Optional[str] = None
     source:      str
     match_score: float
+    anchor_id:   Optional[int] = None
+    doc_id:      str
+    page_index:  int
     created_at:  datetime
     updated_at:  datetime
 
