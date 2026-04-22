@@ -98,7 +98,20 @@ CREATE TABLE IF NOT EXISTS ticket_logs (
 CREATE INDEX IF NOT EXISTS idx_ticket_logs_ticket_id ON ticket_logs (ticket_id);
 
 -- ==========================================
--- 知识库条目表
+-- 知识库：量化锚点（L1，仅此表建向量 ANN 索引）
+-- ==========================================
+CREATE TABLE IF NOT EXISTS kb_anchors (
+    id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    quant_key   VARCHAR(64)  NOT NULL UNIQUE,
+    anchor_vec  vector(512)  NOT NULL,
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_kb_anchors_vec ON kb_anchors
+    USING ivfflat (anchor_vec vector_cosine_ops) WITH (lists = 50);
+
+-- ==========================================
+-- 知识库条目（L2：页级索引，embedding 仅用于候选集内精排，无向量索引）
 -- ==========================================
 CREATE TABLE IF NOT EXISTS kb_entries (
     id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -108,6 +121,9 @@ CREATE TABLE IF NOT EXISTS kb_entries (
     tags        VARCHAR(256),
     source      kb_source    NOT NULL DEFAULT 'manual',
     match_score FLOAT        NOT NULL DEFAULT 0.8,
+    anchor_id   BIGINT       REFERENCES kb_anchors(id) ON DELETE RESTRICT,
+    doc_id      VARCHAR(128) NOT NULL DEFAULT 'legacy',
+    page_index  INTEGER      NOT NULL DEFAULT 1,
     embedding   vector(512),
     created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
     updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
@@ -115,9 +131,9 @@ CREATE TABLE IF NOT EXISTS kb_entries (
 
 CREATE INDEX IF NOT EXISTS idx_kb_category ON kb_entries (category);
 CREATE INDEX IF NOT EXISTS idx_kb_source   ON kb_entries (source);
--- IVFFlat index for fast approximate nearest-neighbor search
-CREATE INDEX IF NOT EXISTS idx_kb_embedding ON kb_entries
-    USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+CREATE INDEX IF NOT EXISTS idx_kb_anchor_id ON kb_entries (anchor_id);
+CREATE INDEX IF NOT EXISTS idx_kb_doc_id ON kb_entries (doc_id);
+CREATE INDEX IF NOT EXISTS idx_kb_doc_page ON kb_entries (doc_id, page_index);
 
 -- ==========================================
 -- 默认管理员账号（密码: admin123）

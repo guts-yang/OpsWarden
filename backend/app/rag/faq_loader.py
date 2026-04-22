@@ -4,7 +4,7 @@ from pathlib import Path
 from sqlalchemy.orm import Session
 
 from app.models.knowledge import KBEntry
-from app.rag.retriever import add_entry
+from app.rag.retriever import ingest_kb_entry
 
 logger = logging.getLogger(__name__)
 
@@ -43,11 +43,11 @@ def load_faq_if_empty(db: Session):
 
     db.flush()  # Assign IDs without committing
 
-    # Write embeddings to PostgreSQL
+    FAQ_DOC_ID = "OpsWarden_FAQ"
     embed_ok = 0
-    for obj in db_entries:
+    for idx, obj in enumerate(db_entries, start=1):
         try:
-            add_entry(obj.id, obj.question, obj.solution, obj.category)
+            ingest_kb_entry(db, obj.id, obj.question, obj.solution, obj.category, FAQ_DOC_ID, idx)
             embed_ok += 1
         except Exception as e:
             logger.warning(f"Embedding sync failed for entry {obj.id}: {e}")

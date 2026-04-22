@@ -1,7 +1,10 @@
+import logging
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from typing import Optional
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 from app.database import get_db
 from app.models.ticket import Ticket, TicketLog
@@ -12,6 +15,7 @@ from app.schemas.ticket import (
 )
 from app.middleware.auth import require_operator, CurrentUser
 from app.utils.response import success
+from app.rag.retriever import ingest_kb_entry
 
 router = APIRouter(prefix="/api/tickets", tags=["工单管理"])
 
@@ -200,8 +204,23 @@ def resolve_ticket(ticket_id: int, req: TicketResolve, db: Session = Depends(get
             solution=req.solution,
             source="ticket_writeback",
             match_score=0.8,
+            doc_id=f"ticket-{ticket.ticket_no}",
+            page_index=1,
         )
         db.add(kb_entry)
+        db.flush()
+        try:
+            ingest_kb_entry(
+                db,
+                kb_entry.id,
+                kb_entry.question,
+                kb_entry.solution,
+                kb_entry.category,
+                kb_entry.doc_id,
+                kb_entry.page_index,
+            )
+        except Exception as embed_err:
+            logger.warning(f"工单回写知识库向量同步失败: {embed_err}")
         add_log(db, ticket.id, action="writeback",
                 operator_id=current_user.id,
                 operator_name=current_user.username,

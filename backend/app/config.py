@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     EMBEDDING_DEVICE: str = "cpu"
     RAG_SCORE_THRESHOLD: float = 0.4
     RAG_TOP_K: int = 3
+    RAG_ANCHOR_TOP_K: int = 8
+    ANCHOR_QUANT_EPSILON: float = 0.02
 
     class Config:
         env_file = str(_ENV_FILE)
