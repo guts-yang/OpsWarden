@@ -42,7 +42,7 @@
 
 OpsWarden 是一套面向企业运维场景的 AI 数字员工系统，核心功能三条线：
 
-- **AI 问答（RAG）**：用户提问 → 向量检索知识库 → DeepSeek 生成回答；知识库无答案时自动创建工单
+- **AI 问答（RAG）**：用户提问 → **双层检索**（量化锚点 Top-K → 页级条目精排）→ DeepSeek 生成回答；知识库无答案时自动创建工单
 - **工单系统**：工单全生命周期管理（待处理 → 处理中 → 已解决 → 已关闭），支持解决方案写回知识库
 - **账号管理**：运维账号增删改查、冻结/解冻、重置密码，后台可视化管理
 
@@ -62,7 +62,7 @@ OpsWarden 是一套面向企业运维场景的 AI 数字员工系统，核心功
 | ORM          | SQLAlchemy + psycopg3               | 2.0 / 3.1+                   |
 | 认证           | JWT (python-jose + passlib)         | HS256                        |
 | AI 大模型       | DeepSeek API                        | deepseek-chat                |
-| 向量存储         | PostgreSQL pgvector                 | cosine 相似度，与业务数据同库           |
+| 向量存储         | PostgreSQL pgvector                 | **L1** `kb_anchors` 建 IVFFlat；**L2** `kb_entries.embedding` 仅精排、无向量索引 |
 | Embedding 模型 | BAAI/bge-small-zh-v1.5              | sentence-transformers, 512 维 |
 | 对话编排       | LangGraph + Postgres checkpoint     | 多轮对话状态与 checkpoint 持久化   |
 | 前端           | Vue 3 + Vite + Pinia + Vue Router 4 | Tailwind CSS 3               |
@@ -139,9 +139,11 @@ psql -U postgres -d opswarden -f init.sql
 `init.sql` 会自动完成：
 
 - 启用 `vector` 扩展（pgvector）
-- 创建所有 ENUM 类型和表（`accounts`、`tickets`、`ticket_logs`、`kb_entries`）
-- `kb_entries.embedding` 列存储 512 维向量，建立 IVFFlat 近似索引
+- 创建所有 ENUM 类型和表（`accounts`、`tickets`、`ticket_logs`、**`kb_anchors`**、**`kb_entries`**）
+- **知识库双层存储**：`kb_anchors` 存量化锚点向量（**仅此表**对 `anchor_vec` 建 IVFFlat）；`kb_entries` 存切片正文、`doc_id` / `page_index`、`anchor_id` 外键及 **精排用** `embedding`（**不在此列建 ANN 索引**）
 - 插入默认管理员账号：用户名 `admin`，密码 `admin123`
+
+> **从旧版单表结构升级**：若数据库已存在仅含 `kb_entries` + `idx_kb_embedding` 的旧库，请在维护窗口执行 [`scripts/migrate_kb_anchors.sql`](scripts/migrate_kb_anchors.sql)，并通过界面重新保存条目或离线脚本为存量数据回填锚点与向量。
 
 ### 4. 配置环境变量
 
@@ -200,7 +202,9 @@ npm run build
 
 ## RAG 模块说明
 
-### 架构概览
+### 架构概览（量化锚点 + 页级索引）
+
+检索分为两阶段，避免在条目表上维护大型动态聚类索引，便于按 `doc_id` / `page_index` **精确遗忘**切片：
 
 ```
 用户提问
@@ -208,23 +212,24 @@ npm run build
   ▼
 POST /api/chat
   │
-  ├─► embed_query()        # BGE 模型将问题编码为 512 维向量
+  ├─► embed_query()           # BGE 将问题编码为 512 维向量
   │       ↓
-  ├─► pgvector 检索         # cosine 相似度（kb_entries.embedding <=> query_vec）
-  │       ↓                # score ≥ 0.4 即命中
-  ├─► [命中] → DeepSeek API 生成回答  → 返回 source="kb"
+  ├─► L1 锚点路由             # 在 kb_anchors.anchor_vec 上做 Top-K（IVFFlat + cosine）
+  │       ↓
+  ├─► L2 候选精排             # anchor_id ∈ Top-K 的 kb_entries，用条目 embedding 与 query 算相似度
+  │       ↓                   # score ≥ RAG_SCORE_THRESHOLD 即命中
+  ├─► [命中] → DeepSeek API   → 返回 source="kb"
   │
-  └─► [未命中] → 自动创建工单          → 返回 source="fallback"
+  └─► [未命中] → 工单降级逻辑   → 返回 source="fallback"
 ```
 
-### 向量存储说明
+### 向量存储与写入
 
-知识库向量直接存储在 PostgreSQL `kb_entries` 表的 `embedding vector(512)` 列，
-无需独立向量数据库。使用 pgvector IVFFlat 索引加速近似最近邻搜索。
-
-- 新增/更新知识库条目 → 自动调用 `retriever.add_entry()` 写入 embedding
-- 删除条目 → embedding 置 NULL，自动退出搜索范围
-- FAQ 首次启动自动从 `knowledge_base/OpsWarden_FAQ.md` 导入
+- **`kb_anchors`**：条目向量经网格量化 \( \mathrm{round}(v/\epsilon)\cdot\epsilon \) 后 **upsert**，`quant_key` 去重；**ANN 索引只建在锚点表**。
+- **`kb_entries`**：`doc_id`、`page_index` 标识文档与页码；`embedding` 保存原始向量供 **L2 精排**，**不在该列创建 IVFFlat/HNSW**。
+- **写入**：`retriever.ingest_kb_entry()` 在完成锚点归属后更新条目的 `anchor_id` 与 `embedding`。
+- **删除**：删除条目行后，若无其它条目引用同一锚点，则删除孤立 `kb_anchors` 行；支持 `DELETE /api/knowledge/by-doc` 按文档或页批量删除。
+- **FAQ**：首次启动从 `knowledge_base/OpsWarden_FAQ.md` 导入，`doc_id=OpsWarden_FAQ`，`page_index` 为条目序号。
 
 ### 依赖项检查
 
@@ -286,7 +291,7 @@ OpsWarden/
 │       ├── models/
 │       │   ├── account.py       # Account ORM 模型
 │       │   ├── ticket.py        # Ticket / TicketLog ORM 模型
-│       │   └── knowledge.py     # KBEntry ORM 模型（含 Vector(512) embedding 列）
+│       │   └── knowledge.py     # KBAnchor / KBEntry（锚点与页级条目）
 │       ├── schemas/
 │       │   ├── account.py
 │       │   ├── ticket.py
@@ -300,9 +305,10 @@ OpsWarden/
 │       ├── checkpointer/        # LangGraph Postgres checkpoint 连接与工具
 │       └── rag/
 │           ├── embedder.py      # Sentence-Transformers 封装
+│           ├── quantizer.py     # 向量量化（锚点网格 ε）
 │           ├── faq_loader.py    # Markdown FAQ 解析 → PostgreSQL
 │           ├── llm.py           # DeepSeek API 调用
-│           ├── retriever.py     # pgvector 语义检索 + CRUD
+│           ├── retriever.py     # 双阶段检索 + ingest_kb_entry / prune_anchor
 │           └── chat_pipeline.py # RAG 管道（供工作流节点调用）
 ├── frontend/                    # Vue 3 + Vite SPA
 │   ├── Dockerfile               # 前端静态资源 + nginx 容器
@@ -337,7 +343,8 @@ OpsWarden/
 ├── docker/
 │   └── engine-ipv4-snippet.json # Docker Engine IPv4 优先片段（排障见 scripts）
 ├── scripts/
-│   └── docker_verify_log.py     # compose 校验与日志采集
+│   ├── docker_verify_log.py     # compose 校验与日志采集
+│   └── migrate_kb_anchors.sql   # 旧库升级到锚点架构（可选）
 ├── docs/
 │   ├── canva.png                # 系统流程图（可替换为高分辨率版本）
 │   ├── API_TESTING.md           # API 测试文档
@@ -394,14 +401,17 @@ OpsWarden/
 
 **知识库**
 
+创建/更新条目时可传 **`doc_id`、`page_index`**（页级索引）；列表支持 **`doc_id`** 筛选查询参数。
 
-| 接口    | 方法     | 路径                     | 认证     |
-| ----- | ------ | ---------------------- | ------ |
-| 知识库统计 | GET    | `/api/knowledge/stats` | Bearer |
-| 知识库列表 | GET    | `/api/knowledge`       | Bearer |
-| 新增条目  | POST   | `/api/knowledge`       | Bearer |
-| 更新条目  | PUT    | `/api/knowledge/{id}`  | Bearer |
-| 删除条目  | DELETE | `/api/knowledge/{id}`  | Bearer |
+| 接口       | 方法     | 路径                           | 认证     |
+| -------- | ------ | ---------------------------- | ------ |
+| 知识库统计   | GET    | `/api/knowledge/stats`       | Bearer |
+| 快捷题目列表 | GET    | `/api/knowledge/quick-prompts` | Bearer |
+| 知识库列表   | GET    | `/api/knowledge`             | Bearer |
+| 新增条目    | POST   | `/api/knowledge`             | Bearer |
+| 更新条目    | PUT    | `/api/knowledge/{id}`        | Bearer |
+| 按 id 删除 | DELETE | `/api/knowledge/{id}`        | Bearer |
+| 按文档删除   | DELETE | `/api/knowledge/by-doc`（`doc_id` 必填，`page_index` 可选） | Bearer |
 
 
 **AI 问答 & 统计**
@@ -428,8 +438,10 @@ OpsWarden/
 | `DEEPSEEK_API_KEY`                | _(空)_                                                        | DeepSeek API 密钥，**AI 回答必填** |
 | `DEEPSEEK_MODEL`                  | `deepseek-chat`                                              | 使用的模型                       |
 | `EMBEDDING_MODEL`                 | `BAAI/bge-small-zh-v1.5`                                     | Embedding 模型名（首次自动下载）       |
-| `RAG_SCORE_THRESHOLD`             | `0.4`                                                        | 检索相似度阈值（< 此值则触发工单）          |
-| `RAG_TOP_K`                       | `3`                                                          | 检索返回最大条数                    |
+| `RAG_SCORE_THRESHOLD`             | `0.4`                                                        | L2 精排相似度阈值（低于则视为未命中，可走工单降级） |
+| `RAG_TOP_K`                       | `3`                                                          | 最终返回知识切片条数上限                  |
+| `RAG_ANCHOR_TOP_K`                | `8`                                                          | L1 锚点路由 Top-K                     |
+| `ANCHOR_QUANT_EPSILON`            | `0.02`                                                       | 锚点网格量化步长 \(\epsilon\)（`.env` 可调） |
 
 生成强密钥：
 
@@ -480,6 +492,10 @@ psql -U postgres -d opswarden -f init.sql
 **Q: 健康检查返回 `vector_store: error`？**
 
 A: pgvector 扩展未正确安装或未在数据库中启用。确认执行过 `CREATE EXTENSION IF NOT EXISTS vector;`，可在 psql 中运行 `\dx` 查看已安装扩展。
+
+**Q: 升级数据库后 AI 检索不到知识库条目？**
+
+A: 若为从旧版「单表 IVFFlat」迁移而来，请确认已执行 `scripts/migrate_kb_anchors.sql`，并在后台 **重新编辑保存** 各条目（或运行回填脚本），使 `kb_anchors` 与条目的 `embedding`/`anchor_id` 完整写入。
 
 **Q: 前端 `npm run dev` 报 `Cannot find module` 错误？**
 

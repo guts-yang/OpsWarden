@@ -128,11 +128,6 @@ def search(query: str, top_k: int | None = None, threshold: float | None = None)
         return []
 
 
-def delete_entry_embed_only(entry_id: int):
-    """兼容旧名：已由行删除代替；保留空实现避免误调用。"""
-    logger.debug("delete_entry_embed_only noop for entry_id=%s", entry_id)
-
-
 def collection_count() -> int:
     try:
         with SessionLocal() as db:
