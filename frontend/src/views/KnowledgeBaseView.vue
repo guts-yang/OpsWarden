@@ -32,6 +32,8 @@ const form = reactive({
   question: '',
   solution: '',
   tags: '',
+  doc_id: 'manual',
+  page_index: 1,
 })
 
 async function loadStats() {
@@ -87,7 +89,14 @@ function onPageChange(p) {
 
 function openCreate() {
   editingEntry.value = null
-  Object.assign(form, { category: '基础架构', question: '', solution: '', tags: '' })
+  Object.assign(form, {
+    category: '基础架构',
+    question: '',
+    solution: '',
+    tags: '',
+    doc_id: 'manual',
+    page_index: 1,
+  })
   panelError.value = ''
   showPanel.value = true
 }
@@ -99,6 +108,8 @@ function openEdit(entry) {
     question: entry.question,
     solution: entry.solution,
     tags: Array.isArray(entry.tags) ? entry.tags.join(', ') : (entry.tags ?? ''),
+    doc_id: entry.doc_id ?? 'manual',
+    page_index: entry.page_index ?? 1,
   })
   panelError.value = ''
   showPanel.value = true
@@ -112,11 +123,16 @@ async function saveEntry() {
   saving.value = true
   panelError.value = ''
   try {
+    const tagStr = form.tags
+      ? form.tags.split(',').map((t) => t.trim()).filter(Boolean).join(', ')
+      : ''
     const payload = {
       category: form.category,
       question: form.question.trim(),
       solution: form.solution.trim(),
-      tags: form.tags ? form.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
+      tags: tagStr || undefined,
+      doc_id: (form.doc_id || 'manual').trim(),
+      page_index: Number(form.page_index) || 1,
     }
     if (editingEntry.value) {
       await knowledgeApi.update(editingEntry.value.id, payload)
@@ -269,7 +285,11 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
             </div>
             <p class="text-sm font-medium text-on-surface mb-1 truncate">{{ entry.question }}</p>
             <p class="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">{{ entry.solution }}</p>
-            <p class="text-[10px] text-on-surface-variant mt-2">更新于 {{ fmtDate(entry.updated_at) }}</p>
+            <p class="text-[10px] text-on-surface-variant mt-2 font-mono">
+              {{ entry.doc_id }} · 第 {{ entry.page_index }} 页
+              <span v-if="entry.anchor_id" class="text-on-surface-variant/70"> · 锚点 {{ entry.anchor_id }}</span>
+            </p>
+            <p class="text-[10px] text-on-surface-variant mt-1">更新于 {{ fmtDate(entry.updated_at) }}</p>
           </div>
           <!-- Actions -->
           <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
@@ -328,6 +348,27 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
           placeholder="请输入解决方案..."
           class="w-full border border-outline rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500 resize-none leading-relaxed"
         />
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-on-surface-variant mb-1.5">所属文档 doc_id</label>
+          <input
+            v-model="form.doc_id"
+            type="text"
+            placeholder="manual / 手册标识"
+            class="w-full border border-outline rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500 font-mono"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-on-surface-variant mb-1.5">文档页码</label>
+          <input
+            v-model.number="form.page_index"
+            type="number"
+            min="1"
+            class="w-full border border-outline rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500"
+          />
+        </div>
       </div>
 
       <div>
