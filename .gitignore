@@ -3,6 +3,7 @@
 
 # Runtime logs
 *.log
+docs/reports/
 
 # ML models (large files, use pip install instead)
 /models
