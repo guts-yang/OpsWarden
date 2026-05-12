@@ -19,8 +19,13 @@ const loading = ref(false)
 const activeCategory = ref('全部')
 const searchKeyword = ref('')
 const sourceFilter = ref('')
+const docIdFilter = ref('')
 const page = ref(1)
 const PAGE_SIZE = 12
+
+// 自检质量分（match_score）口径文案，全局统一
+const MATCH_SCORE_TOOLTIP =
+  '自检质量分：基于语义模型计算问题与解决方案的余弦相似度，反映该条知识问答对的内在一致性，与实际检索命中率无关。'
 
 const showPanel = ref(false)
 const editingEntry = ref(null)
@@ -52,6 +57,7 @@ async function loadEntries() {
     if (activeCategory.value !== '全部') params.category = activeCategory.value
     if (searchKeyword.value) params.keyword = searchKeyword.value
     if (sourceFilter.value) params.source = sourceFilter.value
+    if (docIdFilter.value) params.doc_id = docIdFilter.value.trim()
 
     const data = await knowledgeApi.list(params)
     entries.value = data?.items ?? []
@@ -77,6 +83,15 @@ let searchTimer
 function onSearchInput() {
   clearTimeout(searchTimer)
   searchTimer = setTimeout(() => {
+    page.value = 1
+    loadEntries()
+  }, 400)
+}
+
+let docIdTimer
+function onDocIdInput() {
+  clearTimeout(docIdTimer)
+  docIdTimer = setTimeout(() => {
     page.value = 1
     loadEntries()
   }, 400)
@@ -194,7 +209,13 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
       </div>
       <div class="ops-card-hover p-4 min-h-[100px] flex flex-col">
         <div class="flex items-start justify-between gap-2">
-          <p class="text-xs font-medium text-on-surface-variant">平均匹配分</p>
+          <p class="text-xs font-medium text-on-surface-variant flex items-center gap-1">
+            平均匹配分
+            <span
+              class="material-symbols-outlined text-[14px] text-on-surface-variant/70 cursor-help"
+              :title="MATCH_SCORE_TOOLTIP"
+            >info</span>
+          </p>
           <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0">
             <span class="material-symbols-outlined text-on-surface-variant text-[18px]">analytics</span>
           </div>
@@ -232,6 +253,18 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
             {{ opt.label }}
           </option>
         </select>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant">
+            description
+          </span>
+          <input
+            v-model="docIdFilter"
+            type="text"
+            placeholder="所属文档 doc_id"
+            class="pl-8 pr-3 py-2 text-xs ops-input w-44 font-mono"
+            @input="onDocIdInput"
+          />
+        </div>
         <div class="relative">
           <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant">
             search
@@ -279,8 +312,13 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
               >
                 {{ entry.source === 'ticket_writeback' ? '工单回写' : '手动' }}
               </span>
-              <span v-if="entry.match_score" class="text-[10px] text-on-surface-variant ml-auto">
+              <span
+                v-if="entry.match_score != null"
+                class="text-[10px] text-on-surface-variant ml-auto inline-flex items-center gap-0.5 cursor-help"
+                :title="MATCH_SCORE_TOOLTIP"
+              >
                 匹配 {{ (entry.match_score * 100).toFixed(0) }}%
+                <span class="material-symbols-outlined text-[12px] text-on-surface-variant/70">info</span>
               </span>
             </div>
             <p class="text-sm font-medium text-on-surface mb-1 truncate">{{ entry.question }}</p>

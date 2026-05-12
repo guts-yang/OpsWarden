@@ -17,6 +17,10 @@ __pycache__/
 venv/
 *.log
 
+# Code completion
+.codebuddy/
+.claude/
+
 # Frontend build artifacts
 node_modules/
 dist/

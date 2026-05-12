@@ -36,7 +36,7 @@ def load_faq_if_empty(db: Session):
             question=e["question"],
             solution=e["solution"],
             source="manual",
-            match_score=0.9,
+            # match_score 由 ingest_kb_entry 内的「自检质量分」覆盖，此处不再硬编码
         )
         db.add(obj)
         db_entries.append(obj)

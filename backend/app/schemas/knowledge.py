@@ -8,6 +8,8 @@ class KBEntryCreate(BaseModel):
     question:    str          = Field(..., min_length=1)
     solution:    str          = Field(..., min_length=1)
     tags:        Optional[str] = Field(None, max_length=256)
+    # 服务端会在 ingest_kb_entry 中用「自检质量分」(question↔solution 余弦相似度) 覆盖此值，
+    # 字段保留仅为向后兼容，传入将被忽略。
     match_score: Optional[float] = Field(0.8, ge=0.0, le=1.0)
     doc_id:      str          = Field(default="manual", min_length=1, max_length=128)
     page_index:  int          = Field(default=1, ge=1)
@@ -18,6 +20,7 @@ class KBEntryUpdate(BaseModel):
     question:    Optional[str]   = None
     solution:    Optional[str]   = None
     tags:        Optional[str]   = Field(None, max_length=256)
+    # 服务端会在 ingest_kb_entry 中重新计算「自检质量分」并覆盖此值，传入将被忽略。
     match_score: Optional[float] = Field(None, ge=0.0, le=1.0)
     doc_id:      Optional[str]   = Field(None, max_length=128)
     page_index:  Optional[int]   = Field(None, ge=1)

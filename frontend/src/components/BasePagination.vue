@@ -8,27 +8,34 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:page'])
 
-const totalPages = computed(() => Math.ceil(props.total / props.pageSize))
+const totalPages = computed(() => Math.max(1, Math.ceil(props.total / props.pageSize)))
 const start = computed(() => (props.page - 1) * props.pageSize + 1)
 const end = computed(() => Math.min(props.page * props.pageSize, props.total))
 </script>
 
 <template>
-  <div v-if="total > 0" class="flex items-center justify-between mt-4">
-    <span class="text-xs text-on-surface-variant">
+  <div
+    v-if="total > 0"
+    class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 mt-4"
+  >
+    <span class="text-xs text-on-surface-variant text-center sm:text-left">
       显示 {{ start }}–{{ end }} / 共 {{ total }} 条
     </span>
-    <div class="flex items-center gap-1">
+    <div class="flex items-center justify-center gap-1.5">
       <button
-        class="px-2 py-1 text-xs rounded border border-outline hover:bg-surface-container disabled:opacity-40"
+        type="button"
+        class="px-3 py-2 sm:py-1 text-xs rounded-lg sm:rounded border border-outline hover:bg-surface-container active:bg-surface-container disabled:opacity-40 transition-colors"
         :disabled="page <= 1"
         @click="emit('update:page', page - 1)"
       >
         上一页
       </button>
-      <span class="px-3 py-1 text-xs">{{ page }} / {{ totalPages }}</span>
+      <span class="px-3 py-2 sm:py-1 text-xs tabular-nums text-on-surface">
+        {{ page }} / {{ totalPages }}
+      </span>
       <button
-        class="px-2 py-1 text-xs rounded border border-outline hover:bg-surface-container disabled:opacity-40"
+        type="button"
+        class="px-3 py-2 sm:py-1 text-xs rounded-lg sm:rounded border border-outline hover:bg-surface-container active:bg-surface-container disabled:opacity-40 transition-colors"
         :disabled="page >= totalPages"
         @click="emit('update:page', page + 1)"
       >
