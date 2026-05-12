@@ -1,0 +1,777 @@
+{
+  "summary": {
+    "total_entries": 101,
+    "faq_count": 100,
+    "avg": 0.8714,
+    "median": 0.8776,
+    "min": 0.732,
+    "max": 0.9234,
+    "buckets": {
+      "<0.50": 0,
+      "0.50-0.65": 0,
+      "0.65-0.80": 5,
+      ">=0.80": 95
+    },
+    "lowest_10": [
+      {
+        "page_index": 71,
+        "match_score": 0.732,
+        "question": "服务器上发现可疑陌生进程时如何记录、上报并清除？"
+      },
+      {
+        "page_index": 45,
+        "match_score": 0.7619,
+        "question": "如何查看并管理服务器上的监听端口与服务？"
+      },
+      {
+        "page_index": 48,
+        "match_score": 0.7762,
+        "question": "如何在 Linux 服务器上管理文件权限与所有者？"
+      },
+      {
+        "page_index": 39,
+        "match_score": 0.7955,
+        "question": "如何查看服务器的 CPU、内存、磁盘等硬件信息？"
+      },
+      {
+        "page_index": 74,
+        "match_score": 0.798,
+        "question": "如何合规地销毁服务器上的敏感数据（覆写、安全擦除与物理销毁）？"
+      },
+      {
+        "page_index": 98,
+        "match_score": 0.8025,
+        "question": "员工离职前需要完成哪些 IT 交接事项（数据/设备/账号）？"
+      },
+      {
+        "page_index": 8,
+        "match_score": 0.8138,
+        "question": "如何查看当前账号拥有的系统权限清单并导出？"
+      },
+      {
+        "page_index": 3,
+        "match_score": 0.8212,
+        "question": "如何申请新系统的访问权限并完成审批？"
+      },
+      {
+        "page_index": 23,
+        "match_score": 0.8238,
+        "question": "无线网络频繁断开时如何排查驱动、信号与电源管理？"
+      },
+      {
+        "page_index": 63,
+        "match_score": 0.8273,
+        "question": "发现服务器被入侵后如何隔离、保留现场并上报安全团队？"
+      }
+    ]
+  },
+  "records": [
+    {
+      "id": 101,
+      "doc_id": "ticket-T-20260512-001",
+      "page_index": 1,
+      "match_score": 0.46,
+      "question": "你是谁？"
+    },
+    {
+      "id": 102,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 1,
+      "match_score": 0.8658,
+      "question": "账号被冻结后如何自助解冻或申请人工处理？"
+    },
+    {
+      "id": 103,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 2,
+      "match_score": 0.869,
+      "question": "忘记密码后如何通过短信验证码重置新密码？"
+    },
+    {
+      "id": 104,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 3,
+      "match_score": 0.8212,
+      "question": "如何申请新系统的访问权限并完成审批？"
+    },
+    {
+      "id": 105,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 4,
+      "match_score": 0.916,
+      "question": "管理员如何为新员工开通运维账号并下发初始密码？"
+    },
+    {
+      "id": 106,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 5,
+      "match_score": 0.8829,
+      "question": "员工离职后账号如何冻结、保留与最终注销？"
+    },
+    {
+      "id": 107,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 6,
+      "match_score": 0.8766,
+      "question": "如何修改账号绑定的手机号并完成新旧号码验证？"
+    },
+    {
+      "id": 108,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 7,
+      "match_score": 0.8666,
+      "question": "账号密码的强制更换周期与有效期策略是什么？"
+    },
+    {
+      "id": 109,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 8,
+      "match_score": 0.8138,
+      "question": "如何查看当前账号拥有的系统权限清单并导出？"
+    },
+    {
+      "id": 110,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 9,
+      "match_score": 0.8874,
+      "question": "权限申请审批超时未处理时如何催办或更换审批人？"
+    },
+    {
+      "id": 111,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 10,
+      "match_score": 0.8546,
+      "question": "管理员如何撤销某员工的指定权限并通知本人？"
+    },
+    {
+      "id": 112,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 11,
+      "match_score": 0.897,
+      "question": "如何使用 Excel 模板批量导入员工账号？"
+    },
+    {
+      "id": 113,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 12,
+      "match_score": 0.8794,
+      "question": "账号提示\"已在其他设备登录\"时如何强制下线或排查异常登录？"
+    },
+    {
+      "id": 114,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 13,
+      "match_score": 0.8896,
+      "question": "如何为账号开启双因素认证（2FA）并绑定 Authenticator？"
+    },
+    {
+      "id": 115,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 14,
+      "match_score": 0.9234,
+      "question": "双因素认证设备丢失后如何使用备用码登录或重置 2FA？"
+    },
+    {
+      "id": 116,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 15,
+      "match_score": 0.8521,
+      "question": "如何查看账号的登录历史记录与异常登录告警？"
+    },
+    {
+      "id": 117,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 16,
+      "match_score": 0.8954,
+      "question": "跨部门调岗后原权限如何撤销、新权限如何申请？"
+    },
+    {
+      "id": 118,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 17,
+      "match_score": 0.9125,
+      "question": "如何为账号设置登录 IP 白名单及 CIDR 段规则？"
+    },
+    {
+      "id": 119,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 18,
+      "match_score": 0.83,
+      "question": "账号提示\"存在安全风险，已被临时限制\"时如何核实并解除限制？"
+    },
+    {
+      "id": 120,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 19,
+      "match_score": 0.8532,
+      "question": "VPN 连接失败后如何排查客户端、节点与连通性？"
+    },
+    {
+      "id": 121,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 20,
+      "match_score": 0.901,
+      "question": "VPN 已连接但无法访问内网资源时如何排查路由与权限？"
+    },
+    {
+      "id": 122,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 21,
+      "match_score": 0.8848,
+      "question": "办公网络访问速度很慢时如何测速并定位带宽瓶颈？"
+    },
+    {
+      "id": 123,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 22,
+      "match_score": 0.8953,
+      "question": "内网 DNS 解析失败导致域名无法访问时如何排查？"
+    },
+    {
+      "id": 124,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 23,
+      "match_score": 0.8238,
+      "question": "无线网络频繁断开时如何排查驱动、信号与电源管理？"
+    },
+    {
+      "id": 125,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 24,
+      "match_score": 0.8775,
+      "question": "远程桌面（RDP）连接失败时如何排查端口、防火墙与权限？"
+    },
+    {
+      "id": 126,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 25,
+      "match_score": 0.889,
+      "question": "SSH 连接服务器超时或被拒绝时如何排查端口、密钥与防火墙？"
+    },
+    {
+      "id": 127,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 26,
+      "match_score": 0.9087,
+      "question": "防火墙申请放通端口的工单与审批流程是什么？"
+    },
+    {
+      "id": 128,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 27,
+      "match_score": 0.8813,
+      "question": "如何为设备申请固定 IP 地址并完成 MAC 绑定？"
+    },
+    {
+      "id": 129,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 28,
+      "match_score": 0.9013,
+      "question": "两台设备出现 IP 地址冲突时如何定位 MAC 并修正分配？"
+    },
+    {
+      "id": 130,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 29,
+      "match_score": 0.8919,
+      "question": "如何使用 iperf3 测试两台服务器之间的网络带宽？"
+    },
+    {
+      "id": 131,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 30,
+      "match_score": 0.8404,
+      "question": "公司网络能上网但特定网站无法访问时如何排查访问策略？"
+    },
+    {
+      "id": 132,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 31,
+      "match_score": 0.8489,
+      "question": "网络打印机无法连接时如何排查 IP、网络与驱动？"
+    },
+    {
+      "id": 133,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 32,
+      "match_score": 0.8951,
+      "question": "如何在 Windows/Mac/浏览器中配置代理服务器访问外网？"
+    },
+    {
+      "id": 134,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 33,
+      "match_score": 0.8818,
+      "question": "服务器 CPU 使用率持续 100% 时如何定位高占用进程并处置？"
+    },
+    {
+      "id": 135,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 34,
+      "match_score": 0.8726,
+      "question": "服务器内存不足触发 OOM 时如何排查并恢复？"
+    },
+    {
+      "id": 136,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 35,
+      "match_score": 0.8981,
+      "question": "服务器磁盘空间不足时如何清理日志、临时文件并申请扩容？"
+    },
+    {
+      "id": 137,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 36,
+      "match_score": 0.8675,
+      "question": "如何查看 Linux 服务器的系统日志与启动日志？"
+    },
+    {
+      "id": 138,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 37,
+      "match_score": 0.8889,
+      "question": "Linux 服务器时间不准确时如何手动同步 NTP 并启用 chronyd？"
+    },
+    {
+      "id": 139,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 38,
+      "match_score": 0.88,
+      "question": "服务器无法重启卡在启动界面时如何进入恢复模式排查？"
+    },
+    {
+      "id": 140,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 39,
+      "match_score": 0.7955,
+      "question": "如何查看服务器的 CPU、内存、磁盘等硬件信息？"
+    },
+    {
+      "id": 141,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 40,
+      "match_score": 0.8849,
+      "question": "如何使用 ansible 或 pssh 在多台服务器上批量执行命令？"
+    },
+    {
+      "id": 142,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 41,
+      "match_score": 0.8737,
+      "question": "如何用 systemctl 管理服务器开机自启动服务？"
+    },
+    {
+      "id": 143,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 42,
+      "match_score": 0.8787,
+      "question": "如何使用 crontab 设置 Linux 定时任务（Cron）？"
+    },
+    {
+      "id": 144,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 43,
+      "match_score": 0.8857,
+      "question": "服务器 Load Average 过高时如何区分 CPU 与 IO 瓶颈并分析？"
+    },
+    {
+      "id": 145,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 44,
+      "match_score": 0.8642,
+      "question": "如何安全地批量删除服务器大量文件而不影响 IO 与业务？"
+    },
+    {
+      "id": 146,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 45,
+      "match_score": 0.7619,
+      "question": "如何查看并管理服务器上的监听端口与服务？"
+    },
+    {
+      "id": 147,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 46,
+      "match_score": 0.8738,
+      "question": "如何为 Linux 服务器添加并持久化 swap 分区？"
+    },
+    {
+      "id": 148,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 47,
+      "match_score": 0.8347,
+      "question": "服务器证书快过期时如何续期、重载并验证？"
+    },
+    {
+      "id": 149,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 48,
+      "match_score": 0.7762,
+      "question": "如何在 Linux 服务器上管理文件权限与所有者？"
+    },
+    {
+      "id": 150,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 49,
+      "match_score": 0.8875,
+      "question": "Web 应用返回 502 Bad Gateway 时如何排查后端服务与 Nginx？"
+    },
+    {
+      "id": 151,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 50,
+      "match_score": 0.8892,
+      "question": "应用部署后页面显示 404 时如何排查 Nginx 路径与 SPA 配置？"
+    },
+    {
+      "id": 152,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 51,
+      "match_score": 0.8712,
+      "question": "MySQL 数据库连接失败时如何根据错误码排查权限、端口与连接数？"
+    },
+    {
+      "id": 153,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 52,
+      "match_score": 0.9046,
+      "question": "数据库查询非常慢时如何开启慢查询日志并用 EXPLAIN 优化？"
+    },
+    {
+      "id": 154,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 53,
+      "match_score": 0.8777,
+      "question": "如何使用 mysqldump 对数据库进行备份与定时归档？"
+    },
+    {
+      "id": 155,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 54,
+      "match_score": 0.894,
+      "question": "误删数据库数据时如何通过备份或 binlog 恢复？"
+    },
+    {
+      "id": 156,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 55,
+      "match_score": 0.8943,
+      "question": "Redis 服务无法连接时如何排查服务状态、bind 与 protected-mode？"
+    },
+    {
+      "id": 157,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 56,
+      "match_score": 0.8899,
+      "question": "应用日志报\"Too many open files\"时如何调整 ulimit 与 nofile 上限？"
+    },
+    {
+      "id": 158,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 57,
+      "match_score": 0.8537,
+      "question": "如何查看 Java 应用的 GC 情况并分析内存泄漏？"
+    },
+    {
+      "id": 159,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 58,
+      "match_score": 0.8967,
+      "question": "Nginx 配置修改后无法生效时如何检查语法、重载与多实例？"
+    },
+    {
+      "id": 160,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 59,
+      "match_score": 0.8744,
+      "question": "应用部署如何借助负载均衡实现不停机滚动发布？"
+    },
+    {
+      "id": 161,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 60,
+      "match_score": 0.8762,
+      "question": "发布出问题如何快速回滚到上一个版本（Git/包/Docker）？"
+    },
+    {
+      "id": 162,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 61,
+      "match_score": 0.8587,
+      "question": "消息队列（RabbitMQ/Kafka）消息堆积时如何排查消费者并扩容？"
+    },
+    {
+      "id": 163,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 62,
+      "match_score": 0.8971,
+      "question": "Docker 应用容器无法启动时如何查日志、镜像与端口冲突？"
+    },
+    {
+      "id": 164,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 63,
+      "match_score": 0.8273,
+      "question": "发现服务器被入侵后如何隔离、保留现场并上报安全团队？"
+    },
+    {
+      "id": 165,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 64,
+      "match_score": 0.867,
+      "question": "收到钓鱼邮件后如何识别、上报并防止账号被钓？"
+    },
+    {
+      "id": 166,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 65,
+      "match_score": 0.8733,
+      "question": "如何申请对外开放系统的安全扫描并完成漏洞修复？"
+    },
+    {
+      "id": 167,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 66,
+      "match_score": 0.8457,
+      "question": "如何查看系统的操作审计日志并按多维度筛选导出？"
+    },
+    {
+      "id": 168,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 67,
+      "match_score": 0.8844,
+      "question": "发现陌生 IP 扫描服务器端口时如何封锁并启用 IPS？"
+    },
+    {
+      "id": 169,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 68,
+      "match_score": 0.8718,
+      "question": "数据泄露发生后如何上报、阻断、取证并配合合规处理？"
+    },
+    {
+      "id": 170,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 69,
+      "match_score": 0.8962,
+      "question": "如何对敏感配置文件进行加密存储与密钥管理？"
+    },
+    {
+      "id": 171,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 70,
+      "match_score": 0.8595,
+      "question": "如何定期检查并防范系统中的弱密码账号？"
+    },
+    {
+      "id": 172,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 71,
+      "match_score": 0.732,
+      "question": "服务器上发现可疑陌生进程时如何记录、上报并清除？"
+    },
+    {
+      "id": 173,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 72,
+      "match_score": 0.9014,
+      "question": "如何配置服务器 SSH 安全加固（禁 root、密钥登录、改端口）？"
+    },
+    {
+      "id": 174,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 73,
+      "match_score": 0.8762,
+      "question": "如何处理 SSL/TLS 证书被标记为不信任（证书链/过期/自签）？"
+    },
+    {
+      "id": 175,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 74,
+      "match_score": 0.798,
+      "question": "如何合规地销毁服务器上的敏感数据（覆写、安全擦除与物理销毁）？"
+    },
+    {
+      "id": 176,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 75,
+      "match_score": 0.9003,
+      "question": "收到 CPU 高负载告警时如何登录确认进程并处置？"
+    },
+    {
+      "id": 177,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 76,
+      "match_score": 0.8393,
+      "question": "磁盘使用率超过 80% 的告警如何清理日志、临时文件并扩容？"
+    },
+    {
+      "id": 178,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 77,
+      "match_score": 0.9125,
+      "question": "服务健康检查失败告警如何定位故障并恢复？"
+    },
+    {
+      "id": 179,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 78,
+      "match_score": 0.8964,
+      "question": "如何在监控平台配置新的告警规则、阈值与分级通知？"
+    },
+    {
+      "id": 180,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 79,
+      "match_score": 0.8901,
+      "question": "告警太多形成\"告警疲劳\"时如何治理与优化？"
+    },
+    {
+      "id": 181,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 80,
+      "match_score": 0.9091,
+      "question": "如何监控某个接口的响应时间并配置 P95 告警？"
+    },
+    {
+      "id": 182,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 81,
+      "match_score": 0.9016,
+      "question": "日志监控平台没有收到日志时如何排查 Agent、配置与连通性？"
+    },
+    {
+      "id": 183,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 82,
+      "match_score": 0.9006,
+      "question": "如何在 Grafana 中搭建业务指标的监控大盘 Dashboard？"
+    },
+    {
+      "id": 184,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 83,
+      "match_score": 0.8462,
+      "question": "如何在夜间值班期间响应并处置 P1 紧急告警？"
+    },
+    {
+      "id": 185,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 84,
+      "match_score": 0.8983,
+      "question": "服务器网卡流量异常告警时如何定位流量来源并处置？"
+    },
+    {
+      "id": 186,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 85,
+      "match_score": 0.886,
+      "question": "电脑开机蓝屏（BSOD）时如何根据错误代码排查驱动与系统？"
+    },
+    {
+      "id": 187,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 86,
+      "match_score": 0.8962,
+      "question": "电脑运行越来越慢时如何清理启动项、磁盘并排查恶意软件？"
+    },
+    {
+      "id": 188,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 87,
+      "match_score": 0.863,
+      "question": "显示器无信号或画面异常时如何排查视频线、输入源与显卡？"
+    },
+    {
+      "id": 189,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 88,
+      "match_score": 0.8495,
+      "question": "如何从企业软件中心安装公司统一发放的软件？"
+    },
+    {
+      "id": 190,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 89,
+      "match_score": 0.8715,
+      "question": "如何申请新购或更换故障硬件设备（键盘、鼠标、耳机等）？"
+    },
+    {
+      "id": 191,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 90,
+      "match_score": 0.8686,
+      "question": "会议室投影仪或大屏无法连接电脑时如何排查接口与投屏？"
+    },
+    {
+      "id": 192,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 91,
+      "match_score": 0.8738,
+      "question": "电脑无法识别 USB 设备时如何排查接口、驱动与企业安全策略？"
+    },
+    {
+      "id": 193,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 92,
+      "match_score": 0.8752,
+      "question": "如何使用企业远程协助工具远程协助同事解决电脑问题？"
+    },
+    {
+      "id": 194,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 93,
+      "match_score": 0.8678,
+      "question": "打印机提示\"脱机\"无法打印时如何清队列、重装驱动并恢复？"
+    },
+    {
+      "id": 195,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 94,
+      "match_score": 0.8525,
+      "question": "如何申请为新员工配置入职电脑及预装软件？"
+    },
+    {
+      "id": 196,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 95,
+      "match_score": 0.8716,
+      "question": "差旅报销系统无法登录或提交报销单失败时如何排查并应急处理？"
+    },
+    {
+      "id": 197,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 96,
+      "match_score": 0.8992,
+      "question": "如何在 OA 系统中提交出差申请单并完成审批？"
+    },
+    {
+      "id": 198,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 97,
+      "match_score": 0.837,
+      "question": "新员工入职第一天需要完成哪些 IT 配置（账号/邮箱/VPN/软件）？"
+    },
+    {
+      "id": 199,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 98,
+      "match_score": 0.8025,
+      "question": "员工离职前需要完成哪些 IT 交接事项（数据/设备/账号）？"
+    },
+    {
+      "id": 200,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 99,
+      "match_score": 0.898,
+      "question": "员工长期休假（产假/病假）期间账号如何冻结、转发与恢复？"
+    },
+    {
+      "id": 201,
+      "doc_id": "OpsWarden_FAQ",
+      "page_index": 100,
+      "match_score": 0.8891,
+      "question": "员工内部调岗后哪些 IT 事项需要运维配合处理（权限/通讯录）？"
+    }
+  ]
+}

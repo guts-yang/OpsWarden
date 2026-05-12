@@ -172,11 +172,11 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
 </script>
 
 <template>
-  <div class="p-6 space-y-4">
+  <div class="p-4 md:p-6 space-y-4">
     <!-- Filter bar -->
-    <div class="ops-card flex flex-wrap items-center justify-between gap-3 p-4">
-      <div class="flex items-center gap-2 flex-wrap">
-        <div class="relative">
+    <div class="ops-card flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-between gap-3 p-3 md:p-4">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 flex-1 min-w-0">
+        <div class="relative flex-1 min-w-0">
           <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant pointer-events-none">
             search
           </span>
@@ -184,13 +184,13 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
             v-model="searchName"
             type="text"
             placeholder="搜索姓名..."
-            class="pl-8 pr-3 py-2 text-xs ops-input w-48 sm:w-56"
+            class="w-full sm:w-56 pl-8 pr-3 py-2 text-xs ops-input"
             @input="onSearchInput"
           />
         </div>
         <select
           v-model="statusFilter"
-          class="text-xs ops-input px-3 py-2 bg-white cursor-pointer"
+          class="w-full sm:w-auto text-xs ops-input px-3 py-2 bg-white cursor-pointer"
           @change="page = 1; loadAccounts()"
         >
           <option value="">全部状态</option>
@@ -200,7 +200,8 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
       </div>
       <button
         v-if="auth.isAdmin"
-        class="flex items-center gap-1.5 px-3 py-2 bg-primary-500 text-white text-xs font-medium rounded-lg hover:bg-primary-600 shadow-sm hover:shadow transition-shadow"
+        type="button"
+        class="flex items-center justify-center gap-1.5 px-3 py-2 bg-primary-500 text-white text-xs font-medium rounded-lg hover:bg-primary-600 active:bg-primary-700 shadow-sm hover:shadow transition-shadow min-h-[40px] flex-shrink-0"
         @click="openCreate"
       >
         <span class="material-symbols-outlined text-[14px]">person_add</span>
@@ -208,8 +209,8 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
       </button>
     </div>
 
-    <!-- Table -->
-    <div class="ops-card overflow-hidden">
+    <!-- Table (PC ≥ md) -->
+    <div class="hidden md:block ops-card overflow-hidden">
       <table class="w-full text-xs">
         <thead>
           <tr class="border-b border-outline bg-surface-dim">
@@ -259,6 +260,7 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
             <td v-if="auth.isAdmin" class="px-4 py-3 text-right">
               <div class="flex items-center justify-end gap-1">
                 <button
+                  type="button"
                   class="w-7 h-7 flex items-center justify-center rounded hover:bg-surface-container"
                   title="编辑"
                   @click="openEdit(account)"
@@ -266,6 +268,7 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
                   <span class="material-symbols-outlined text-[16px] text-on-surface-variant">edit</span>
                 </button>
                 <button
+                  type="button"
                   class="w-7 h-7 flex items-center justify-center rounded"
                   :class="account.status === 'active' ? 'hover:bg-error-container' : 'hover:bg-success-container'"
                   :title="account.status === 'active' ? '冻结' : '解冻'"
@@ -285,6 +288,90 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
       </table>
     </div>
 
+    <!-- Card list (Mobile < md) -->
+    <div class="md:hidden space-y-3">
+      <div v-if="loading" class="text-center py-12 text-xs text-on-surface-variant">加载中...</div>
+      <div v-else-if="accounts.length === 0" class="text-center py-12 text-xs text-on-surface-variant">暂无数据</div>
+      <div
+        v-for="account in accounts"
+        :key="account.id"
+        class="ops-card p-3.5 active:bg-surface-dim transition-colors"
+      >
+        <!-- 头部：姓名 + 状态徽章 -->
+        <div class="flex items-start justify-between gap-2 mb-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <div
+              class="w-9 h-9 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center shrink-0"
+            >
+              <span class="text-primary-800 text-xs font-semibold">
+                {{ account.name?.charAt(0) ?? account.username?.charAt(0) ?? '?' }}
+              </span>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-medium text-on-surface truncate">{{ account.name || account.username }}</p>
+              <p class="text-[11px] text-on-surface-variant truncate">@{{ account.username }}</p>
+            </div>
+          </div>
+          <span
+            class="text-[10px] px-2 py-0.5 rounded-full font-medium flex-shrink-0"
+            :class="ACCOUNT_STATUS[account.status]?.class"
+          >
+            {{ ACCOUNT_STATUS[account.status]?.label }}
+          </span>
+        </div>
+
+        <!-- 信息网格 -->
+        <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px] mb-2 pb-2 border-b border-outline-variant">
+          <div class="min-w-0">
+            <span class="text-on-surface-variant">工号 </span>
+            <span class="font-mono text-on-surface truncate">{{ account.employee_id || '—' }}</span>
+          </div>
+          <div class="min-w-0">
+            <span class="text-on-surface-variant">角色 </span>
+            <span
+              class="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
+              :class="ACCOUNT_ROLE[account.role]?.class"
+            >
+              {{ ACCOUNT_ROLE[account.role]?.label }}
+            </span>
+          </div>
+          <div class="min-w-0">
+            <span class="text-on-surface-variant">部门 </span>
+            <span class="text-on-surface">{{ departmentTableLabel(account.department) }}</span>
+          </div>
+          <div class="min-w-0">
+            <span class="text-on-surface-variant">登录 </span>
+            <span class="text-on-surface-variant">{{ fmtDate(account.last_login_at) || '—' }}</span>
+          </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div v-if="auth.isAdmin" class="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            class="flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-outline text-on-surface-variant hover:bg-surface-container active:bg-surface-container min-h-[36px]"
+            @click="openEdit(account)"
+          >
+            <span class="material-symbols-outlined text-[14px]">edit</span>
+            编辑
+          </button>
+          <button
+            type="button"
+            class="flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border min-h-[36px]"
+            :class="account.status === 'active'
+              ? 'border-error/30 text-error hover:bg-error-container active:bg-error-container'
+              : 'border-success/30 text-success hover:bg-success-container active:bg-success-container'"
+            @click="toggleFreeze(account)"
+          >
+            <span class="material-symbols-outlined text-[14px]">
+              {{ account.status === 'active' ? 'lock' : 'lock_open' }}
+            </span>
+            {{ account.status === 'active' ? '冻结' : '解冻' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
     <BasePagination :total="total" :page="page" :page-size="PAGE_SIZE" @update:page="onPageChange" />
   </div>
 
@@ -295,7 +382,7 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
         {{ panelError }}
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block text-xs font-medium text-on-surface-variant mb-1.5">工号</label>
           <input
@@ -344,7 +431,7 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
         />
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label class="block text-xs font-medium text-on-surface-variant mb-1.5">部门</label>
           <select
@@ -393,13 +480,15 @@ const panelTitle = () => (editingAccount.value ? '编辑账号' : '新建账号'
 
       <div class="flex gap-2 pt-2">
         <button
-          class="flex-1 py-2 border border-outline rounded-lg text-sm hover:bg-surface-container"
+          type="button"
+          class="flex-1 py-2.5 border border-outline rounded-lg text-sm hover:bg-surface-container active:bg-surface-container min-h-[44px]"
           @click="showPanel = false"
         >
           取消
         </button>
         <button
-          class="flex-1 py-2 bg-primary-500 text-white rounded-lg text-sm hover:bg-primary-600 disabled:opacity-60"
+          type="button"
+          class="flex-1 py-2.5 bg-primary-500 text-white rounded-lg text-sm hover:bg-primary-600 active:bg-primary-700 disabled:opacity-60 min-h-[44px]"
           :disabled="saving"
           @click="saveAccount"
         >
