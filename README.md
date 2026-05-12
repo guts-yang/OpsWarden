@@ -436,7 +436,7 @@ OpsWarden/
 | `JWT_SECRET_KEY`                  | `CHANGE_ME_USE_RANDOM_STRING`                                | JWT 签名密钥，生产环境必须修改           |
 | `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | `480`                                                        | Token 有效期（分钟）               |
 | `DEEPSEEK_API_KEY`                | _(空)_                                                        | DeepSeek API 密钥，**AI 回答必填** |
-| `DEEPSEEK_MODEL`                  | `deepseek-chat`                                              | 使用的模型                       |
+| `DEEPSEEK_MODEL`                  | `deepseek-v4-flash`                                              | 使用的模型                       |
 | `EMBEDDING_MODEL`                 | `BAAI/bge-small-zh-v1.5`                                     | Embedding 模型名（首次自动下载）       |
 | `RAG_SCORE_THRESHOLD`             | `0.4`                                                        | L2 精排相似度阈值（低于则视为未命中，可走工单降级） |
 | `RAG_TOP_K`                       | `3`                                                          | 最终返回知识切片条数上限                  |
