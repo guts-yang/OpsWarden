@@ -1,0 +1,28 @@
+# Environment & secrets
+.env
+
+# Runtime logs
+*.log
+
+# ML models (large files, use pip install instead)
+/models
+models/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+*.log
+
+# Frontend build artifacts
+node_modules/
+dist/
+.cache/
+
+# ChromaDB runtime data
+backend/chroma_db/
+
+# macOS
+.DS_Store

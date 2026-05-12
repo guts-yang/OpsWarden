@@ -1,0 +1,34 @@
+# === Git 与 个人开发工具 ===
+.git
+.github
+.gitignore
+.cursor
+
+# === 环境变量与配置 (极其重要，防止密码泄露) ===
+.env
+
+# === Python 后端相关 ===
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.venv
+venv
+env
+
+# === 前端 Node.js 相关 ===
+node_modules
+dist
+build
+
+# === 运行日志与缓存 ===
+logs/
+
+# === 文档与系统垃圾文件 ===
+*.md
+**/.DS_Store
+Thumbs.db

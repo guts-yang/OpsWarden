@@ -1,0 +1,246 @@
+from enum import Enum
+
+from fastapi import APIRouter, Depends, Query, HTTPException
+from sqlalchemy.orm import Session
+from sqlalchemy import or_
+from sqlalchemy.exc import IntegrityError
+from typing import Optional
+
+from app.database import get_db
+from app.models.account import Account
+from app.schemas.account import (
+    AccountCreate, AccountUpdate, AccountResetPassword,
+    AccountProfileUpdate, AccountChangePassword,
+    AccountResponse, AccountListResponse
+)
+from app.utils.security import hash_password, verify_password
+from app.utils.response import success
+from app.utils.employee_id import allocate_employee_id
+from app.middleware.auth import get_current_user, require_admin, CurrentUser
+
+router = APIRouter(prefix="/api/accounts", tags=["账号管理"])
+
+
+# ── 个人资料接口（/me，需在 /{account_id} 之前注册，防止路由冲突） ──────────────
+
+@router.get("/me", summary="获取当前登录用户信息")
+def get_me(
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    account = db.query(Account).filter(Account.id == current_user.id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+    return success(data=AccountResponse.model_validate(account))
+
+
+@router.put("/me", summary="修改当前用户个人资料")
+def update_me(
+    req: AccountProfileUpdate,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    account = db.query(Account).filter(Account.id == current_user.id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+
+    update_data = req.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        if isinstance(value, Enum):
+            setattr(account, field, value.value)
+        elif value is None:
+            if field == "department":
+                account.department = None
+            elif field in ("email", "phone"):
+                setattr(account, field, None)
+        else:
+            setattr(account, field, value)
+
+    db.commit()
+    db.refresh(account)
+    return success(data=AccountResponse.model_validate(account), message="资料已更新")
+
+
+@router.patch("/me/password", summary="修改当前用户密码")
+def change_my_password(
+    req: AccountChangePassword,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(get_current_user),
+):
+    account = db.query(Account).filter(Account.id == current_user.id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+
+    if not verify_password(req.old_password, account.password_hash):
+        raise HTTPException(status_code=400, detail="原密码错误")
+
+    account.password_hash = hash_password(req.new_password)
+    db.commit()
+    return success(message="密码已修改")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+
+@router.post("", summary="创建运维账号")
+def create_account(
+    req: AccountCreate,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(require_admin)
+):
+    custom_eid = bool(req.employee_id)
+    employee_id = req.employee_id if custom_eid else allocate_employee_id(db, req.role.value)
+
+    for _ in range(5):
+        existing = db.query(Account).filter(
+            or_(Account.employee_id == employee_id, Account.username == req.username)
+        ).first()
+        if existing:
+            if existing.username == req.username:
+                raise HTTPException(status_code=400, detail="用户名已存在")
+            if existing.employee_id == employee_id:
+                if custom_eid:
+                    raise HTTPException(status_code=400, detail="工号已存在")
+                employee_id = allocate_employee_id(db, req.role.value)
+                continue
+
+        try:
+            account = Account(
+                employee_id=employee_id,
+                username=req.username,
+                password_hash=hash_password(req.password),
+                name=req.name,
+                department=req.department.value if req.department else None,
+                email=req.email,
+                phone=req.phone,
+                role=req.role.value,
+            )
+            db.add(account)
+            db.commit()
+            db.refresh(account)
+            return success(data=AccountResponse.model_validate(account), message="创建成功")
+        except IntegrityError:
+            db.rollback()
+            if custom_eid:
+                raise HTTPException(status_code=400, detail="工号或用户名已存在")
+            employee_id = allocate_employee_id(db, req.role.value)
+
+    raise HTTPException(status_code=500, detail="创建失败，请稍后重试")
+
+
+@router.get("", summary="查询账号列表")
+def list_accounts(
+    employee_id: Optional[str] = Query(None),
+    name: Optional[str] = Query(None),
+    department: Optional[str] = Query(None),
+    status: Optional[str] = Query(None),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(require_admin)
+):
+    query = db.query(Account)
+
+    if employee_id:
+        query = query.filter(Account.employee_id == employee_id)
+    if name:
+        query = query.filter(Account.name.like(f"%{name}%"))
+    if department:
+        query = query.filter(Account.department == department)
+    if status:
+        query = query.filter(Account.status == status)
+
+    total = query.count()
+    items = query.order_by(Account.created_at.desc()) \
+                 .offset((page - 1) * page_size) \
+                 .limit(page_size) \
+                 .all()
+
+    return success(data=AccountListResponse(
+        total=total,
+        page=page,
+        page_size=page_size,
+        items=[AccountResponse.model_validate(item) for item in items]
+    ))
+
+
+@router.get("/{account_id}", summary="查询单个账号")
+def get_account(
+    account_id: int,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(require_admin)
+):
+    account = db.query(Account).filter(Account.id == account_id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+    return success(data=AccountResponse.model_validate(account))
+
+
+@router.put("/{account_id}", summary="修改账号信息")
+def update_account(
+    account_id: int,
+    req: AccountUpdate,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(require_admin)
+):
+    account = db.query(Account).filter(Account.id == account_id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+
+    update_data = req.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        if isinstance(value, Enum):
+            setattr(account, field, value.value)
+        elif value is None:
+            if field == "department":
+                account.department = None
+            elif field in ("email", "phone"):
+                setattr(account, field, None)
+        else:
+            setattr(account, field, value)
+
+    db.commit()
+    db.refresh(account)
+    return success(data=AccountResponse.model_validate(account), message="修改成功")
+
+
+@router.patch("/{account_id}/freeze", summary="冻结账号")
+def freeze_account(
+    account_id: int,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(require_admin)
+):
+    account = db.query(Account).filter(Account.id == account_id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+    account.status = "frozen"
+    db.commit()
+    return success(message="账号已冻结")
+
+
+@router.patch("/{account_id}/unfreeze", summary="解冻账号")
+def unfreeze_account(
+    account_id: int,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(require_admin)
+):
+    account = db.query(Account).filter(Account.id == account_id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+    account.status = "active"
+    db.commit()
+    return success(message="账号已解冻")
+
+
+@router.patch("/{account_id}/reset-password", summary="重置密码")
+def reset_password(
+    account_id: int,
+    req: AccountResetPassword,
+    db: Session = Depends(get_db),
+    current_user: CurrentUser = Depends(require_admin)
+):
+    account = db.query(Account).filter(Account.id == account_id).first()
+    if not account:
+        raise HTTPException(status_code=404, detail="账号不存在")
+    account.password_hash = hash_password(req.new_password)
+    db.commit()
+    return success(message="密码已重置")

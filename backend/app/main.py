@@ -1,0 +1,108 @@
+import os
+# Remove invalid CA bundle path that blocks HuggingFace model downloads
+os.environ.pop('CURL_CA_BUNDLE', None)
+os.environ.pop('REQUESTS_CA_BUNDLE', None)
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from sqlalchemy import text
+import logging
+
+logger = logging.getLogger(__name__)
+
+from app.database import engine
+from app.api import auth, account, ticket, analytics, knowledge, chat
+
+from app.middleware.exception import (
+    http_exception_handler,
+    validation_exception_handler,
+    general_exception_handler
+)
+from app.middleware.logging import RequestLoggingMiddleware
+
+app = FastAPI(
+    title="OpsWarden API",
+    description="AI运维数字员工平台",
+    version="1.0.0"
+)
+
+# 中间件（顺序很重要）
+app.add_middleware(RequestLoggingMiddleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# 异常处理
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(Exception, general_exception_handler)
+
+# 路由
+app.include_router(auth.router)
+app.include_router(account.router)
+app.include_router(ticket.router)
+app.include_router(analytics.router)
+app.include_router(knowledge.router)
+app.include_router(chat.router)
+
+
+
+@app.on_event("startup")
+def startup_event():
+    from app.database import SessionLocal, init_extensions
+    from app.rag.faq_loader import load_faq_if_empty
+    try:
+        init_extensions()
+    except Exception as e:
+        logger.warning(f"PostgreSQL 扩展初始化失败：{e}")
+    db = SessionLocal()
+    try:
+        load_faq_if_empty(db)
+    except Exception as e:
+        logger.warning(f"FAQ 加载失败（不影响服务启动）：{e}")
+    finally:
+        db.close()
+
+    try:
+        from app.checkpointer.runtime import init_checkpointer_pool
+        init_checkpointer_pool()
+    except Exception as e:
+        logger.warning(f"LangGraph Checkpointer 初始化失败（图持久化不可用）：{e}")
+
+
+@app.on_event("shutdown")
+def shutdown_event():
+    try:
+        from app.checkpointer.runtime import close_checkpointer_pool
+        close_checkpointer_pool()
+    except Exception as e:
+        logger.warning(f"Checkpointer 连接池关闭异常：{e}")
+
+
+@app.get("/", tags=["系统"])
+def root():
+    return {"message": "OpsWarden API is running", "docs": "/docs"}
+
+
+@app.get("/health", tags=["系统"])
+def health_check():
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {str(e)}"
+
+    try:
+        from app.rag.retriever import collection_count
+        vector_docs = collection_count()
+        vector_status = "ok"
+    except Exception as e:
+        vector_status = f"error: {str(e)}"
+        vector_docs = -1
+
+    return {"status": "healthy", "database": db_status, "vector_store": vector_status, "vector_docs": vector_docs}
