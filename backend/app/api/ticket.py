@@ -203,7 +203,7 @@ def resolve_ticket(ticket_id: int, req: TicketResolve, db: Session = Depends(get
             question=ticket.title,
             solution=req.solution,
             source="ticket_writeback",
-            match_score=0.8,
+            # match_score 由 ingest_kb_entry 内的「自检质量分」覆盖，此处不再硬编码
             doc_id=f"ticket-{ticket.ticket_no}",
             page_index=1,
         )

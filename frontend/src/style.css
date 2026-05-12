@@ -6,9 +6,26 @@
   * {
     box-sizing: border-box;
   }
+  html,
+  body {
+    /* 防止移动端横向滚动 */
+    overflow-x: hidden;
+  }
   body {
     @apply bg-surface-dim text-on-surface font-sans;
     margin: 0;
+    /* iOS Safari 流畅滚动 */
+    -webkit-overflow-scrolling: touch;
+    /* 禁用 iOS 长按弹出菜单（保留输入域） */
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* 移动端 input/textarea 防止聚焦时自动缩放：font-size ≥ 16px */
+  @media (max-width: 767px) {
+    input,
+    textarea,
+    select {
+      font-size: 16px;
+    }
   }
 }
 
@@ -30,5 +47,38 @@
   .material-symbols-outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     user-select: none;
+  }
+  /* iOS 安全区域工具类 */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pl-safe {
+    padding-left: env(safe-area-inset-left);
+  }
+  .pr-safe {
+    padding-right: env(safe-area-inset-right);
+  }
+  .mb-safe {
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+  /* 底部 Tab Bar 内容预留高度（含安全区） */
+  .pb-tabbar {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+  /* 隐藏滚动条但保留滚动能力（横向 Tabs 等） */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* 触控热区最小 44pt，符合 iOS HIG */
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
   }
 }

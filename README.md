@@ -61,7 +61,7 @@ OpsWarden 是一套面向企业运维场景的 AI 数字员工系统，核心功
 | 后端框架         | FastAPI + Uvicorn                   | 0.115 / 0.30                 |
 | ORM          | SQLAlchemy + psycopg3               | 2.0 / 3.1+                   |
 | 认证           | JWT (python-jose + passlib)         | HS256                        |
-| AI 大模型       | DeepSeek API                        | deepseek-chat                |
+| AI 大模型       | DeepSeek API                        | deepseek-v4-flash                |
 | 向量存储         | PostgreSQL pgvector                 | **L1** `kb_anchors` 建 IVFFlat；**L2** `kb_entries.embedding` 仅精排、无向量索引 |
 | Embedding 模型 | BAAI/bge-small-zh-v1.5              | sentence-transformers, 512 维 |
 | 对话编排       | LangGraph + Postgres checkpoint     | 多轮对话状态与 checkpoint 持久化   |
