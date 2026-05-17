@@ -66,7 +66,7 @@ http://localhost:8000/docs
 | ticket_no | varchar(32) | 工单编号 T-YYYYMMDD-NNN |
 | title | varchar(256) | 标题 |
 | description | text | 描述 |
-| source | enum | ai_auto/manual/feishu |
+| source | enum | ai_auto/manual |
 | status | enum | pending/processing/resolved/closed |
 | priority | enum | low/medium/high/urgent |
 | reporter_id | bigint | 报障人ID |

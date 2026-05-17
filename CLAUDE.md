@@ -117,7 +117,7 @@ POST /api/knowledge {question, solution, ...}
 
 **Account**：`employee_id`（NOT NULL UNIQUE，自注册时格式 `REG_{timestamp_ms}`）、`role`（admin/operator/user）、`status`（active/frozen）
 
-**Ticket**：`ticket_no`（格式 `T-YYYYMMDD-NNN`）、`source`（ai_auto/manual/feishu）、`status`（pending/processing/resolved/closed）、`is_written_back`（是否已回写知识库）
+**Ticket**：`ticket_no`（格式 `T-YYYYMMDD-NNN`）、`source`（ai_auto/manual）、`status`（pending/processing/resolved/closed）、`is_written_back`（是否已回写知识库）
 
 **KBEntry**：`embedding`（pgvector 512维，NULL 表示未建索引，RAG 不可见）、`source`（manual/ticket_writeback）、`match_score`（历史匹配得分）
 

@@ -1,5 +1,8 @@
 # Environment & secrets
 .env
+.claude/
+.cursor/
+.vscode/
 
 # Runtime logs
 *.log

@@ -14,7 +14,7 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
-    CREATE TYPE ticket_source  AS ENUM ('ai_auto', 'manual', 'feishu');
+    CREATE TYPE ticket_source  AS ENUM ('ai_auto', 'manual');
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
