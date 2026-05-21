@@ -117,7 +117,7 @@ async function scrollToBottom() {
   }
 }
 
-async function sendMessage(text) {
+async function sendMessage(text, pendingAction = null) {
   const q = (text ?? input.value).trim()
   if (!q || loading.value) return
   input.value = ''
@@ -128,13 +128,19 @@ async function sendMessage(text) {
 
   loading.value = true
   try {
-    const data = await chatApi.send({ query: q, thread_id: threadId.value })
+    const data = await chatApi.send({
+      query: q,
+      thread_id: threadId.value,
+      pending_action: pendingAction,
+    })
     messages.value.push({
       id: Date.now() + 1,
       role: 'ai',
       text: data.answer,
       source: data.source,
       ticketNo: data.ticket_no,
+      needsConfirmation: data.needs_confirmation,
+      pendingAction: data.pending_action,
       time: new Date(),
     })
   } catch (e) {
@@ -159,6 +165,20 @@ function onKeydown(e) {
     e.preventDefault()
     sendMessage()
   }
+}
+
+function confirmPending(msg) {
+  if (loading.value) return
+  msg.needsConfirmation = false
+  persistSession()
+  sendMessage('确认创建工单', msg.pendingAction)
+}
+
+function cancelPending(msg) {
+  if (loading.value) return
+  msg.needsConfirmation = false
+  persistSession()
+  sendMessage('暂不创建工单', msg.pendingAction)
 }
 
 function clearHistory() {
@@ -228,6 +248,29 @@ function fmtTime(d) {
             "
             v-html="escapeHtml(msg.text)"
           />
+          <div
+            v-if="msg.role === 'ai' && msg.needsConfirmation && msg.pendingAction?.tool === 'ticket_create'"
+            class="mt-2 flex flex-wrap gap-2"
+          >
+            <button
+              type="button"
+              class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary-500 text-white text-xs font-medium hover:bg-primary-600 active:bg-primary-700 disabled:opacity-50"
+              :disabled="loading"
+              @click="confirmPending(msg)"
+            >
+              <span class="material-symbols-outlined text-[14px]">confirmation_number</span>
+              创建工单
+            </button>
+            <button
+              type="button"
+              class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-outline bg-white text-on-surface-variant text-xs font-medium hover:bg-surface-container disabled:opacity-50"
+              :disabled="loading"
+              @click="cancelPending(msg)"
+            >
+              <span class="material-symbols-outlined text-[14px]">close</span>
+              暂不创建
+            </button>
+          </div>
           <!-- Meta -->
           <div
             class="flex items-center gap-2 mt-1 flex-wrap"
@@ -241,11 +284,17 @@ function fmtTime(d) {
               知识库命中
             </span>
             <span
-              v-else-if="msg.source === 'fallback'"
+              v-else-if="msg.ticketNo"
               class="text-[10px] bg-warning-container text-warning px-1.5 py-0.5 rounded-full font-medium"
             >
               工单已创建
               <template v-if="msg.ticketNo"> · {{ msg.ticketNo }}</template>
+            </span>
+            <span
+              v-else-if="msg.needsConfirmation"
+              class="text-[10px] bg-warning-container text-warning px-1.5 py-0.5 rounded-full font-medium"
+            >
+              等待确认
             </span>
             <span
               v-else-if="msg.source === 'error'"

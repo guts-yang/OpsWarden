@@ -45,3 +45,39 @@ async def generate_answer(question: str, context_docs: list[dict]) -> str | None
     except Exception as e:
         logger.warning(f"DeepSeek API error: {e}")
         return None
+
+
+async def generate_general_answer(question: str) -> str | None:
+    settings = get_settings()
+    if not settings.DEEPSEEK_API_KEY:
+        return None
+
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "你是专业的 IT 运维助手。当前没有可召回的知识库条目，"
+                "请基于通用运维经验给出谨慎、简洁的分析方向。"
+                "不要声称已经查询到系统状态或工单状态。"
+            ),
+        },
+        {"role": "user", "content": question},
+    ]
+
+    try:
+        async with httpx.AsyncClient(timeout=settings.DEEPSEEK_TIMEOUT) as client:
+            resp = await client.post(
+                f"{settings.DEEPSEEK_BASE_URL}/chat/completions",
+                headers={"Authorization": f"Bearer {settings.DEEPSEEK_API_KEY}"},
+                json={
+                    "model": settings.DEEPSEEK_MODEL,
+                    "messages": messages,
+                    "temperature": settings.DEEPSEEK_TEMPERATURE,
+                    "max_tokens": settings.DEEPSEEK_MAX_TOKENS,
+                },
+            )
+            resp.raise_for_status()
+            return resp.json()["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        logger.warning(f"DeepSeek general answer error: {e}")
+        return None

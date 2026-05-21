@@ -74,6 +74,13 @@ def startup_event():
         logger.warning(f"LangGraph Checkpointer 初始化失败（图持久化不可用）：{e}")
 
 
+    try:
+        from app.agent.trace import init_agent_tables
+        init_agent_tables()
+    except Exception as e:
+        logger.warning(f"Agent audit table init failed: {e}")
+
+
 @app.on_event("shutdown")
 def shutdown_event():
     try:
