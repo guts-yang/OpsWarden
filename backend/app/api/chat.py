@@ -4,12 +4,15 @@ import logging
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
+from typing import Any
 
 from app.database import get_db
 from app.middleware.auth import get_current_user, CurrentUser
 from app.utils.response import success
 from app.rag.chat_pipeline import run_chat_pipeline
-from app.graphs.chat_workflow import invoke_chat_with_checkpoint
+from app.agent.graph import invoke_agent_with_checkpoint
+from app.agent.trace import create_run, update_run
+from app.agent.tools import execute_tool
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +23,7 @@ _THREAD_ID_PATTERN = re.compile(r"^[a-zA-Z0-9_-]{1,128}$")
 
 class ChatRequest(BaseModel):
     query: str
+    pending_action: dict[str, Any] | None = None
     thread_id: str | None = Field(
         default=None,
         description="客户端会话 ID（UUID 等），用于 checkpoint 多轮隔离；缺省为 default",
@@ -54,13 +58,56 @@ async def chat(
             }
         )
 
+    if req.pending_action:
+        action = req.pending_action
+        action_type = action.get("type")
+        tool_name = action.get("tool")
+        args = action.get("args") if isinstance(action.get("args"), dict) else {}
+        q_lower = query.lower()
+        if any(word in q_lower for word in ("确认", "同意", "执行", "继续", "yes", "y", "ok", "confirm")):
+            result = execute_tool(db, current_user, str(tool_name), args)
+            ticket = result.get("ticket") or {}
+            if action_type == "tool_call" and tool_name == "ticket_create" and result.get("ok"):
+                return success(
+                    data={
+                        "answer": f"已为你创建工单 {ticket.get('ticket_no')}，当前状态为 {ticket.get('status')}，运维人员会继续跟进。",
+                        "source": "agent",
+                        "thread_id": thread_id,
+                        "checkpointed": False,
+                        "agent_enabled": True,
+                        "ticket_no": ticket.get("ticket_no"),
+                        "ticket_id": ticket.get("id"),
+                    }
+                )
+            return success(
+                data={
+                    "answer": f"操作执行失败：{result.get('error', 'unknown error')}",
+                    "source": "error",
+                    "thread_id": thread_id,
+                    "checkpointed": False,
+                    "agent_enabled": True,
+                }
+            )
+        if any(word in q_lower for word in ("取消", "暂不", "不用", "不要", "否", "no", "n", "cancel")):
+            return success(
+                data={
+                    "answer": "已取消待确认操作。",
+                    "source": "agent",
+                    "thread_id": thread_id,
+                    "checkpointed": False,
+                    "agent_enabled": True,
+                }
+            )
+
+    agent_run_id = create_run(db, thread_id, current_user.id, query)
     graph_ok = True
     try:
-        final = await invoke_chat_with_checkpoint(
+        final = await invoke_agent_with_checkpoint(
             db=db,
             user=current_user,
             thread_id=thread_id,
             query=query,
+            agent_run_id=agent_run_id,
         )
     except RuntimeError:
         graph_ok = False
@@ -74,20 +121,38 @@ async def chat(
         data = await run_chat_pipeline(db, current_user, query)
         data["thread_id"] = thread_id
         data["checkpointed"] = False
+        data["agent_enabled"] = False
+        update_run(db, agent_run_id, data.get("answer", ""), "fallback_pipeline")
         return success(data=data)
 
     history = final.get("history") or []
+    answer = final.get("answer", "")
+    stop_reason = final.get("stop_reason", "")
+    update_run(db, agent_run_id, answer, stop_reason)
+    tool_calls = [
+        call for call in (final.get("tool_calls") or [])
+        if call.get("run_id") == agent_run_id
+    ]
     data = {
-        "answer": final.get("answer", ""),
-        "source": final.get("source", "fallback"),
+        "answer": answer,
+        "source": final.get("source", "agent"),
         "thread_id": thread_id,
         "checkpointed": True,
+        "agent_enabled": True,
         "history_turns": len(history) // 2,
+        "confidence": final.get("confidence", 0.0),
+        "stop_reason": stop_reason,
+        "agent_trace": tool_calls,
+        "kb_refs": final.get("kb_refs") or [],
+        "needs_confirmation": bool(final.get("needs_confirmation")),
+        "pending_action": final.get("pending_action"),
     }
-    if final.get("source") == "kb":
-        data["kb_entry_id"] = final.get("kb_entry_id")
-        data["question"] = final.get("question")
-        data["category"] = final.get("category")
+    kb_refs = final.get("kb_refs") or []
+    if kb_refs:
+        first_ref = kb_refs[0]
+        data["kb_entry_id"] = first_ref.get("id")
+        data["question"] = first_ref.get("question")
+        data["category"] = first_ref.get("category")
     if final.get("ticket_no"):
         data["ticket_no"] = final.get("ticket_no")
         data["ticket_id"] = final.get("ticket_id")
