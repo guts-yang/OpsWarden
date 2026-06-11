@@ -43,8 +43,6 @@
 OpsWarden 是一套面向企业运维场景的 AI 数字员工系统，核心功能三条线：
 
 - **AI 问答（RAG）**：用户提问 → **双层检索**（量化锚点 Top-K → 页级条目精排）→ DeepSeek 生成回答；知识库无答案时自动创建工单
-- **ICML 2025论文灵感**：[Fast Exact Unlearning for In-Context Learning Data for LLMs](https://arxiv.org/abs/2402.00751)
-- **Github开源仓库灵感**：https://github.com/VectifyAI/PageIndex
 - **工单系统**：工单全生命周期管理（待处理 → 处理中 → 已解决 → 已关闭），支持解决方案写回知识库
 - **账号管理**：运维账号增删改查、冻结/解冻、重置密码，后台可视化管理
 
@@ -199,6 +197,9 @@ npm run build
 ***
 
 ## RAG 模块说明
+
+- **ICML 2025论文灵感**：[Fast Exact Unlearning for In-Context Learning Data for LLMs](https://arxiv.org/abs/2402.00751)
+- **Github开源仓库灵感**：https://github.com/VectifyAI/PageIndex
 
 ### 架构概览（量化锚点 + 页级索引）
 
