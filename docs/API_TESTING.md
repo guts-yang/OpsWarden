@@ -3,7 +3,7 @@
 ## 测试环境
 - 后端地址：http://localhost:8000
 - Swagger UI：http://localhost:8000/docs
-- 默认账号：`admin` / `admin123`
+- 默认账号：`admin` / `请自行设置`
 
 ---
 
@@ -14,7 +14,7 @@
 ```json
 {
   "username": "admin",
-  "password": "admin123"
+  "password": "YOUR_PASSWORD"
 }
 ```
 点击 **Execute**，复制返回的 `access_token`。
@@ -38,11 +38,11 @@ Content-Type: application/json
 {
   "employee_id": "EMP001",
   "username": "zhangsan",
-  "password": "123456",
+  "password": "YOUR_PASSWORD",
   "name": "张三",
   "department": "运维部",
-  "email": "zhangsan@test.com",
-  "phone": "13800138000",
+  "email": "zhangsan@example.com",
+  "phone": "138XXXXXXXX",
   "role": "operator"
 }
 ```
@@ -80,7 +80,7 @@ Content-Type: application/json
 请求体：
 ```json
 {
-  "new_password": "newpass123"
+  "new_password": "YOUR_NEW_PASSWORD"
 }
 ```
 **期望返回**：`message="密码已重置"`

@@ -4,14 +4,9 @@ FROM ${PYTHON_BASE_IMAGE}
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
+# 直接安装 Python 依赖（使用官方 PyPI，添加 trusted-host 解决 SSL 问题）
 COPY requirements.txt /app/requirements.txt
-RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
-    pip config set global.timeout 300 && \
-    pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org -r /app/requirements.txt
 
 COPY backend /app/backend
 

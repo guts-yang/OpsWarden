@@ -14,7 +14,6 @@ class TicketStatusEnum(str, Enum):
 class TicketSourceEnum(str, Enum):
     ai_auto = "ai_auto"
     manual = "manual"
-    feishu = "feishu"
 
 
 class TicketPriorityEnum(str, Enum):

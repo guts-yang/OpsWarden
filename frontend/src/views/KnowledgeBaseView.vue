@@ -22,6 +22,10 @@ const sourceFilter = ref('')
 const page = ref(1)
 const PAGE_SIZE = 12
 
+// 自检质量分（match_score）口径文案，全局统一
+const MATCH_SCORE_TOOLTIP =
+  '自检质量分：基于语义模型计算问题与解决方案的余弦相似度，反映该条知识问答对的内在一致性，与实际检索命中率无关。'
+
 const showPanel = ref(false)
 const editingEntry = ref(null)
 const saving = ref(false)
@@ -32,8 +36,6 @@ const form = reactive({
   question: '',
   solution: '',
   tags: '',
-  doc_id: 'manual',
-  page_index: 1,
 })
 
 async function loadStats() {
@@ -94,8 +96,6 @@ function openCreate() {
     question: '',
     solution: '',
     tags: '',
-    doc_id: 'manual',
-    page_index: 1,
   })
   panelError.value = ''
   showPanel.value = true
@@ -108,8 +108,6 @@ function openEdit(entry) {
     question: entry.question,
     solution: entry.solution,
     tags: Array.isArray(entry.tags) ? entry.tags.join(', ') : (entry.tags ?? ''),
-    doc_id: entry.doc_id ?? 'manual',
-    page_index: entry.page_index ?? 1,
   })
   panelError.value = ''
   showPanel.value = true
@@ -131,8 +129,6 @@ async function saveEntry() {
       question: form.question.trim(),
       solution: form.solution.trim(),
       tags: tagStr || undefined,
-      doc_id: (form.doc_id || 'manual').trim(),
-      page_index: Number(form.page_index) || 1,
     }
     if (editingEntry.value) {
       await knowledgeApi.update(editingEntry.value.id, payload)
@@ -162,44 +158,50 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
 </script>
 
 <template>
-  <div class="p-6 space-y-5">
+  <div class="p-4 md:p-6 space-y-4 md:space-y-5 max-w-full overflow-x-hidden">
     <!-- Stats -->
-    <div class="grid grid-cols-2 xl:grid-cols-4 gap-4">
-      <div class="ops-card-hover p-4 min-h-[100px] flex flex-col">
+    <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4">
+      <div class="ops-card-hover p-3 md:p-4 min-h-[92px] md:min-h-[100px] flex flex-col">
         <div class="flex items-start justify-between gap-2">
           <p class="text-xs font-medium text-on-surface-variant">总条目</p>
-          <div class="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-primary-500 text-[18px]">library_books</span>
+          <div class="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-primary-500 text-[16px] md:text-[18px]">library_books</span>
           </div>
         </div>
-        <p class="text-2xl font-semibold text-on-surface mt-2 tabular-nums">{{ stats?.total ?? '—' }}</p>
+        <p class="text-xl md:text-2xl font-semibold text-on-surface mt-2 tabular-nums">{{ stats?.total ?? '—' }}</p>
       </div>
-      <div class="ops-card-hover p-4 min-h-[100px] flex flex-col">
+      <div class="ops-card-hover p-3 md:p-4 min-h-[92px] md:min-h-[100px] flex flex-col">
         <div class="flex items-start justify-between gap-2">
           <p class="text-xs font-medium text-on-surface-variant">本周新增</p>
-          <div class="w-8 h-8 rounded-lg bg-success-container flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-success text-[18px]">trending_up</span>
+          <div class="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-success-container flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-success text-[16px] md:text-[18px]">trending_up</span>
           </div>
         </div>
-        <p class="text-2xl font-semibold text-on-surface mt-2 tabular-nums">{{ stats?.new_this_week ?? '—' }}</p>
+        <p class="text-xl md:text-2xl font-semibold text-on-surface mt-2 tabular-nums">{{ stats?.new_this_week ?? '—' }}</p>
       </div>
-      <div class="ops-card-hover p-4 min-h-[100px] flex flex-col">
+      <div class="ops-card-hover p-3 md:p-4 min-h-[92px] md:min-h-[100px] flex flex-col">
         <div class="flex items-start justify-between gap-2">
           <p class="text-xs font-medium text-on-surface-variant">工单回写</p>
-          <div class="w-8 h-8 rounded-lg bg-warning-container flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-warning text-[18px]">sync_alt</span>
+          <div class="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-warning-container flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-warning text-[16px] md:text-[18px]">sync_alt</span>
           </div>
         </div>
-        <p class="text-2xl font-semibold text-on-surface mt-2 tabular-nums">{{ stats?.ticket_writeback ?? '—' }}</p>
+        <p class="text-xl md:text-2xl font-semibold text-on-surface mt-2 tabular-nums">{{ stats?.ticket_writeback ?? '—' }}</p>
       </div>
-      <div class="ops-card-hover p-4 min-h-[100px] flex flex-col">
+      <div class="ops-card-hover p-3 md:p-4 min-h-[92px] md:min-h-[100px] flex flex-col">
         <div class="flex items-start justify-between gap-2">
-          <p class="text-xs font-medium text-on-surface-variant">平均匹配分</p>
-          <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-on-surface-variant text-[18px]">analytics</span>
+          <p class="text-xs font-medium text-on-surface-variant flex items-center gap-1 min-w-0">
+            <span class="truncate">平均匹配分</span>
+            <span
+              class="material-symbols-outlined text-[14px] text-on-surface-variant/70 cursor-help shrink-0"
+              :title="MATCH_SCORE_TOOLTIP"
+            >info</span>
+          </p>
+          <div class="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-on-surface-variant text-[16px] md:text-[18px]">analytics</span>
           </div>
         </div>
-        <p class="text-2xl font-semibold text-on-surface mt-2 tabular-nums">
+        <p class="text-xl md:text-2xl font-semibold text-on-surface mt-2 tabular-nums">
           {{ stats?.avg_match_score != null ? (stats.avg_match_score * 100).toFixed(0) + '%' : '—' }}
         </p>
       </div>
@@ -207,12 +209,13 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
 
     <!-- Filter bar -->
     <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-      <div class="flex items-center gap-2 flex-wrap min-w-0 overflow-x-auto pb-1 -mb-1 lg:pb-0 lg:mb-0">
-        <!-- Category tabs -->
+      <!-- Category tabs：手机端横向可滚（系统组件，与条目卡片无关） -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-4 md:mx-0 px-4 md:px-0 pb-1 -mb-1 lg:pb-0 lg:mb-0">
         <button
           v-for="cat in categories"
           :key="cat"
-          class="px-3 py-1.5 text-xs rounded-lg border transition-colors shrink-0"
+          type="button"
+          class="px-3 py-1.5 text-xs rounded-lg border transition-colors shrink-0 whitespace-nowrap"
           :class="
             activeCategory === cat
               ? 'bg-primary-500 text-white border-primary-500 shadow-sm'
@@ -223,16 +226,18 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
           {{ cat }}
         </button>
       </div>
-      <div class="flex items-center gap-2">
+
+      <!-- Filter inputs：手机端堆叠 -->
+      <div class="grid grid-cols-2 gap-2 lg:flex lg:items-center lg:gap-2">
         <select
           v-model="sourceFilter"
-          class="text-xs ops-input px-3 py-2 cursor-pointer"
+          class="text-xs ops-input px-3 py-2 cursor-pointer w-full lg:w-auto col-span-1"
         >
           <option v-for="opt in sourceOptions" :key="opt.value" :value="opt.value">
             {{ opt.label }}
           </option>
         </select>
-        <div class="relative">
+        <div class="relative col-span-1 lg:col-auto">
           <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-on-surface-variant">
             search
           </span>
@@ -240,12 +245,13 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
             v-model="searchKeyword"
             type="text"
             placeholder="搜索关键词"
-            class="pl-8 pr-3 py-2 text-xs ops-input w-48"
+            class="w-full lg:w-48 pl-8 pr-3 py-2 text-xs ops-input"
             @input="onSearchInput"
           />
         </div>
         <button
-          class="flex items-center gap-1.5 px-3 py-1.5 bg-primary-500 text-white text-xs rounded-lg hover:bg-primary-600"
+          type="button"
+          class="col-span-2 lg:col-auto flex items-center justify-center gap-1.5 px-3 py-2 bg-primary-500 text-white text-xs rounded-lg hover:bg-primary-600 active:bg-primary-700 min-h-[36px]"
           @click="openCreate"
         >
           <span class="material-symbols-outlined text-[14px]">add</span>
@@ -254,19 +260,20 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
       </div>
     </div>
 
-    <!-- Grid -->
+    <!-- Grid：手机端单列；条目卡片严格不溢出，仅垂直滚动 -->
     <div v-if="loading" class="text-center py-16 text-xs text-on-surface-variant">加载中...</div>
     <div v-else-if="entries.length === 0" class="text-center py-16 text-xs text-on-surface-variant">暂无数据</div>
-    <div v-else class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+    <div v-else class="grid grid-cols-1 xl:grid-cols-2 gap-3 md:gap-4">
       <div
         v-for="entry in entries"
         :key="entry.id"
-        class="ops-card-hover p-4 group"
+        class="ops-card-hover p-3 md:p-4 group w-full min-w-0 overflow-hidden"
       >
-        <div class="flex items-start justify-between gap-3">
+        <div class="flex items-start justify-between gap-2 md:gap-3">
           <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary-50 text-primary-700 font-medium">
+            <!-- 顶部徽章行：可换行不溢出 -->
+            <div class="flex items-center gap-1.5 mb-2 flex-wrap">
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary-50 text-primary-700 font-medium max-w-full truncate">
                 {{ entry.category }}
               </span>
               <span
@@ -279,28 +286,35 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
               >
                 {{ entry.source === 'ticket_writeback' ? '工单回写' : '手动' }}
               </span>
-              <span v-if="entry.match_score" class="text-[10px] text-on-surface-variant ml-auto">
+              <span
+                v-if="entry.match_score != null"
+                class="text-[10px] text-on-surface-variant md:ml-auto inline-flex items-center gap-0.5 cursor-help"
+                :title="MATCH_SCORE_TOOLTIP"
+              >
                 匹配 {{ (entry.match_score * 100).toFixed(0) }}%
+                <span class="material-symbols-outlined text-[12px] text-on-surface-variant/70">info</span>
               </span>
             </div>
-            <p class="text-sm font-medium text-on-surface mb-1 truncate">{{ entry.question }}</p>
-            <p class="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">{{ entry.solution }}</p>
-            <p class="text-[10px] text-on-surface-variant mt-2 font-mono">
-              {{ entry.doc_id }} · 第 {{ entry.page_index }} 页
-              <span v-if="entry.anchor_id" class="text-on-surface-variant/70"> · 锚点 {{ entry.anchor_id }}</span>
-            </p>
-            <p class="text-[10px] text-on-surface-variant mt-1">更新于 {{ fmtDate(entry.updated_at) }}</p>
+            <!-- 问题：截断不换行溢出 -->
+            <p class="text-sm font-medium text-on-surface mb-1 line-clamp-2 break-words">{{ entry.question }}</p>
+            <!-- 解决方案预览：换行 + 截断 -->
+            <p class="text-xs text-on-surface-variant line-clamp-2 leading-relaxed break-words">{{ entry.solution }}</p>
+            <p class="text-[10px] text-on-surface-variant mt-2">更新于 {{ fmtDate(entry.updated_at) }}</p>
           </div>
-          <!-- Actions -->
-          <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+          <!-- Actions：手机端常显，PC 端 hover 显示 -->
+          <div class="flex flex-col md:flex-row gap-1 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex-shrink-0">
             <button
-              class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-surface-container"
+              type="button"
+              class="w-8 h-8 md:w-7 md:h-7 flex items-center justify-center rounded-lg hover:bg-surface-container active:bg-surface-container"
+              aria-label="编辑"
               @click="openEdit(entry)"
             >
               <span class="material-symbols-outlined text-[16px] text-on-surface-variant">edit</span>
             </button>
             <button
-              class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-error-container"
+              type="button"
+              class="w-8 h-8 md:w-7 md:h-7 flex items-center justify-center rounded-lg hover:bg-error-container active:bg-error-container"
+              aria-label="删除"
               @click="deleteEntry(entry)"
             >
               <span class="material-symbols-outlined text-[16px] text-error">delete</span>
@@ -350,27 +364,6 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
         />
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="block text-xs font-medium text-on-surface-variant mb-1.5">所属文档 doc_id</label>
-          <input
-            v-model="form.doc_id"
-            type="text"
-            placeholder="manual / 手册标识"
-            class="w-full border border-outline rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500 font-mono"
-          />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-on-surface-variant mb-1.5">文档页码</label>
-          <input
-            v-model.number="form.page_index"
-            type="number"
-            min="1"
-            class="w-full border border-outline rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500"
-          />
-        </div>
-      </div>
-
       <div>
         <label class="block text-xs font-medium text-on-surface-variant mb-1.5">标签（逗号分隔）</label>
         <input
@@ -383,13 +376,15 @@ const panelTitle = computed(() => (editingEntry.value ? '编辑知识条目' : '
 
       <div class="flex gap-2 pt-2">
         <button
-          class="flex-1 py-2 border border-outline rounded-lg text-sm hover:bg-surface-container"
+          type="button"
+          class="flex-1 py-2.5 border border-outline rounded-lg text-sm hover:bg-surface-container active:bg-surface-container min-h-[44px]"
           @click="showPanel = false"
         >
           取消
         </button>
         <button
-          class="flex-1 py-2 bg-primary-500 text-white rounded-lg text-sm hover:bg-primary-600 disabled:opacity-60"
+          type="button"
+          class="flex-1 py-2.5 bg-primary-500 text-white rounded-lg text-sm hover:bg-primary-600 active:bg-primary-700 disabled:opacity-60 min-h-[44px]"
           :disabled="saving"
           @click="saveEntry"
         >

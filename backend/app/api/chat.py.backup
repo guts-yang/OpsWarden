@@ -13,6 +13,7 @@ from app.rag.chat_pipeline import run_chat_pipeline
 from app.agent.graph import invoke_agent_with_checkpoint
 from app.agent.trace import create_run, update_run
 from app.agent.tools import execute_tool
+from app.services.llm_cache_service import LlmCacheService
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,26 @@ async def chat(
                 "source": "fallback",
                 "thread_id": thread_id,
                 "checkpointed": False,
+            }
+        )
+
+    # 缓存查询：在双路径之前检查是否有相似问题缓存
+    cache_service = LlmCacheService(db)
+    cached_result = cache_service.query_cache(query)
+    if cached_result:
+        logger.info(f"缓存命中，直接返回缓存结果")
+        return success(
+            data={
+                "answer": cached_result["answer"],
+                "source": f"cache_{cached_result['source']}",
+                "thread_id": thread_id,
+                "checkpointed": False,
+                "agent_enabled": cached_result["source"] == "agent",
+                "kb_entry_id": cached_result.get("kb_entry_id"),
+                "question": cached_result.get("question"),
+                "category": cached_result.get("category"),
+                "cache_hit": True,
+                "cache_similarity": cached_result.get("similarity"),
             }
         )
 
@@ -123,6 +144,18 @@ async def chat(
         data["checkpointed"] = False
         data["agent_enabled"] = False
         update_run(db, agent_run_id, data.get("answer", ""), "fallback_pipeline")
+        
+        # RAG路径完成后写入缓存
+        if data.get("source") == "kb":
+            cache_service.write_cache(
+                question=query,
+                answer=data["answer"],
+                source="rag",
+                kb_entry_id=data.get("kb_entry_id"),
+                question_text=data.get("question"),
+                category=data.get("category")
+            )
+        
         return success(data=data)
 
     history = final.get("history") or []
@@ -156,5 +189,16 @@ async def chat(
     if final.get("ticket_no"):
         data["ticket_no"] = final.get("ticket_no")
         data["ticket_id"] = final.get("ticket_id")
+
+    # Agent路径完成后写入缓存
+    if answer and not final.get("needs_confirmation"):
+        cache_service.write_cache(
+            question=query,
+            answer=answer,
+            source="agent",
+            kb_entry_id=data.get("kb_entry_id"),
+            question_text=data.get("question"),
+            category=data.get("category")
+        )
 
     return success(data=data)

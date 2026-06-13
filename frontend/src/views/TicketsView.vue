@@ -3,6 +3,7 @@ import { ref, reactive, onMounted, watch } from 'vue'
 import { ticketsApi } from '@/api/tickets'
 import { useAuthStore } from '@/stores/auth'
 import BaseModal from '@/components/BaseModal.vue'
+import BaseSlidePanel from '@/components/BaseSlidePanel.vue'
 import BasePagination from '@/components/BasePagination.vue'
 import { TICKET_STATUS, TICKET_PRIORITY, fmtDate } from '@/utils/constants'
 
@@ -27,6 +28,7 @@ const loading = ref(false)
 const selectedTicket = ref(null)
 const ticketLogs = ref([])
 const detailLoading = ref(false)
+const showMobileDetail = ref(false)
 
 const showCreateModal = ref(false)
 const creating = ref(false)
@@ -56,6 +58,10 @@ async function selectTicket(ticket) {
   selectedTicket.value = ticket
   ticketLogs.value = []
   detailLoading.value = true
+  // 手机端打开侧滑详情面板
+  if (typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches) {
+    showMobileDetail.value = true
+  }
   try {
     const [detail, logs] = await Promise.all([
       ticketsApi.get(ticket.id),
@@ -140,13 +146,16 @@ function onPageChange(p) {
 <template>
   <div class="flex h-full overflow-hidden">
     <!-- Left: list -->
-    <div class="w-[38%] min-w-[280px] max-w-[420px] flex-shrink-0 border-r border-outline flex flex-col bg-white shadow-shell">
+    <div
+      class="flex flex-col bg-white shadow-shell w-full md:w-[38%] md:min-w-[280px] md:max-w-[420px] md:flex-shrink-0 md:border-r md:border-outline"
+    >
       <!-- Header -->
       <div class="px-4 pt-4 pb-3 border-b border-outline space-y-3">
         <div class="flex items-center justify-between">
           <h2 class="text-sm font-semibold text-on-surface">工单列表</h2>
           <button
-            class="flex items-center gap-1 text-xs bg-primary-500 text-white px-3 py-1.5 rounded-lg hover:bg-primary-600"
+            type="button"
+            class="flex items-center gap-1 text-xs bg-primary-500 text-white px-3 py-2 sm:py-1.5 rounded-lg hover:bg-primary-600 active:bg-primary-700 min-h-[36px]"
             @click="showCreateModal = true"
           >
             <span class="material-symbols-outlined text-[14px]">add</span>
@@ -166,12 +175,13 @@ function onPageChange(p) {
             @input="onKeywordInput"
           />
         </div>
-        <!-- Tabs -->
-        <div class="flex gap-1">
+        <!-- Tabs：横向可滚 -->
+        <div class="flex gap-1 overflow-x-auto no-scrollbar -mx-1 px-1">
           <button
             v-for="tab in tabs"
             :key="tab.key"
-            class="px-2.5 py-1 text-xs rounded-md transition-colors"
+            type="button"
+            class="px-3 py-1.5 text-xs rounded-md transition-colors flex-shrink-0 whitespace-nowrap"
             :class="
               activeTab === tab.key
                 ? 'bg-primary-50 text-primary-700 font-medium'
@@ -191,7 +201,7 @@ function onPageChange(p) {
         <div
           v-for="ticket in tickets"
           :key="ticket.id"
-          class="px-4 py-3 border-b border-outline cursor-pointer transition-colors"
+          class="px-4 py-3 border-b border-outline cursor-pointer transition-colors active:bg-primary-50/60"
           :class="selectedTicket?.id === ticket.id ? 'bg-primary-50' : 'hover:bg-surface-dim'"
           @click="selectTicket(ticket)"
         >
@@ -204,7 +214,7 @@ function onPageChange(p) {
               {{ TICKET_STATUS[ticket.status]?.label }}
             </span>
           </div>
-          <p class="text-xs font-medium text-on-surface truncate mb-1">{{ ticket.title }}</p>
+          <p class="text-sm md:text-xs font-medium text-on-surface truncate mb-1">{{ ticket.title }}</p>
           <div class="flex items-center gap-2">
             <span
               class="text-[10px] px-1.5 py-0.5 rounded-full"
@@ -222,8 +232,8 @@ function onPageChange(p) {
       </div>
     </div>
 
-    <!-- Right: detail -->
-    <div class="flex-1 overflow-y-auto p-6 bg-surface-dim">
+    <!-- Right: detail (PC only) -->
+    <div class="hidden md:block flex-1 overflow-y-auto p-6 bg-surface-dim">
       <div v-if="!selectedTicket" class="flex flex-col items-center justify-center h-full text-on-surface-variant px-6">
         <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-4xl text-on-surface-variant/40">confirmation_number</span>
@@ -308,6 +318,7 @@ function onPageChange(p) {
               写入知识库
             </label>
             <button
+              type="button"
               class="px-4 py-1.5 bg-success text-white text-xs rounded-lg hover:bg-green-700 disabled:opacity-60"
               :disabled="!resolveForm.solution.trim() || resolving"
               @click="resolveTicket"
@@ -323,6 +334,7 @@ function onPageChange(p) {
           class="flex justify-end"
         >
           <button
+            type="button"
             class="px-4 py-1.5 border border-outline text-xs rounded-lg hover:bg-surface-container"
             @click="closeTicket"
           >
@@ -355,6 +367,126 @@ function onPageChange(p) {
       </div>
     </div>
   </div>
+
+  <!-- Mobile detail SlidePanel -->
+  <BaseSlidePanel
+    :show="showMobileDetail"
+    :title="selectedTicket?.title || '工单详情'"
+    width="480px"
+    @close="showMobileDetail = false"
+  >
+    <div v-if="detailLoading" class="text-center py-12 text-xs text-on-surface-variant">
+      加载中...
+    </div>
+    <div v-else-if="selectedTicket" class="space-y-4">
+      <!-- Title row -->
+      <div class="ops-card p-4">
+        <div class="flex items-center gap-2 flex-wrap mb-3">
+          <span
+            class="text-xs px-2 py-0.5 rounded-full font-medium"
+            :class="TICKET_PRIORITY[selectedTicket.priority]?.class"
+          >
+            {{ TICKET_PRIORITY[selectedTicket.priority]?.label }}
+          </span>
+          <span
+            class="text-xs px-2 py-0.5 rounded-full font-medium"
+            :class="TICKET_STATUS[selectedTicket.status]?.class"
+          >
+            {{ TICKET_STATUS[selectedTicket.status]?.label }}
+          </span>
+        </div>
+        <div class="grid grid-cols-1 gap-y-2 text-xs">
+          <div>
+            <span class="text-on-surface-variant">工单号：</span>
+            <span class="font-mono">{{ selectedTicket.ticket_no }}</span>
+          </div>
+          <div>
+            <span class="text-on-surface-variant">来源：</span>
+            <span>{{ selectedTicket.source === 'ai_auto' ? 'AI 自动' : '手动创建' }}</span>
+          </div>
+          <div>
+            <span class="text-on-surface-variant">提交人：</span>
+            <span>{{ selectedTicket.reporter_name || '—' }}</span>
+          </div>
+          <div>
+            <span class="text-on-surface-variant">创建时间：</span>
+            <span>{{ fmtDate(selectedTicket.created_at) }}</span>
+          </div>
+        </div>
+        <div v-if="selectedTicket.description" class="mt-3 pt-3 border-t border-outline">
+          <p class="text-xs text-on-surface-variant mb-1">问题描述</p>
+          <p class="text-sm text-on-surface leading-relaxed whitespace-pre-wrap">{{ selectedTicket.description }}</p>
+        </div>
+      </div>
+
+      <div v-if="selectedTicket.solution" class="ops-card p-4">
+        <p class="text-xs font-medium text-on-surface-variant mb-2">解决方案</p>
+        <p class="text-sm text-on-surface leading-relaxed whitespace-pre-wrap">{{ selectedTicket.solution }}</p>
+        <div class="flex items-center gap-3 mt-3 text-xs text-on-surface-variant flex-wrap">
+          <span>解决于 {{ fmtDate(selectedTicket.resolved_at) }}</span>
+          <span v-if="selectedTicket.is_written_back" class="text-success">已写入知识库</span>
+        </div>
+      </div>
+
+      <div
+        v-if="auth.isOperator && ['pending', 'processing'].includes(selectedTicket.status)"
+        class="ops-card p-4"
+      >
+        <p class="text-xs font-medium text-on-surface-variant mb-3">处理工单</p>
+        <textarea
+          v-model="resolveForm.solution"
+          rows="4"
+          placeholder="请填写解决方案..."
+          class="w-full ops-input px-3 py-2 text-sm resize-none mb-3"
+        />
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <label class="flex items-center gap-2 text-xs text-on-surface-variant cursor-pointer">
+            <input v-model="resolveForm.write_back" type="checkbox" class="rounded" />
+            写入知识库
+          </label>
+          <button
+            type="button"
+            class="px-4 py-2 bg-success text-white text-xs rounded-lg hover:bg-green-700 active:bg-green-800 disabled:opacity-60 min-h-[40px]"
+            :disabled="!resolveForm.solution.trim() || resolving"
+            @click="resolveTicket"
+          >
+            {{ resolving ? '提交中...' : '标记已解决' }}
+          </button>
+        </div>
+      </div>
+
+      <div
+        v-if="auth.isOperator && selectedTicket.status === 'resolved'"
+        class="flex justify-end"
+      >
+        <button
+          type="button"
+          class="px-4 py-2 border border-outline text-xs rounded-lg hover:bg-surface-container active:bg-surface-container"
+          @click="closeTicket"
+        >
+          关闭工单
+        </button>
+      </div>
+
+      <div class="ops-card p-4">
+        <p class="text-xs font-medium text-on-surface-variant mb-3">操作记录</p>
+        <div v-if="ticketLogs.length === 0" class="text-xs text-on-surface-variant">暂无记录</div>
+        <div class="space-y-3">
+          <div v-for="log in ticketLogs" :key="log.id" class="flex gap-3">
+            <div class="w-1.5 h-1.5 rounded-full bg-outline mt-1.5 flex-shrink-0" />
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 mb-0.5 flex-wrap">
+                <span class="text-xs font-medium text-on-surface">{{ log.action }}</span>
+                <span class="text-[10px] text-on-surface-variant">{{ log.operator_name }}</span>
+                <span class="text-[10px] text-on-surface-variant ml-auto">{{ fmtDate(log.created_at) }}</span>
+              </div>
+              <p v-if="log.content" class="text-xs text-on-surface-variant">{{ log.content }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </BaseSlidePanel>
 
   <!-- Create Modal -->
   <BaseModal

@@ -14,7 +14,7 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
-    CREATE TYPE ticket_source  AS ENUM ('ai_auto', 'manual', 'feishu');
+    CREATE TYPE ticket_source  AS ENUM ('ai_auto', 'manual');
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
@@ -136,8 +136,37 @@ CREATE INDEX IF NOT EXISTS idx_kb_doc_id ON kb_entries (doc_id);
 CREATE INDEX IF NOT EXISTS idx_kb_doc_page ON kb_entries (doc_id, page_index);
 
 -- ==========================================
--- 默认管理员账号（密码: admin123）
+-- 默认管理员账号（密码: 请通过 bcrypt 生成后替换）
 -- ==========================================
 INSERT INTO accounts (employee_id, username, password_hash, name, department, role, status)
-VALUES ('ADMIN001', 'admin', '$2b$12$y3JGlrKh27jfkD2Cpiij/OoTie4H4Az4BSx2A.5mfLUFNEtPawrF2', '系统管理员', 'general', 'admin', 'active')
+VALUES ('ADMIN001', 'admin', '$2b$12$YOUR_BCRYPT_HASH_REPLACE_ME', '系统管理员', 'general', 'admin', 'active')
 ON CONFLICT (username) DO NOTHING;
+
+-- ==========================================
+-- Agent audit tables
+-- ==========================================
+CREATE TABLE IF NOT EXISTS agent_runs (
+    id             BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    thread_id      VARCHAR(160) NOT NULL,
+    user_id        BIGINT,
+    query          TEXT NOT NULL,
+    final_answer   TEXT,
+    stop_reason    VARCHAR(64),
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_agent_runs_thread_id ON agent_runs (thread_id);
+CREATE INDEX IF NOT EXISTS idx_agent_runs_user_id   ON agent_runs (user_id);
+
+CREATE TABLE IF NOT EXISTS agent_tool_calls (
+    id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    run_id        BIGINT REFERENCES agent_runs(id) ON DELETE CASCADE,
+    tool_name     VARCHAR(64) NOT NULL,
+    args_json     JSONB,
+    result_json   JSONB,
+    latency_ms    INTEGER,
+    success       BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_agent_tool_calls_run_id ON agent_tool_calls (run_id);
