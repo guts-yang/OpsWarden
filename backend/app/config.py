@@ -7,8 +7,8 @@ _ENV_FILE = Path(__file__).parent.parent.parent / ".env"
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "postgresql+psycopg://postgres:password@localhost:5432/opswarden"
-    SECRET_KEY: str = "ops-warden-secret-key"
+    DATABASE_URL: str = "postgresql+psycopg://postgres:CHANGE_ME@localhost:5432/opswarden"
+    SECRET_KEY: str = "CHANGE_ME_USE_RANDOM_STRING"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
 

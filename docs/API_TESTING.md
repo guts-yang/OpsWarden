@@ -3,7 +3,7 @@
 ## 测试环境
 - 后端地址：http://localhost:8000
 - Swagger UI：http://localhost:8000/docs
-- 默认账号：`admin` / `admin123`
+- 默认账号：`admin` / `CHANGE_ME`
 
 ---
 
@@ -14,7 +14,7 @@
 ```json
 {
   "username": "admin",
-  "password": "admin123"
+  "password": "CHANGE_ME"
 }
 ```
 点击 **Execute**，复制返回的 `access_token`。
@@ -38,7 +38,7 @@ Content-Type: application/json
 {
   "employee_id": "EMP001",
   "username": "zhangsan",
-  "password": "123456",
+  "password": "CHANGE_ME",
   "name": "张三",
   "department": "运维部",
   "email": "zhangsan@test.com",

@@ -136,10 +136,11 @@ CREATE INDEX IF NOT EXISTS idx_kb_doc_id ON kb_entries (doc_id);
 CREATE INDEX IF NOT EXISTS idx_kb_doc_page ON kb_entries (doc_id, page_index);
 
 -- ==========================================
--- 默认管理员账号（密码: admin123）
+-- 默认管理员账号（密码: 请在部署后使用 bcrypt 生成新密码哈希并替换下方 password_hash 值）
+-- 生成示例: python -c "import bcrypt; print(bcrypt.hashpw(b'YOUR_STRONG_PASSWORD', bcrypt.gensalt()).decode())"
 -- ==========================================
 INSERT INTO accounts (employee_id, username, password_hash, name, department, role, status)
-VALUES ('ADMIN001', 'admin', '$2b$12$y3JGlrKh27jfkD2Cpiij/OoTie4H4Az4BSx2A.5mfLUFNEtPawrF2', '系统管理员', 'general', 'admin', 'active')
+VALUES ('ADMIN001', 'admin', 'CHANGE_ME_REPLACE_WITH_BCRYPT_HASH', '系统管理员', 'general', 'admin', 'active')
 ON CONFLICT (username) DO NOTHING;
 
 -- ==========================================

@@ -155,4 +155,4 @@ POST /api/knowledge {question, solution, ...}
 
 **登录/注册报错「请求数据格式错误」：** 后端未重启，旧进程仍在运行旧代码。确认 uvicorn 已使用新代码启动。
 
-**默认管理员账号：** username `admin`，password `admin123`（仅开发环境，生产须修改）。
+**默认管理员账号：** username `admin`，password `CHANGE_ME`（仅开发环境，生产须修改）。

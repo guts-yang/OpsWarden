@@ -20,7 +20,11 @@ services:
       start_period: 10s
 
   backend:
-    image: opswarden-backend:latest
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args:
+        PYTHON_BASE_IMAGE: ${DOCKERHUB_PYTHON_IMAGE:-python:3.11-slim-bookworm}
     container_name: opswarden-backend
     restart: always
     env_file:
@@ -28,7 +32,6 @@ services:
         required: false
     environment:
       DATABASE_URL: postgresql+psycopg://postgres:${POSTGRES_PASSWORD:-CHANGE_ME}@postgres:5432/opswarden
-      HF_HUB_OFFLINE: "1"
     ports:
       - "8000:8000"
     volumes:
