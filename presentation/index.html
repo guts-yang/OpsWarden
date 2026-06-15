@@ -6,18 +6,18 @@
   <title>运维数字员工 OpsWarden · 答辩</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" id="theme">
 
   <style>
     :root {
       --ow-orange: #ff6700;
       --ow-orange-soft: #ff8a3d;
       --ow-blue: #1a73e8;
-      --ow-bg: #0d0d0f;
-      --ow-bg2: #161619;
-      --ow-text: #f5f5f7;
-      --ow-dim: #a1a1aa;
-      --ow-line: #2a2a30;
+      --ow-bg: #f6f7f9;
+      --ow-bg2: #ffffff;
+      --ow-text: #1a1a1f;
+      --ow-dim: #6b7280;
+      --ow-line: #e5e7eb;
       --ow-green: #34a853;
     }
 
@@ -29,7 +29,7 @@
     .reveal .slides section { height: 100%; }
 
     .reveal-viewport {
-      background: radial-gradient(1200px 700px at 80% -10%, #241307 0%, var(--ow-bg) 55%) !important;
+      background: radial-gradient(1200px 700px at 80% -10%, #fff3e9 0%, var(--ow-bg) 55%) !important;
     }
 
     .reveal h1, .reveal h2, .reveal h3 { color: var(--ow-text); font-weight: 800; letter-spacing: -0.01em; text-transform: none; }
@@ -48,7 +48,7 @@
     .star-tag {
       position: absolute; top: 28px; right: 40px;
       font-size: 0.5em; font-weight: 700; letter-spacing: 0.15em;
-      color: var(--ow-bg); background: var(--ow-orange);
+      color: #1a1a1f; background: var(--ow-orange);
       padding: 6px 14px; border-radius: 999px;
     }
     .star-tag.t { background: var(--ow-blue); color: #fff; }
@@ -85,9 +85,9 @@
     .card .lbl { font-size: 0.62em; color: var(--ow-dim); margin-top: 6px; }
 
     .reveal table { font-size: 0.62em; width: 100%; border-collapse: collapse; }
-    .reveal table th { background: #20140a; color: var(--ow-orange-soft); border-bottom: 2px solid var(--ow-orange); padding: 10px 12px; }
+    .reveal table th { background: #fff3e9; color: var(--ow-orange); border-bottom: 2px solid var(--ow-orange); padding: 10px 12px; }
     .reveal table td { border-bottom: 1px solid var(--ow-line); padding: 9px 12px; color: var(--ow-text); }
-    .reveal table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+    .reveal table tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
 
     .flow { display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:center; }
     .flow .step {
@@ -97,7 +97,7 @@
     .flow .step.hot { border-color: var(--ow-orange); box-shadow: 0 0 0 1px var(--ow-orange) inset; }
     .flow .arrow { color: var(--ow-orange); font-size: 1.2em; font-weight: 900; }
 
-    .pill { display:inline-block; background:#20140a; color:var(--ow-orange-soft);
+    .pill { display:inline-block; background:#fff3e9; color:var(--ow-orange);
       border:1px solid var(--ow-orange); border-radius:999px; padding:5px 14px; font-size:0.55em; font-weight:700; margin:4px 6px 0 0; }
 
     .reveal ul { line-height: 1.55; }
@@ -112,12 +112,12 @@
 
     /* 功能短片（动图）占位框 */
     .clipbox { position:relative; width:74%; margin:0.4em auto 0; aspect-ratio:16/9; max-height:440px;
-      border:2px dashed var(--ow-orange); border-radius:16px; background:#0a0a0c; overflow:hidden;
+      border:2px dashed var(--ow-orange); border-radius:16px; background:#fafafa; overflow:hidden;
       display:flex; align-items:center; justify-content:center; }
     .clipbox .ph { position:absolute; z-index:0; color:var(--ow-dim); font-size:0.55em; font-weight:700; text-align:center; padding:0 16px; }
     .clipbox video { position:relative; z-index:1; width:100%; height:100%; object-fit:cover; display:block; }
     .feat-h { text-align:center; margin:0.1em 0 0; }
-    .feat-h .role { font-size:0.42em; font-weight:700; vertical-align:middle; margin-left:10px; color:var(--ow-bg);
+    .feat-h .role { font-size:0.42em; font-weight:700; vertical-align:middle; margin-left:10px; color:#1a1a1f;
       background:var(--ow-orange); border-radius:999px; padding:3px 10px; }
     .feat-cap { text-align:center; font-size:0.58em; color:var(--ow-dim); margin-top:0.45em; }
 
@@ -130,7 +130,7 @@
 <div class="slides">
 
   <!-- 1 封面 -->
-  <section data-background-gradient="radial-gradient(900px 600px at 75% 0%, #3a1c08 0%, #0d0d0f 60%)">
+  <section data-background-gradient="radial-gradient(900px 600px at 75% 0%, #fff3e9 0%, #f6f7f9 60%)">
     <div class="center-wrap">
       <div class="kicker">AI 运维数字员工平台</div>
       <h1>运维数字员工 <span class="accent">OpsWarden</span></h1>
@@ -519,7 +519,7 @@
   </section>
 
   <!-- 13 演示 -->
-  <section data-background-gradient="radial-gradient(900px 600px at 50% 30%, #3a1c08 0%, #0d0d0f 65%)">
+  <section data-background-gradient="radial-gradient(900px 600px at 50% 30%, #fff3e9 0%, #f6f7f9 65%)">
     <div class="center-wrap" style="text-align:center;">
       <div class="kicker" style="text-align:center;">LIVE DEMO</div>
       <h1 style="font-size:2em;">说一千道一万，<br>不如<span class="accent">现场跑一遍</span></h1>
@@ -573,7 +573,7 @@
   </section>
 
   <!-- 16 总结致谢 -->
-  <section data-background-gradient="radial-gradient(900px 600px at 50% 20%, #3a1c08 0%, #0d0d0f 60%)">
+  <section data-background-gradient="radial-gradient(900px 600px at 50% 20%, #fff3e9 0%, #f6f7f9 60%)">
     <div class="center-wrap" style="text-align:center;">
       <div class="kicker" style="text-align:center;">ONE MORE THING</div>
       <h1 style="font-size:2.1em;">OpsWarden</h1>
