@@ -114,19 +114,13 @@ def prune_anchor_if_unused(db: Session, anchor_id: int | None) -> None:
         db.flush()
 
 
-def search(
-    query: str,
-    top_k: int | None = None,
-    threshold: float | None = None,
-    anchor_k: int | None = None,
-) -> list[dict]:
+def search(query: str, top_k: int | None = None, threshold: float | None = None) -> list[dict]:
     settings = get_settings()
     if top_k is None:
         top_k = settings.RAG_TOP_K
     if threshold is None:
         threshold = settings.RAG_SCORE_THRESHOLD
-    if anchor_k is None:
-        anchor_k = settings.RAG_ANCHOR_TOP_K
+    anchor_k = settings.RAG_ANCHOR_TOP_K
 
     try:
         qvec = embed_query(query)
@@ -174,7 +168,6 @@ def search(
                 "question": e.question,
                 "solution": e.solution,
                 "category": e.category,
-                "page_index": e.page_index,
                 "score": round(sc, 4),
             })
         return out
