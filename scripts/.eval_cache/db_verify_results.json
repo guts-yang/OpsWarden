@@ -1,0 +1,57 @@
+[
+  {
+    "rank": 1,
+    "epsilon": 0.1,
+    "anchor_k": 4,
+    "threshold": 0.6,
+    "top_k": 3,
+    "memory_hit1_with_threshold": 1.0,
+    "db_hit1_with_threshold": 1.0,
+    "db_hit1_no_threshold": 1.0,
+    "delta_hit1": 0.0
+  },
+  {
+    "rank": 2,
+    "epsilon": 0.1,
+    "anchor_k": 4,
+    "threshold": 0.6,
+    "top_k": 1,
+    "memory_hit1_with_threshold": 1.0,
+    "db_hit1_with_threshold": 1.0,
+    "db_hit1_no_threshold": 1.0,
+    "delta_hit1": 0.0
+  },
+  {
+    "rank": 3,
+    "epsilon": 0.1,
+    "anchor_k": 4,
+    "threshold": 0.6,
+    "top_k": 5,
+    "memory_hit1_with_threshold": 1.0,
+    "db_hit1_with_threshold": 1.0,
+    "db_hit1_no_threshold": 1.0,
+    "delta_hit1": 0.0
+  },
+  {
+    "rank": 4,
+    "epsilon": 0.08,
+    "anchor_k": 4,
+    "threshold": 0.6,
+    "top_k": 3,
+    "memory_hit1_with_threshold": 1.0,
+    "db_hit1_with_threshold": 1.0,
+    "db_hit1_no_threshold": 1.0,
+    "delta_hit1": 0.0
+  },
+  {
+    "rank": 5,
+    "epsilon": 0.08,
+    "anchor_k": 4,
+    "threshold": 0.6,
+    "top_k": 1,
+    "memory_hit1_with_threshold": 1.0,
+    "db_hit1_with_threshold": 1.0,
+    "db_hit1_no_threshold": 1.0,
+    "delta_hit1": 0.0
+  }
+]
