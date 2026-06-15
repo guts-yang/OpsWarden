@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpsWarden · RAG 底层原理交互演示</title>
+<style>
+  :root{
+    --orange:#ff6700; --orange-soft:#ff8a3d; --blue:#1a73e8; --green:#34a853;
+    --bg:#0c0c0f; --bg2:#15151a; --bg3:#1c1c23; --text:#f5f5f7; --dim:#9aa0aa;
+    --line:#2a2a33; --red:#e0533d; --purple:#9b6dff;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family:"PingFang SC","Microsoft YaHei","Inter",system-ui,sans-serif;}
+  body{background:radial-gradient(1100px 650px at 85% -8%,#241307 0%,var(--bg) 55%);min-height:100vh;}
+  a{color:var(--orange-soft)}
+  code{font-family:"SF Mono",Consolas,Monaco,monospace;background:#000;color:var(--orange-soft);
+    padding:1px 6px;border-radius:6px;font-size:.86em;border:1px solid var(--line)}
+
+  .wrap{max-width:1240px;margin:0 auto;padding:28px 28px 80px}
+
+  header.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+    border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:24px;flex-wrap:wrap}
+  .hero .kick{font-size:12px;font-weight:800;letter-spacing:.28em;color:var(--orange);text-transform:uppercase}
+  .hero h1{margin:.25em 0 .15em;font-size:34px;font-weight:900;letter-spacing:-.01em}
+  .hero h1 .ow{color:var(--orange)}
+  .hero p{margin:0;color:var(--dim);font-size:14px;max-width:640px;line-height:1.6}
+  .specs{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  .spec{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:6px 13px;
+    font-size:12px;font-weight:700;white-space:nowrap}
+  .spec b{color:var(--orange)}
+
+  /* control bar */
+  .panel{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;margin-bottom:22px}
+  .panel h2{margin:0 0 4px;font-size:15px;font-weight:800;letter-spacing:.02em}
+  .panel .hint{color:var(--dim);font-size:12.5px;margin:0 0 14px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .chip{cursor:pointer;border:1px solid var(--line);background:var(--bg3);color:var(--text);
+    border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:600;transition:.15s}
+  .chip:hover{border-color:var(--orange);color:var(--orange-soft)}
+  .chip.hit{border-color:#2c4a33}.chip.hit::before{content:"● ";color:var(--green)}
+  .chip.miss{border-color:#4a3030}.chip.miss::before{content:"● ";color:var(--red)}
+  .inputrow{display:flex;gap:10px;flex-wrap:wrap}
+  .inputrow input{flex:1;min-width:260px;background:#0a0a0d;border:1px solid var(--line);color:var(--text);
+    border-radius:10px;padding:12px 14px;font-size:14px;outline:none}
+  .inputrow input:focus{border-color:var(--orange)}
+  .btn{cursor:pointer;border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:800;transition:.15s;white-space:nowrap}
+  .btn.primary{background:var(--orange);color:#1a0d02}
+  .btn.primary:hover{background:var(--orange-soft)}
+  .btn.ghost{background:var(--bg3);color:var(--text);border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--orange)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .speedrow{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:12.5px;color:var(--dim)}
+  .speedrow input[type=range]{accent-color:var(--orange)}
+
+  /* pipeline */
+  .pipe{display:grid;grid-template-columns:1fr;gap:16px}
+  .stage{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+    opacity:.4;transition:opacity .35s, border-color .35s, box-shadow .35s;position:relative}
+  .stage.active{opacity:1;border-color:var(--orange);box-shadow:0 0 0 1px var(--orange) inset,0 10px 40px -20px var(--orange)}
+  .stage.done{opacity:1}
+  .stage .sh{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+  .stage .no{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:14px;background:var(--bg3);border:1px solid var(--line);color:var(--dim);flex:0 0 auto}
+  .stage.active .no,.stage.done .no{background:var(--orange);color:#1a0d02;border-color:var(--orange)}
+  .stage .st{flex:1}
+  .stage .st b{font-size:15px;font-weight:800;display:block}
+  .stage .st span{font-size:12px;color:var(--dim)}
+  .stage .code{font-size:11px;color:var(--dim);font-family:"SF Mono",Consolas,monospace}
+  .stage .body{padding:16px 18px;display:none}
+  .stage.active .body,.stage.done .body{display:block}
+
+  .twocol{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  @media(max-width:880px){.twocol{grid-template-columns:1fr}.specs{justify-content:flex-start}}
+
+  .muted{color:var(--dim);font-size:13px;line-height:1.65}
+  .kv{font-size:12.5px;color:var(--dim);margin:2px 0}
+  .kv b{color:var(--text)}
+
+  /* query prefix box */
+  .qbox{background:#0a0a0d;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.6}
+  .qbox .pre{color:var(--purple);font-weight:700}
+  .qbox .usr{color:var(--orange-soft);font-weight:700}
+
+  /* vector heatmap */
+  .heat{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:6px}
+  .heat .cell{aspect-ratio:1;border-radius:3px;background:#15151a;transition:background .3s, transform .3s}
+  .veclbl{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-bottom:6px}
+
+  /* anchors */
+  .anchors{display:flex;flex-direction:column;gap:8px}
+  .anchor{display:flex;align-items:center;gap:12px;background:var(--bg3);border:1px solid var(--line);
+    border-radius:10px;padding:9px 12px;transition:.3s;opacity:.55}
+  .anchor.top{opacity:1;border-color:var(--blue);box-shadow:0 0 0 1px var(--blue) inset}
+  .anchor.dim{opacity:.3}
+  .anchor .akey{font-family:"SF Mono",Consolas,monospace;font-size:11px;color:var(--blue);width:74px;flex:0 0 auto}
+  .anchor .amem{flex:1;font-size:12.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .anchor .asc{font-weight:800;font-size:12.5px;color:var(--blue);width:54px;text-align:right;flex:0 0 auto}
+  .anchor .badge{font-size:10px;font-weight:800;color:#04223f;background:var(--blue);border-radius:6px;padding:2px 6px}
+
+  /* rerank list */
+  .rank{display:flex;flex-direction:column;gap:9px}
+  .row{background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:10px 12px;transition:.3s;opacity:.5}
+  .row.show{opacity:1}
+  .row.hit{border-color:var(--green)}
+  .row.below{border-color:var(--line);opacity:.45}
+  .row .top{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+  .row .qq{flex:1;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .cat{font-size:10.5px;color:var(--dim);background:#000;border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+  .row .scv{font-weight:900;font-size:14px;width:58px;text-align:right}
+  .row.hit .scv{color:var(--green)}.row.below .scv{color:var(--red)}
+  .bar{height:8px;border-radius:5px;background:#0a0a0d;overflow:hidden;position:relative}
+  .bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:5px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+  .row.hit .bar i{background:linear-gradient(90deg,var(--green),#7be0a0)}
+  .row.below .bar i{background:linear-gradient(90deg,#6b2c22,var(--red))}
+  .thline{position:relative;height:0;margin:2px 0 10px}
+  .thline .lab{position:absolute;top:-9px;font-size:10.5px;color:var(--red);font-weight:800;background:var(--bg2);padding:0 6px}
+
+  /* verdict / result */
+  .verdict{border-radius:12px;padding:16px 18px;margin-top:4px;border:1px solid var(--line);background:var(--bg3)}
+  .verdict.ok{border-color:var(--green);background:linear-gradient(180deg,rgba(52,168,83,.10),transparent)}
+  .verdict.no{border-color:var(--red);background:linear-gradient(180deg,rgba(224,83,61,.10),transparent)}
+  .verdict h3{margin:0 0 8px;font-size:16px;font-weight:900}
+  .verdict.ok h3{color:#7be0a0}.verdict.no h3{color:#ff9a86}
+  .verdict .ans{font-size:13px;line-height:1.7;white-space:pre-wrap;color:var(--text);max-height:200px;overflow:auto}
+  .typing::after{content:"▌";color:var(--orange);animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  .ticket{display:flex;align-items:center;gap:14px;background:#0a0a0d;border:1px dashed var(--red);
+    border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px}
+  .ticket .tno{font-family:"SF Mono",Consolas,monospace;color:var(--red);font-weight:800;font-size:14px}
+
+  /* loop banner */
+  .loop{margin-top:22px;background:linear-gradient(180deg,rgba(255,103,0,.08),transparent);
+    border:1px solid var(--orange);border-radius:var(--r);padding:18px 20px;display:none}
+  .loop.show{display:block}
+  .loop h2{margin:0 0 6px;font-size:16px;color:var(--orange-soft)}
+  .loopflow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0}
+  .loopflow .s{background:var(--bg3);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700}
+  .loopflow .s.hot{border-color:var(--orange);color:var(--orange-soft)}
+  .loopflow .ar{color:var(--orange);font-weight:900}
+
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--dim)}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+
+  footer{margin-top:40px;text-align:center;color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:18px}
+  .pop{animation:pop .4s ease}
+  @keyframes pop{0%{transform:scale(.96);opacity:.4}100%{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div>
+      <div class="kick">RAG 底层原理 · 交互演示</div>
+      <h1><span class="ow">OpsWarden</span> 检索增强生成 是怎么工作的</h1>
+      <p>输入一个运维问题，亲眼看它如何被<b style="color:#fff">向量化 → 量化锚点粗筛 → 全精度精排 → 阈值判定 → 生成答案 / 建工单</b>。
+        下方相似度由浏览器实时计算（教学用简化向量，真实系统为 BGE 512 维）。</p>
+    </div>
+    <div class="specs">
+      <div class="spec">模型 <b>BGE-small-zh-v1.5</b></div>
+      <div class="spec">维度 <b>512</b></div>
+      <div class="spec">阈值 <b>0.40</b></div>
+      <div class="spec">精排 Top-<b>3</b></div>
+      <div class="spec">锚点 Top-<b>8</b></div>
+      <div class="spec">ε <b>0.02</b></div>
+    </div>
+  </header>
+
+  <!-- CONTROL -->
+  <div class="panel">
+    <h2>① 提一个运维问题</h2>
+    <p class="hint">点击示例（<span style="color:var(--green)">●</span> 知识库中已有 / <span style="color:var(--red)">●</span> 知识库未覆盖），或自己输入一句话。</p>
+    <div class="chips" id="chips"></div>
+    <div class="inputrow">
+      <input id="q" placeholder="例如：VPN 连不上怎么办？" autocomplete="off">
+      <button class="btn primary" id="run">▶ 运行检索</button>
+      <button class="btn ghost" id="step" title="单步执行，方便边讲边演示">单步 ▷</button>
+      <button class="btn ghost" id="reset">重置</button>
+    </div>
+    <div class="speedrow">
+      <span>动画速度</span>
+      <input type="range" id="speed" min="0" max="2" step="1" value="1">
+      <span id="speedlbl">正常</span>
+      <span style="margin-left:auto" class="muted">提示：答辩时用「单步 ▷」逐阶段讲解效果最佳</span>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="pipe" id="pipe">
+
+    <!-- STAGE 1 -->
+    <div class="stage" id="s1">
+      <div class="sh"><div class="no">1</div>
+        <div class="st"><b>查询向量化（非对称编码）</b><span>BGE 查询侧加 instruction 前缀，文档侧不加 —— 召回更准</span></div>
+        <div class="code">embedder.py · embed_query()</div>
+      </div>
+      <div class="body">
+        <div class="twocol">
+          <div>
+            <p class="muted" style="margin-top:0">实际送入模型编码的文本（前缀为 BGE 官方推荐写法）：</p>
+            <div class="qbox"><span class="pre">为这个句子生成表示以用于检索相关文章：</span><span class="usr" id="qshow">…</span></div>
+            <p class="muted">模型把这句话压缩成一个 <b style="color:#fff">512 维、已 L2 归一化</b>的语义向量。归一化后，两个向量的点积就等于余弦相似度，计算更快。</p>
+            <div class="kv">编码后向量模长 <b>‖v‖ = 1.000</b>　·　数值范围约 <b>[-0.12, 0.12]</b></div>
+          </div>
+          <div>
+            <div class="veclbl"><span>查询向量热力图（投影展示）</span><span id="dimlbl">512-d</span></div>
+            <div class="heat" id="heatQ"></div>
+            <div class="legend"><span><i style="background:var(--orange)"></i>正分量</span><span><i style="background:var(--blue)"></i>负分量</span><span><i style="background:#15151a"></i>近 0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 2 -->
+    <div class="stage" id="s2">
+      <div class="sh"><div class="no">2</div>
+        <div class="st"><b>L1 粗筛 · 量化锚点路由</b><span>先把向量量化吸附到网格，相似条目共享锚点；只取最近 Top-8 锚点桶</span></div>
+        <div class="code">quantizer.py · retriever.py</div>
+      </div>
+      <div class="body">
+        <div class="twocol">
+          <div>
+            <p class="muted" style="margin-top:0">量化把连续向量吸附到网格点，把"几乎一样"的向量合并成同一个<b style="color:var(--blue)">锚点</b>，索引更轻、粗筛更快：</p>
+            <div class="qbox" style="font-family:Consolas,monospace;font-size:12.5px;line-height:1.9">
+              anchor_vec = <span style="color:var(--orange-soft)">round</span>(v / <span style="color:var(--blue)">ε</span>) × <span style="color:var(--blue)">ε</span>　<span style="color:var(--dim)">// ε=0.02</span><br>
+              quant_key = <span style="color:var(--orange-soft)">sha256</span>(anchor_vec)　<span style="color:var(--dim)">// 去重 upsert</span>
+            </div>
+            <p class="muted">查询向量与每个锚点算余弦距离，<b style="color:var(--blue)">cosine_distance</b> 由 pgvector 在数据库内用近似索引完成，毫秒级返回候选桶。</p>
+          </div>
+          <div>
+            <div class="veclbl"><span>锚点桶（按与查询相似度排序）</span><span class="kv">取 Top-8</span></div>
+            <div class="anchors" id="anchorList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 3 -->
+    <div class="stage" id="s3">
+      <div class="sh"><div class="no">3</div>
+        <div class="st"><b>L2 精排 · 全精度余弦重排</b><span>只在候选桶内的条目上做全精度相似度计算，取 Top-3</span></div>
+        <div class="code">retriever.py · search()</div>
+      </div>
+      <div class="body">
+        <p class="muted" style="margin-top:0">粗筛缩小范围后，对候选条目用<b style="color:#fff">未量化的原始向量</b>逐条精算余弦相似度并排序。这就是"先粗筛、再精排"——又快又准。</p>
+        <div class="thline"><span class="lab" id="thlab">命中阈值 0.40 ↑ 命中　↓ 视为未命中</span></div>
+        <div class="rank" id="rankList"></div>
+      </div>
+    </div>
+
+    <!-- STAGE 4 -->
+    <div class="stage" id="s4">
+      <div class="sh"><div class="no">4</div>
+        <div class="st"><b>判定与生成</b><span>命中 → DeepSeek 基于检索上下文生成；未命中 → 进入工单流程</span></div>
+        <div class="code">chat_pipeline.py · llm.py</div>
+      </div>
+      <div class="body" id="resultBody"></div>
+    </div>
+
+  </div>
+
+  <!-- SELF-LEARNING LOOP -->
+  <div class="loop" id="loop">
+    <h2>↺ 自学习闭环：让它把这道题学会</h2>
+    <p class="muted" style="margin-top:0">这次未命中。在真实系统里，运维同学解决工单后勾选"写入知识库"，系统会自动 <code>ingest_kb_entry()</code> 把这条新知识向量化、建锚点存入。下次同样的问题就能直接命中。</p>
+    <div class="loopflow">
+      <span class="s">用户提问</span><span class="ar">→</span>
+      <span class="s">RAG 未命中</span><span class="ar">→</span>
+      <span class="s">确认后建工单</span><span class="ar">→</span>
+      <span class="s">运维解决</span><span class="ar">→</span>
+      <span class="s hot">回写知识库</span><span class="ar">↺</span>
+      <span class="s">下次直接命中</span>
+    </div>
+    <button class="btn primary" id="learn">✓ 解决工单并回写知识库，然后重试</button>
+  </div>
+
+  <footer>
+    OpsWarden · AI 运维数字员工平台　|　核心代码：<code>backend/app/rag/</code>（embedder · quantizer · retriever · llm · chat_pipeline）<br>
+    本页相似度为浏览器实时计算的教学版（中文 bigram 向量）；线上为 BGE-small-zh-v1.5（512 维）+ PostgreSQL/pgvector + DeepSeek。
+  </footer>
+</div>
+
+<script>
+/* ===================== 教学用知识库（来自 OpsWarden_FAQ.md 节选 + 概念化） ===================== */
+let KB = [
+  {q:"账号被冻结后如何自助解冻或申请人工处理？", cat:"账号与权限", sol:"1) 登录运维门户→账号中心→自助解冻，完成身份验证后自动解冻；2) 或拨打运维热线 400-XXX-XXXX（09:00–18:00）人工处理；3) 常见冻结原因：连续 5 次密码错误、账号长期未使用；4) 解冻后建议立即修改密码。"},
+  {q:"忘记密码后如何通过短信验证码重置新密码？", cat:"账号与权限", sol:"1) 登录页点击「忘记密码」；2) 输入工号及绑定手机号接收验证码；3) 验证后设置新密码（大小写+数字，≥8位）；4) 新密码不能与最近 3 次相同；5) 手机号已变更需联系运维人工重置。"},
+  {q:"如何申请新系统的访问权限并完成审批？", cat:"账号与权限", sol:"1) 运维门户→权限申请模块；2) 选择目标系统及权限级别（只读/读写/管理员）；3) 填写原因并选直属上级审批；4) 审批通过后 24 小时内生效；5) 48 小时未通知请联系运维查询。"},
+  {q:"连接公司 VPN 总是失败应该怎么排查？", cat:"网络与连接", sol:"1) 确认本地网络可正常上网；2) 核对 VPN 账号密码与服务器地址；3) 重启 VPN 客户端并切换线路；4) 检查防火墙/杀毒是否拦截；5) 仍失败请提供报错截图联系运维。"},
+  {q:"共享文件夹提示无访问权限怎么办？", cat:"网络与连接", sol:"1) 确认已加入对应权限组；2) 检查网络与域账号是否在线；3) 使用 \\\\服务器IP\\共享名 重新连接；4) 清除旧凭据后重新输入账号；5) 仍被拒请提交权限申请单。"},
+  {q:"打印机无法打印任务一直排队如何处理？", cat:"办公设备", sol:"1) 检查打印机电源与纸张/墨粉；2) 重启打印服务（Print Spooler）；3) 清空打印队列后重试；4) 重新安装对应型号驱动；5) 网络打印机确认 IP 可达。"},
+  {q:"电脑频繁蓝屏自动重启怎么定位原因？", cat:"终端故障", sol:"1) 记录蓝屏错误代码；2) 检查内存条是否松动并做内存检测；3) 更新或回滚显卡/主板驱动；4) 清理灰尘排查过热；5) 必要时重装系统或报修。"},
+  {q:"邮箱收不到外部邮件该如何排查？", cat:"邮件服务", sol:"1) 检查垃圾邮件/隔离区；2) 确认邮箱容量未满；3) 检查收件规则与黑名单；4) 让对方确认退信提示；5) 仍异常联系运维查收件日志。"}
+];
+
+/* ===================== 教学版向量：中文 bigram TF + L2 归一化 ===================== */
+function clean(s){ return (s||"").replace(/[\s，。？?、,.!！；;：:（）()【】\[\]"'`]/g,""); }
+function bigrams(s){ s=clean(s); let g=[]; if(s.length<=1) return s?[s]:[]; for(let i=0;i<s.length-1;i++) g.push(s.slice(i,i+2)); return g; }
+let VOCAB=[], VIDX={};
+function buildVocab(){
+  VOCAB=[]; VIDX={};
+  let set=new Set();
+  KB.forEach(e=>bigrams(e.q).forEach(b=>set.add(b)));
+  set.forEach(b=>{VIDX[b]=VOCAB.length; VOCAB.push(b);});
+}
+function vecOf(text){
+  let v=new Array(VOCAB.length).fill(0);
+  bigrams(text).forEach(b=>{ if(b in VIDX) v[VIDX[b]] += 1; });
+  let n=Math.hypot(...v)||1; return v.map(x=>x/n);
+}
+function dot(a,b){ let s=0; for(let i=0;i<a.length;i++) s+=a[i]*b[i]; return s; }
+/* 量化（概念展示） */
+const EPS=0.02;
+function quantKey(v){ return v.map(x=>Math.round(x/EPS)).join(","); }
+
+/* 把任意向量投影到 N 个桶做热力图展示 */
+function project(text,N){
+  let buckets=new Array(N).fill(0);
+  let gs=bigrams(text);
+  gs.forEach((b,i)=>{ let h=0; for(let c of b) h=(h*31+c.charCodeAt(0))>>>0; let s=(i%2?1:-1); buckets[h%N]+=s*1; });
+  let mx=Math.max(1,...buckets.map(Math.abs));
+  return buckets.map(x=>x/mx);
+}
+
+/* ===================== 检索（镜像 retriever.search 的两阶段逻辑） ===================== */
+function buildAnchors(){
+  let map={};
+  KB.forEach((e,i)=>{
+    e.vec=vecOf(e.q);
+    let k=quantKey(e.vec);
+    if(!map[k]) map[k]={key:k.slice(0,8)||"·", members:[], vecs:[]};
+    map[k].members.push(i); map[k].vecs.push(e.vec);
+  });
+  // anchor_vec = 成员均值再归一化
+  let anchors=Object.values(map).map((a,idx)=>{
+    let dim=a.vecs[0].length, m=new Array(dim).fill(0);
+    a.vecs.forEach(v=>v.forEach((x,j)=>m[j]+=x));
+    m=m.map(x=>x/a.vecs.length); let n=Math.hypot(...m)||1; m=m.map(x=>x/n);
+    return {key:"A"+String(idx+1).padStart(2,"0"), avec:m, members:a.members};
+  });
+  return anchors;
+}
+function retrieve(query){
+  let qv=vecOf(query);
+  let anchors=buildAnchors();
+  anchors.forEach(a=>a.score=dot(qv,a.avec));
+  anchors.sort((x,y)=>y.score-x.score);
+  let topAnchors=anchors.slice(0,8);                 // RAG_ANCHOR_TOP_K
+  let candIdx=[]; topAnchors.forEach(a=>a.members.forEach(m=>candIdx.push(m)));
+  candIdx=[...new Set(candIdx)];
+  let scored=candIdx.map(i=>({i, e:KB[i], score:dot(qv,KB[i].vec)}));
+  scored.sort((a,b)=>b.score-a.score);
+  return {qv, anchors, topAnchors, scored};
+}
+
+/* ===================== 动画编排 ===================== */
+const THRESH=0.40, TOPK=3;
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const stages=["s1","s2","s3","s4"];
+let SP=1; const SPMAP={0:[1600,"慢"],1:[850,"正常"],2:[300,"快"]};
+function wait(base){ return new Promise(r=>setTimeout(r, base*(SP===0?1.9:SP===2?0.45:1))); }
+
+let lastRun=null;          // {query, result, hit}
+let stepMode=false, stepQueue=[], stepIdx=0;
+
+function resetUI(){
+  stages.forEach(s=>{ let el=$("#"+s); el.classList.remove("active","done"); });
+  $("#heatQ").innerHTML=""; $("#anchorList").innerHTML=""; $("#rankList").innerHTML="";
+  $("#resultBody").innerHTML=""; $("#loop").classList.remove("show");
+  $("#qshow").textContent="…";
+}
+
+function renderHeat(container,text){
+  let N=72, vals=project(text,N);
+  container.innerHTML="";
+  vals.forEach((x,i)=>{
+    let c=document.createElement("div"); c.className="cell";
+    let a=Math.min(1,Math.abs(x));
+    let col = x>=0 ? `rgba(255,103,0,${.12+a*.88})` : `rgba(26,115,232,${.12+a*.88})`;
+    if(a<.06) col="#15151a";
+    c.style.background=col; c.style.transitionDelay=(i*6)+"ms";
+    container.appendChild(c);
+    requestAnimationFrame(()=>{ c.classList.add("pop"); });
+  });
+}
+
+function renderAnchors(res){
+  let list=$("#anchorList"); list.innerHTML="";
+  res.anchors.forEach((a,idx)=>{
+    let inTop=res.topAnchors.includes(a);
+    let names=a.members.map(m=>KB[m].q).join(" / ");
+    let row=document.createElement("div");
+    row.className="anchor"+(inTop?" top":" dim");
+    row.innerHTML=`<span class="akey">${a.key}</span>
+      <span class="amem">${names}</span>
+      <span class="asc">${a.score.toFixed(3)}</span>
+      ${inTop?'<span class="badge">候选</span>':''}`;
+    row.style.transitionDelay=(idx*60)+"ms";
+    list.appendChild(row);
+  });
+}
+
+function renderRank(res){
+  let list=$("#rankList"); list.innerHTML="";
+  let shown=res.scored.slice(0,6);
+  shown.forEach((s,idx)=>{
+    let isTop = idx<TOPK && s.score>=THRESH;
+    let below = s.score<THRESH;
+    let row=document.createElement("div");
+    row.className="row"+(isTop?" hit":below?" below":"");
+    row.innerHTML=`<div class="top">
+        <span class="qq">${s.e.q}</span>
+        <span class="cat">${s.e.cat}</span>
+        <span class="scv">${s.score.toFixed(3)}</span>
+      </div>
+      <div class="bar"><i></i></div>`;
+    list.appendChild(row);
+    setTimeout(()=>{ row.classList.add("show");
+      row.querySelector("i").style.width=Math.min(100,Math.max(3,s.score*100))+"%"; }, idx*120);
+  });
+}
+
+function renderResult(res, query){
+  let body=$("#resultBody"); body.innerHTML="";
+  let best=res.scored[0];
+  let hit = best && best.score>=THRESH;
+  lastRun={query,res,hit};
+  if(hit){
+    let v=document.createElement("div"); v.className="verdict ok pop";
+    v.innerHTML=`<h3>✓ 命中知识库（score ${best.score.toFixed(3)} ≥ 0.40）</h3>
+      <p class="muted" style="margin:.2em 0 .6em">检索到最相关条目：<b style="color:#fff">${best.e.q}</b>　·　
+      把 Top-${TOPK} 条目作为上下文交给 DeepSeek，低温度(0.1)生成专业回答（无 API Key 时兜底返回原文方案）。</p>
+      <div class="ans"><span id="ans"></span><span class="caret typing"></span></div>`;
+    body.appendChild(v);
+    typeText($("#ans"), best.e.sol, $(".caret"));
+    $("#loop").classList.remove("show");
+  }else{
+    let scoreTxt = best? best.score.toFixed(3):"—";
+    let v=document.createElement("div"); v.className="verdict no pop";
+    v.innerHTML=`<h3>✗ 未命中（最高 score ${scoreTxt} &lt; 0.40）</h3>
+      <p class="muted" style="margin:.2em 0 0">知识库中没有足够相似的条目。系统不会乱答，而是进入工单流程——
+      <b style="color:#fff">需用户确认后</b>才创建工单（绝不静默建单）。</p>
+      <div class="ticket"><span class="tno">${ticketNo()}</span>
+        <span>已为该问题生成待确认工单　·　source = <code>ai_auto</code>　·　status = <code>pending</code></span>
+      </div>`;
+    body.appendChild(v);
+    setTimeout(()=>$("#loop").classList.add("show"), 500);
+  }
+}
+
+function ticketNo(){
+  let d=new Date(), p=`T-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}-`;
+  return p+String(Math.floor(Math.random()*900)+100);
+}
+function typeText(el, text, caret){
+  let i=0; el.textContent="";
+  let timer=setInterval(()=>{
+    el.textContent=text.slice(0,i++);
+    if(i>text.length){ clearInterval(timer); if(caret) caret.classList.remove("typing"); }
+  }, SP===0?22:SP===2?5:11);
+}
+
+/* 激活某个 stage */
+function activate(id){
+  let el=$("#"+id); stages.forEach(s=>{ if(s!==id) $("#"+s).classList.remove("active"); });
+  el.classList.add("active");
+}
+function markDone(id){ $("#"+id).classList.add("done"); $("#"+id).classList.remove("active"); }
+
+/* 整套自动播放 */
+async function play(query){
+  resetUI();
+  let res=retrieve(query);
+  // S1
+  $("#qshow").textContent=query; activate("s1"); renderHeat($("#heatQ"),query);
+  await wait(1300); markDone("s1");
+  // S2
+  activate("s2"); renderAnchors(res);
+  await wait(1500); markDone("s2");
+  // S3
+  activate("s3"); renderRank(res);
+  await wait(1500); markDone("s3");
+  // S4
+  activate("s4"); renderResult(res,query);
+  markDone("s4");
+}
+
+/* 单步模式 */
+function buildSteps(query){
+  let res=retrieve(query);
+  return [
+    ()=>{ resetUI(); $("#qshow").textContent=query; activate("s1"); renderHeat($("#heatQ"),query); },
+    ()=>{ markDone("s1"); activate("s2"); renderAnchors(res); },
+    ()=>{ markDone("s2"); activate("s3"); renderRank(res); },
+    ()=>{ markDone("s3"); activate("s4"); renderResult(res,query); markDone("s4"); }
+  ];
+}
+
+/* ===================== 事件 ===================== */
+function curQuery(){ return ($("#q").value||"").trim(); }
+function ensureQuery(){ let q=curQuery(); if(!q){ $("#q").focus(); $("#q").style.borderColor="var(--red)"; setTimeout(()=>$("#q").style.borderColor="",600); } return q; }
+
+$("#run").onclick=async ()=>{
+  let q=ensureQuery(); if(!q) return;
+  stepMode=false; $("#run").disabled=true; $("#step").disabled=true;
+  await play(q);
+  $("#run").disabled=false; $("#step").disabled=false;
+};
+$("#step").onclick=()=>{
+  let q=curQuery();
+  if(!stepMode || stepIdx>=stepQueue.length){
+    q=ensureQuery(); if(!q) return;
+    stepQueue=buildSteps(q); stepIdx=0; stepMode=true;
+  }
+  stepQueue[stepIdx++]();
+  $("#step").textContent = stepIdx>=stepQueue.length ? "完成 ✓ 再点重来" : `单步 ▷ (${stepIdx}/${stepQueue.length})`;
+  if(stepIdx>=stepQueue.length){ stepMode=false; setTimeout(()=>$("#step").textContent="单步 ▷",1500); }
+};
+$("#reset").onclick=()=>{ resetUI(); stepMode=false; $("#step").textContent="单步 ▷"; };
+
+$("#learn").onclick=async ()=>{
+  if(!lastRun) return;
+  // 把上次未命中的问题写回知识库
+  KB.push({q:lastRun.query, cat:"工单回写", sol:`【自学习】该问题已由运维处理并回写知识库：${lastRun.query} —— 后续遇到将直接命中。（真实系统由 ingest_kb_entry() 生成 512 维向量并建立量化锚点）`});
+  buildVocab();
+  $("#learn").textContent="✓ 已写入，正在重试…"; $("#learn").disabled=true;
+  await new Promise(r=>setTimeout(r,500));
+  await play(lastRun.query);
+  $("#learn").textContent="✓ 解决工单并回写知识库，然后重试"; $("#learn").disabled=false;
+};
+
+$("#speed").oninput=e=>{ SP=+e.target.value; $("#speedlbl").textContent=SPMAP[SP][1]; };
+
+$("#q").addEventListener("keydown",e=>{ if(e.key==="Enter") $("#run").click(); });
+
+/* 示例 chips */
+const SAMPLES=[
+  {t:"VPN 连不上怎么办？", hit:true},
+  {t:"忘记密码了怎么重置？", hit:true},
+  {t:"打印机一直排队打不出来", hit:true},
+  {t:"账号被冻结了如何解冻", hit:true},
+  {t:"怎么申请数据库管理员权限", hit:true},
+  {t:"会议室投影仪连不上笔记本", hit:false},
+  {t:"公司食堂几点开门", hit:false},
+  {t:"如何申请年假报销差旅费", hit:false}
+];
+function renderChips(){
+  let box=$("#chips"); box.innerHTML="";
+  SAMPLES.forEach(s=>{
+    let c=document.createElement("div");
+    c.className="chip "+(s.hit?"hit":"miss"); c.textContent=s.t;
+    c.onclick=()=>{ $("#q").value=s.t; $("#run").click(); };
+    box.appendChild(c);
+  });
+}
+
+/* init */
+buildVocab(); renderChips();
+</script>
+</body>
+</html>
