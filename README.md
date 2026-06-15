@@ -99,14 +99,14 @@ OpsWarden 的核心功能三条线：
 
 ## 演示与交互可视化
 
-`presentation/` 目录提供一套用于快速理解本项目的演示材料，**直接用浏览器打开 HTML 即可**（纯前端、零依赖、可离线）：
+`presentation/` 目录提供一套用于答辩与快速理解本项目的演示材料，**直接用浏览器打开 HTML 即可**（纯前端、零依赖、可离线；`rag-math.html` 的公式渲染需联网加载 MathJax CDN）：
 
 | 文件                                  | 用途                                                                             |
 | ----------------------------------- | ------------------------------------------------------------------------------ |
-| [`presentation/rag-space.html`](presentation/rag-space.html)       | **RAG 向量空间几何交互可视化** —— 直观展示向量如何分布在单位超球面、量化网格如何分桶建锚点，以及「整理数据」「检索」两步在空间中如何操作；可拖拽查询向量看 L1 命中网格、L2 精排与命中/未命中 |
-| [`presentation/rag-interactive.html`](presentation/rag-interactive.html) | **RAG 底层原理交互演示** —— 分步讲解 embedding / 量化 / 检索 / 生成全流程                            |
+| [`presentation/rag-interactive.html`](presentation/rag-interactive.html) | **RAG 底层原理交互演示** —— 输入运维问题，实时演示「向量化 → 量化锚点粗筛 → 全精度精排 → 阈值判定 → 命中生成 / 未命中建单」全流程；相似度由浏览器实时计算，支持单步讲解与「回写知识库后重试」的自学习闭环 |
+| [`presentation/rag-math.html`](presentation/rag-math.html) | **RAG 数学求解原理解读** —— 用 MathJax 渲染公式，分 6 步讲清 embedding（L2 归一化 / 非对称编码）、联合向量、余弦=点积、两阶段检索（量化 + 锚点路由 + 精排）、阈值判定、条件生成（温度 softmax）的数学本质，并给出端到端求解链与自学习闭环 |
 
-> 想最快了解系统原理？先打开 **`presentation/rag-space.html`**，切换「向量空间 / 整理数据 / 检索」三步并拖动查询向量，几分钟即可建立直觉。
+> 想最快建立直觉？先打开 **`presentation/rag-interactive.html`** 跑几条示例问题（绿点=知识库已有 / 红点=未覆盖），再看 **`presentation/rag-math.html`** 对照公式理解每一步背后的数学。
 
 ***
 
@@ -437,6 +437,10 @@ OpsWarden/
 │   ├── canva.png                # 系统流程图（可替换为高分辨率版本）
 │   ├── API_TESTING.md           # API 测试文档
 │   └── backend.md               # 后端设计文档
+├── presentation/                # 答辩演示与可视化（纯前端、可离线）
+│   ├── index.html               # 答辩主稿 slides（reveal.js）
+│   ├── rag-interactive.html     # RAG 底层原理交互演示（实时算相似度）
+│   └── rag-math.html            # RAG 数学求解原理解读（MathJax 公式）
 ├── init.sql                     # 数据库初始化脚本（PostgreSQL + pgvector）
 ├── requirements.txt             # Python 依赖
 ├── docker-compose.yml           # Docker 编排（PostgreSQL + pgvector）
