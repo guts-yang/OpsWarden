@@ -7,16 +7,16 @@
 <style>
   :root{
     --orange:#ff6700; --orange-soft:#ff8a3d; --blue:#1a73e8; --green:#34a853;
-    --bg:#0c0c0f; --bg2:#15151a; --bg3:#1c1c23; --text:#f5f5f7; --dim:#9aa0aa;
-    --line:#2a2a33; --red:#e0533d; --purple:#9b6dff;
+    --bg:#f6f7f9; --bg2:#ffffff; --bg3:#f1f2f4; --text:#1a1a1f; --dim:#6b7280;
+    --line:#e5e7eb; --red:#e0533d; --purple:#9b6dff;
     --r:14px;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
     font-family:"PingFang SC","Microsoft YaHei","Inter",system-ui,sans-serif;}
-  body{background:radial-gradient(1100px 650px at 85% -8%,#241307 0%,var(--bg) 55%);min-height:100vh;}
-  a{color:var(--orange-soft)}
-  code{font-family:"SF Mono",Consolas,Monaco,monospace;background:#000;color:var(--orange-soft);
+  body{background:radial-gradient(1100px 650px at 85% -8%,#fff3e9 0%,var(--bg) 55%);min-height:100vh;}
+  a{color:var(--orange)}
+  code{font-family:"SF Mono",Consolas,Monaco,monospace;background:#f1f2f4;color:var(--orange);
     padding:1px 6px;border-radius:6px;font-size:.86em;border:1px solid var(--line)}
 
   .wrap{max-width:1240px;margin:0 auto;padding:28px 28px 80px}
@@ -43,7 +43,7 @@
   .chip.hit{border-color:#2c4a33}.chip.hit::before{content:"● ";color:var(--green)}
   .chip.miss{border-color:#4a3030}.chip.miss::before{content:"● ";color:var(--red)}
   .inputrow{display:flex;gap:10px;flex-wrap:wrap}
-  .inputrow input{flex:1;min-width:260px;background:#0a0a0d;border:1px solid var(--line);color:var(--text);
+  .inputrow input{flex:1;min-width:260px;background:#ffffff;border:1px solid var(--line);color:var(--text);
     border-radius:10px;padding:12px 14px;font-size:14px;outline:none}
   .inputrow input:focus{border-color:var(--orange)}
   .btn{cursor:pointer;border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:800;transition:.15s;white-space:nowrap}
@@ -61,7 +61,7 @@
     opacity:.4;transition:opacity .35s, border-color .35s, box-shadow .35s;position:relative}
   .stage.active{opacity:1;border-color:var(--orange);box-shadow:0 0 0 1px var(--orange) inset,0 10px 40px -20px var(--orange)}
   .stage.done{opacity:1}
-  .stage .sh{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+  .stage .sh{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(0,0,0,.02),transparent)}
   .stage .no{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;
     font-weight:900;font-size:14px;background:var(--bg3);border:1px solid var(--line);color:var(--dim);flex:0 0 auto}
   .stage.active .no,.stage.done .no{background:var(--orange);color:#1a0d02;border-color:var(--orange)}
@@ -80,13 +80,13 @@
   .kv b{color:var(--text)}
 
   /* query prefix box */
-  .qbox{background:#0a0a0d;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.6}
+  .qbox{background:#f8f9fa;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.6}
   .qbox .pre{color:var(--purple);font-weight:700}
   .qbox .usr{color:var(--orange-soft);font-weight:700}
 
   /* vector heatmap */
   .heat{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:6px}
-  .heat .cell{aspect-ratio:1;border-radius:3px;background:#15151a;transition:background .3s, transform .3s}
+  .heat .cell{aspect-ratio:1;border-radius:3px;background:#eceef1;transition:background .3s, transform .3s}
   .veclbl{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-bottom:6px}
 
   /* anchors */
@@ -108,10 +108,10 @@
   .row.below{border-color:var(--line);opacity:.45}
   .row .top{display:flex;align-items:center;gap:10px;margin-bottom:7px}
   .row .qq{flex:1;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .row .cat{font-size:10.5px;color:var(--dim);background:#000;border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+  .row .cat{font-size:10.5px;color:var(--dim);background:#f1f2f4;border:1px solid var(--line);border-radius:6px;padding:2px 7px}
   .row .scv{font-weight:900;font-size:14px;width:58px;text-align:right}
   .row.hit .scv{color:var(--green)}.row.below .scv{color:var(--red)}
-  .bar{height:8px;border-radius:5px;background:#0a0a0d;overflow:hidden;position:relative}
+  .bar{height:8px;border-radius:5px;background:#eceef1;overflow:hidden;position:relative}
   .bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:5px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
   .row.hit .bar i{background:linear-gradient(90deg,var(--green),#7be0a0)}
   .row.below .bar i{background:linear-gradient(90deg,#6b2c22,var(--red))}
@@ -123,12 +123,12 @@
   .verdict.ok{border-color:var(--green);background:linear-gradient(180deg,rgba(52,168,83,.10),transparent)}
   .verdict.no{border-color:var(--red);background:linear-gradient(180deg,rgba(224,83,61,.10),transparent)}
   .verdict h3{margin:0 0 8px;font-size:16px;font-weight:900}
-  .verdict.ok h3{color:#7be0a0}.verdict.no h3{color:#ff9a86}
+  .verdict.ok h3{color:#1e7e34}.verdict.no h3{color:#c0392b}
   .verdict .ans{font-size:13px;line-height:1.7;white-space:pre-wrap;color:var(--text);max-height:200px;overflow:auto}
   .typing::after{content:"▌";color:var(--orange);animation:blink 1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
 
-  .ticket{display:flex;align-items:center;gap:14px;background:#0a0a0d;border:1px dashed var(--red);
+  .ticket{display:flex;align-items:center;gap:14px;background:#fdf2ef;border:1px dashed var(--red);
     border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px}
   .ticket .tno{font-family:"SF Mono",Consolas,monospace;color:var(--red);font-weight:800;font-size:14px}
 
@@ -157,7 +157,7 @@
     <div>
       <div class="kick">RAG 底层原理 · 交互演示</div>
       <h1><span class="ow">OpsWarden</span> 检索增强生成 是怎么工作的</h1>
-      <p>输入一个运维问题，亲眼看它如何被<b style="color:#fff">向量化 → 量化锚点粗筛 → 全精度精排 → 阈值判定 → 生成答案 / 建工单</b>。
+      <p>输入一个运维问题，亲眼看它如何被<b style="color:#1a1a1f">向量化 → 量化锚点粗筛 → 全精度精排 → 阈值判定 → 生成答案 / 建工单</b>。
         下方相似度由浏览器实时计算（教学用简化向量，真实系统为 BGE 512 维）。</p>
     </div>
     <div class="specs">
@@ -203,13 +203,13 @@
           <div>
             <p class="muted" style="margin-top:0">实际送入模型编码的文本（前缀为 BGE 官方推荐写法）：</p>
             <div class="qbox"><span class="pre">为这个句子生成表示以用于检索相关文章：</span><span class="usr" id="qshow">…</span></div>
-            <p class="muted">模型把这句话压缩成一个 <b style="color:#fff">512 维、已 L2 归一化</b>的语义向量。归一化后，两个向量的点积就等于余弦相似度，计算更快。</p>
+            <p class="muted">模型把这句话压缩成一个 <b style="color:#1a1a1f">512 维、已 L2 归一化</b>的语义向量。归一化后，两个向量的点积就等于余弦相似度，计算更快。</p>
             <div class="kv">编码后向量模长 <b>‖v‖ = 1.000</b>　·　数值范围约 <b>[-0.12, 0.12]</b></div>
           </div>
           <div>
             <div class="veclbl"><span>查询向量热力图（投影展示）</span><span id="dimlbl">512-d</span></div>
             <div class="heat" id="heatQ"></div>
-            <div class="legend"><span><i style="background:var(--orange)"></i>正分量</span><span><i style="background:var(--blue)"></i>负分量</span><span><i style="background:#15151a"></i>近 0</span></div>
+            <div class="legend"><span><i style="background:var(--orange)"></i>正分量</span><span><i style="background:var(--blue)"></i>负分量</span><span><i style="background:#eceef1"></i>近 0</span></div>
           </div>
         </div>
       </div>
@@ -246,7 +246,7 @@
         <div class="code">retriever.py · search()</div>
       </div>
       <div class="body">
-        <p class="muted" style="margin-top:0">粗筛缩小范围后，对候选条目用<b style="color:#fff">未量化的原始向量</b>逐条精算余弦相似度并排序。这就是"先粗筛、再精排"——又快又准。</p>
+        <p class="muted" style="margin-top:0">粗筛缩小范围后，对候选条目用<b style="color:#1a1a1f">未量化的原始向量</b>逐条精算余弦相似度并排序。这就是"先粗筛、再精排"——又快又准。</p>
         <div class="thline"><span class="lab" id="thlab">命中阈值 0.40 ↑ 命中　↓ 视为未命中</span></div>
         <div class="rank" id="rankList"></div>
       </div>
@@ -381,7 +381,7 @@ function renderHeat(container,text){
     let c=document.createElement("div"); c.className="cell";
     let a=Math.min(1,Math.abs(x));
     let col = x>=0 ? `rgba(255,103,0,${.12+a*.88})` : `rgba(26,115,232,${.12+a*.88})`;
-    if(a<.06) col="#15151a";
+    if(a<.06) col="#eceef1";
     c.style.background=col; c.style.transitionDelay=(i*6)+"ms";
     container.appendChild(c);
     requestAnimationFrame(()=>{ c.classList.add("pop"); });
@@ -432,7 +432,7 @@ function renderResult(res, query){
   if(hit){
     let v=document.createElement("div"); v.className="verdict ok pop";
     v.innerHTML=`<h3>✓ 命中知识库（score ${best.score.toFixed(3)} ≥ 0.40）</h3>
-      <p class="muted" style="margin:.2em 0 .6em">检索到最相关条目：<b style="color:#fff">${best.e.q}</b>　·　
+      <p class="muted" style="margin:.2em 0 .6em">检索到最相关条目：<b style="color:#1a1a1f">${best.e.q}</b>　·　
       把 Top-${TOPK} 条目作为上下文交给 DeepSeek，低温度(0.1)生成专业回答（无 API Key 时兜底返回原文方案）。</p>
       <div class="ans"><span id="ans"></span><span class="caret typing"></span></div>`;
     body.appendChild(v);
@@ -443,7 +443,7 @@ function renderResult(res, query){
     let v=document.createElement("div"); v.className="verdict no pop";
     v.innerHTML=`<h3>✗ 未命中（最高 score ${scoreTxt} &lt; 0.40）</h3>
       <p class="muted" style="margin:.2em 0 0">知识库中没有足够相似的条目。系统不会乱答，而是进入工单流程——
-      <b style="color:#fff">需用户确认后</b>才创建工单（绝不静默建单）。</p>
+      <b style="color:#1a1a1f">需用户确认后</b>才创建工单（绝不静默建单）。</p>
       <div class="ticket"><span class="tno">${ticketNo()}</span>
         <span>已为该问题生成待确认工单　·　source = <code>ai_auto</code>　·　status = <code>pending</code></span>
       </div>`;
