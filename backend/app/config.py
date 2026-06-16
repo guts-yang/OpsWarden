@@ -12,10 +12,11 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
 
-    # DeepSeek LLM
-    DEEPSEEK_API_KEY: str = ""
-    DEEPSEEK_BASE_URL: str = "https://api.deepseek.com"
-    DEEPSEEK_MODEL: str = "deepseek-chat"
+    # DeepSeek LLM（本地部署，OpenAI 兼容接口；后端请求 {BASE_URL}/chat/completions）
+    # 本地服务（Ollama / vLLM / LM Studio 等）通常不校验 Key，默认填占位符即可
+    DEEPSEEK_API_KEY: str = "local"
+    DEEPSEEK_BASE_URL: str = "http://localhost:11434/v1"
+    DEEPSEEK_MODEL: str = "deepseek-r1"
     DEEPSEEK_TEMPERATURE: float = 0.1
     DEEPSEEK_MAX_TOKENS: int = 800
     DEEPSEEK_TIMEOUT: float = 30.0
