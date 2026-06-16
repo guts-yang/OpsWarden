@@ -252,7 +252,7 @@
       <div class="lbox l2">
         <div class="tag accent">L2 · 精排</div>
         <h3 class="accent" style="margin:6px 0;">kb_entries 全精度重排</h3>
-        <p style="font-size:0.6em; margin:0;">在候选条目上做全精度余弦相似度精排，取 Top-3。<strong>score ≥ 0.4</strong> 才算命中。</p>
+        <p style="font-size:0.6em; margin:0;">在候选条目上做全精度余弦相似度精排，取 Top-3。<strong>score ≥ τ（实验调优至 0.65）</strong>才算命中。</p>
       </div>
     </div>
     <p style="margin-top:0.7em; font-size:0.66em;"><strong>命中</strong> → 交给 DeepSeek 生成答案；<strong>未命中</strong> → 进入工单流程。</p>
@@ -318,6 +318,53 @@
       普通的问答机器人，答不上来就是答不上来，永远那么笨。我们的不一样——它会越用越聪明。
       看这条闭环：用户提问，RAG 没命中，系统确认后自动建工单，运维同学把问题解决，解决的时候勾一下"写入知识库"，系统就自动把这条新知识向量化、建锚点，存进知识库。
       结果是什么？同样的问题，下次再有人问，AI 自己就答出来了，根本不用再开工单。这就叫数字员工——它真的在成长，每解决一个新问题，就永久变聪明一点。这是我们整个系统的闭环，也是它区别于普通问答机器人的关键。
+    </aside>
+  </section>
+
+  <!-- 8.5 RAG 超参数调优 + 稳定性验证 A -->
+  <section>
+    <span class="star-tag a">A · 实验验证</span>
+    <h2 style="margin-bottom:0.25em;">实验为证：<span class="accent">逐参数调优 + 稳定性</span></h2>
+
+    <!-- 最终超参数（重点突出，置顶横条） -->
+    <div class="card" style="display:flex; align-items:center; justify-content:space-between; padding:9px 18px; border-color:var(--ow-orange); box-shadow:0 0 0 1px var(--ow-orange) inset; margin-bottom:12px;">
+      <span style="font-size:0.6em; font-weight:800; letter-spacing:0.06em; color:var(--ow-dim);">216 组网格 · 680 条评测 · 双轨复核　最终选定 ▶</span>
+      <span style="font-size:0.72em; font-weight:900;"><code>ε</code>=<span class="accent">0.02</span></span>
+      <span style="font-size:0.72em; font-weight:900;"><code>L1-K</code>=<span class="accent">8</span></span>
+      <span style="font-size:0.72em; font-weight:900;"><code>τ</code>=<span class="accent">0.65</span></span>
+      <span style="font-size:0.72em; font-weight:900;"><code>Top-K</code>=<span class="accent">3</span></span>
+    </div>
+
+    <!-- 四个参数各一张调优图 -->
+    <div class="grid g2" style="gap:12px;">
+      <div class="card" style="padding:10px 14px;">
+        <h3 style="margin:0 0 2px; font-size:0.92em;">① ε 量化精度 · 选定 <span class="accent">0.02</span></h3>
+        <div class="dim" style="font-size:0.48em; margin-bottom:2px;">命中 / 锚点数随 ε 恒定 → 不敏感</div>
+        <div style="position:relative; height:172px;"><canvas id="hpEps"></canvas></div>
+      </div>
+      <div class="card" style="padding:10px 14px;">
+        <h3 style="margin:0 0 2px; font-size:0.92em;">② L1-K 锚点候选 · 选定 <span class="accent">8</span></h3>
+        <div class="dim" style="font-size:0.48em; margin-bottom:2px;">困难召回到 8 进入平台期</div>
+        <div style="position:relative; height:172px;"><canvas id="hpAk"></canvas></div>
+      </div>
+      <div class="card" style="padding:10px 14px;">
+        <h3 style="margin:0 0 2px; font-size:0.92em;">③ τ 命中阈值 · 选定 <span class="accent">0.65</span></h3>
+        <div class="dim" style="font-size:0.48em; margin-bottom:2px;">命中率与误报率(FPR)最佳平衡点（v2 τ-扫描）</div>
+        <div style="position:relative; height:172px;"><canvas id="hpTau"></canvas></div>
+      </div>
+      <div class="card" style="padding:10px 14px;">
+        <h3 style="margin:0 0 2px; font-size:0.92em;">④ Top-K 精排 · 选定 <span class="accent">3</span></h3>
+        <div class="dim" style="font-size:0.48em; margin-bottom:2px;">召回早已饱和，取 3 兼顾上下文</div>
+        <div style="position:relative; height:172px;"><canvas id="hpTk"></canvas></div>
+      </div>
+    </div>
+    <aside class="notes">
+      讲完闭环，可能有老师会问：你们这些参数是拍脑袋定的吗？不是，我们是做了系统实验调出来的，这一页就是我们的"调参答卷"。最终锁定的四个参数就在顶部横条：ε=0.02、L1-K=8、τ=0.65、Top-K=3。下面四张图，是我们对每个参数单独做的扫描，逐个证明它稳。
+      图①，ε 量化精度：从 0.01 一路扫到 0.15，改写命中率和锚点数几乎一条直线——说明命中对 ε 不敏感，怎么取都稳。
+      图②，L1-K 一阶段锚点候选数：困难集召回随 L1-K 上升，到 8 就进入平台期，再大几乎没收益、只增开销，所以我们选 8——这是收益拐点，不是随便定的。
+      图③，τ 命中阈值：这是最关键的权衡，阈值越高误报率 FPR 越低、但命中率也会掉，两条线的最佳交叉点就在 0.65，既保住高命中、又把误报压下来。
+      图④，Top-K 精排返回条数：召回率在 K=1 就已经饱和，1、3、5 几乎一样，我们取 3 是为了给大模型多一点上下文。
+      四张图、四个参数，每一个的取值都有曲线支撑——这组参数经得起考验。
     </aside>
   </section>
 
@@ -594,6 +641,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
   Reveal.initialize({
     hash: true,
@@ -605,6 +653,96 @@
     margin: 0.06,
     plugins: [ RevealNotes ]
   });
+
+  // 逐参数调优图：懒加载（slide 显示后再渲染，避免 display:none 下 canvas 尺寸为 0）
+  let hpChartsBuilt = false;
+  function buildHpCharts() {
+    if (hpChartsBuilt) return;
+    var probe = document.getElementById('hpAk');
+    if (!probe || probe.offsetParent === null || typeof Chart === 'undefined') return;
+    hpChartsBuilt = true;
+    Chart.defaults.font.family = '"PingFang SC","Microsoft YaHei",system-ui,sans-serif';
+    var tick = { font: { size: 9 } };
+    var legend = { labels: { boxWidth: 12, font: { size: 10 }, padding: 8 } };
+    var base = function (xTitle, yMin, yMax) {
+      return {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        scales: {
+          y: { min: yMin, max: yMax, ticks: tick },
+          x: { title: { display: true, text: xTitle, font: { size: 9 } }, ticks: tick }
+        },
+        plugins: { legend: legend }
+      };
+    };
+
+    // ① ε 量化精度扫描（固定 L1-K=8, Top-K=3, τ=0.65）
+    new Chart(document.getElementById('hpEps'), {
+      type: 'line',
+      data: {
+        labels: ["0.01", "0.02", "0.03", "0.05", "0.08", "0.1", "0.12", "0.15"],
+        datasets: [
+          { label: 'Hit@1·改写 (%)', data: [99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5],
+            borderColor: '#1a73e8', backgroundColor: 'transparent', yAxisID: 'y', tension: 0, pointRadius: 2 },
+          { label: '锚点数', data: [400, 400, 400, 400, 400, 400, 400, 400],
+            borderColor: '#ff6700', backgroundColor: 'transparent', borderDash: [6, 4], yAxisID: 'y1', tension: 0, pointRadius: 2 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        scales: {
+          y: { position: 'left', min: 90, max: 101, ticks: tick },
+          y1: { position: 'right', min: 0, max: 500, grid: { drawOnChartArea: false }, ticks: tick },
+          x: { title: { display: true, text: 'ε（量化精度）', font: { size: 9 } }, ticks: tick }
+        },
+        plugins: { legend: legend }
+      }
+    });
+
+    // ② L1-K 锚点候选扫描（固定 ε=0.02, Top-K=3）
+    new Chart(document.getElementById('hpAk'), {
+      type: 'line',
+      data: {
+        labels: ["1", "2", "3", "4", "6", "8", "12", "16", "24"],
+        datasets: [
+          { label: 'L1 召回·困难 (%)', data: [58.8, 63.7, 66.2, 73.8, 93.8, 96.2, 97.5, 97.5, 97.5],
+            borderColor: '#e0533d', backgroundColor: 'rgba(224,83,61,.10)', tension: .3, fill: true, pointRadius: 3 },
+          { label: 'Hit@1·改写 (%)', data: [99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5],
+            borderColor: '#1a73e8', backgroundColor: 'transparent', borderDash: [6, 4], tension: 0, pointRadius: 2 }
+        ]
+      },
+      options: base('L1-K（一阶段锚点候选数）', 50, 101)
+    });
+
+    // ③ τ 命中阈值权衡（ε=0.02, L1-K=8, Top-K=3；取自 v2 τ-扫描）
+    new Chart(document.getElementById('hpTau'), {
+      type: 'line',
+      data: {
+        labels: ["0.35", "0.40", "0.45", "0.50", "0.55", "0.60", "0.65", "0.70", "0.75", "0.80", "0.85"],
+        datasets: [
+          { label: 'Hit@1·改写 (%)', data: [100, 100, 100, 100, 100, 100, 98.5, 97.5, 95.5, 84.5, 66.5],
+            borderColor: '#1a73e8', backgroundColor: 'transparent', tension: .25, pointRadius: 2 },
+          { label: '误报率 FPR (%)', data: [96.9, 81.2, 62.5, 34.4, 15.6, 9.4, 3.1, 3.1, 0, 0, 0],
+            borderColor: '#e0533d', backgroundColor: 'transparent', tension: .25, pointRadius: 2 }
+        ]
+      },
+      options: base('τ（命中阈值）', 0, 101)
+    });
+
+    // ④ Top-K 精排返回条数（ε=0.02, L1-K=8）
+    new Chart(document.getElementById('hpTk'), {
+      type: 'bar',
+      data: {
+        labels: ["1", "3", "5"],
+        datasets: [
+          { label: 'Recall@K·改写 (%)', data: [99.5, 99.5, 99.5], backgroundColor: 'rgba(52,168,83,.75)' },
+          { label: 'Hit@1·改写 (%)', data: [99.5, 99.5, 99.5], backgroundColor: 'rgba(26,115,232,.75)' }
+        ]
+      },
+      options: base('Top-K（精排返回条数）', 90, 101)
+    });
+  }
+  Reveal.on('ready', buildHpCharts);
+  Reveal.on('slidechanged', buildHpCharts);
 </script>
 </body>
 </html>
