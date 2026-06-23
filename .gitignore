@@ -1,0 +1,42 @@
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+.claude/
+.cursor/
+.vscode/
+
+# Runtime logs
+*.log
+
+# ML models (large files, use pip install instead)
+/models
+models/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Frontend build artifacts
+node_modules/
+dist/
+.cache/
+
+# ChromaDB runtime data
+backend/chroma_db/
+docs/reports/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+
+# Backup files (may contain old secrets)
+*.bak
+*.backup
+
+# Large presentation assets (GitHub 100MB limit)
+*.pptx
+presentation/*.doc

@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 async def generate_answer(question: str, context_docs: list[dict]) -> str | None:
     settings = get_settings()
-    if not settings.DEEPSEEK_API_KEY:
+    if not settings.OLLAMA_BASE_URL:
         return None
 
     context = "\n\n".join([
@@ -29,27 +29,26 @@ async def generate_answer(question: str, context_docs: list[dict]) -> str | None
     ]
 
     try:
-        async with httpx.AsyncClient(timeout=settings.DEEPSEEK_TIMEOUT) as client:
+        async with httpx.AsyncClient(timeout=settings.OLLAMA_TIMEOUT) as client:
             resp = await client.post(
-                f"{settings.DEEPSEEK_BASE_URL}/chat/completions",
-                headers={"Authorization": f"Bearer {settings.DEEPSEEK_API_KEY}"},
+                f"{settings.OLLAMA_BASE_URL}/v1/chat/completions",
                 json={
-                    "model": settings.DEEPSEEK_MODEL,
+                    "model": settings.OLLAMA_MODEL,
                     "messages": messages,
-                    "temperature": settings.DEEPSEEK_TEMPERATURE,
-                    "max_tokens": settings.DEEPSEEK_MAX_TOKENS,
+                    "temperature": settings.OLLAMA_TEMPERATURE,
+                    "max_tokens": settings.OLLAMA_MAX_TOKENS,
                 },
             )
             resp.raise_for_status()
             return resp.json()["choices"][0]["message"]["content"].strip()
     except Exception as e:
-        logger.warning(f"DeepSeek API error: {e}")
+        logger.warning(f"Ollama API error: {e}")
         return None
 
 
 async def generate_general_answer(question: str) -> str | None:
     settings = get_settings()
-    if not settings.DEEPSEEK_API_KEY:
+    if not settings.OLLAMA_BASE_URL:
         return None
 
     messages = [
@@ -65,19 +64,18 @@ async def generate_general_answer(question: str) -> str | None:
     ]
 
     try:
-        async with httpx.AsyncClient(timeout=settings.DEEPSEEK_TIMEOUT) as client:
+        async with httpx.AsyncClient(timeout=settings.OLLAMA_TIMEOUT) as client:
             resp = await client.post(
-                f"{settings.DEEPSEEK_BASE_URL}/chat/completions",
-                headers={"Authorization": f"Bearer {settings.DEEPSEEK_API_KEY}"},
+                f"{settings.OLLAMA_BASE_URL}/v1/chat/completions",
                 json={
-                    "model": settings.DEEPSEEK_MODEL,
+                    "model": settings.OLLAMA_MODEL,
                     "messages": messages,
-                    "temperature": settings.DEEPSEEK_TEMPERATURE,
-                    "max_tokens": settings.DEEPSEEK_MAX_TOKENS,
+                    "temperature": settings.OLLAMA_TEMPERATURE,
+                    "max_tokens": settings.OLLAMA_MAX_TOKENS,
                 },
             )
             resp.raise_for_status()
             return resp.json()["choices"][0]["message"]["content"].strip()
     except Exception as e:
-        logger.warning(f"DeepSeek general answer error: {e}")
+        logger.warning(f"Ollama general answer error: {e}")
         return None

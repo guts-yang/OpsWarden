@@ -39,7 +39,7 @@ def _resolve_thread_id(user: CurrentUser, raw: str | None) -> str:
     return f"user-{user.id}-{s}"
 
 
-@router.post("", summary="AI问答（RAG + DeepSeek + 工单兜底，支持 thread checkpoint）")
+@router.post("", summary="AI问答（RAG + Ollama + 工单兜底，支持 thread checkpoint）")
 async def chat(
     req: ChatRequest,
     db: Session = Depends(get_db),

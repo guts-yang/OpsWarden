@@ -153,12 +153,24 @@ def search(query: str, top_k: int | None = None, threshold: float | None = None)
             )
 
         scored: list[tuple[KBEntry, float]] = []
+        all_scores: list[float] = []
         for e in entries:
             ev = np.asarray(e.embedding, dtype=np.float64)
             en = float(np.linalg.norm(ev)) + 1e-12
             score = float(np.dot(q, ev) / (qn * en))
+            all_scores.append(score)
             if score >= threshold:
                 scored.append((e, score))
+
+        # 调试日志：输出分数分布
+        if all_scores:
+            all_scores_sorted = sorted(all_scores, reverse=True)
+            top_5_scores = all_scores_sorted[:5]
+            logger.info(
+                f"RAG search for '{query[:50]}': threshold={threshold:.2f}, "
+                f"total_entries={len(all_scores)}, passed={len(scored)}, "
+                f"top_5_scores={[round(s, 4) for s in top_5_scores]}"
+            )
 
         scored.sort(key=lambda x: -x[1])
         out = []

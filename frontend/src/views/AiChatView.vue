@@ -1,10 +1,14 @@
 <script setup>
-import { ref, nextTick, onMounted, watch, computed, onBeforeUnmount } from 'vue'
+import { ref, nextTick, onMounted, watch, computed, onBeforeUnmount, onActivated, onDeactivated } from 'vue'
 import { useRoute } from 'vue-router'
 import { chatApi } from '@/api/chat'
 import { knowledgeApi } from '@/api/knowledge'
 import { useAuthStore } from '@/stores/auth'
 import { loadChatSession, saveChatSession, resetChatSession } from '@/utils/chatSessionStorage'
+
+defineOptions({
+  name: 'AiChatView'
+})
 
 const auth = useAuthStore()
 const route = useRoute()
@@ -94,6 +98,10 @@ onMounted(async () => {
   await scrollToBottom()
 })
 
+onActivated(async () => {
+  await scrollToBottom()
+})
+
 onBeforeUnmount(() => {
   if (typeof window !== 'undefined') {
     window.removeEventListener('resize', updateIsMobile)
@@ -143,6 +151,10 @@ async function sendMessage(text, pendingAction = null) {
       pendingAction: data.pending_action,
       time: new Date(),
     })
+    if (data.thread_id && data.thread_id !== threadId.value) {
+      threadId.value = data.thread_id
+      persistSession()
+    }
   } catch (e) {
     messages.value.push({
       id: Date.now() + 1,

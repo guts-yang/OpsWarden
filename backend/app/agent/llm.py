@@ -151,7 +151,7 @@ async def decide_with_llm(
     step_count: int,
 ) -> dict[str, Any]:
     settings = get_settings()
-    if not settings.DEEPSEEK_API_KEY:
+    if not settings.OLLAMA_BASE_URL:
         return heuristic_decision(query, observations, step_count)
 
     payload = {
@@ -168,12 +168,11 @@ async def decide_with_llm(
     ]
 
     try:
-        async with httpx.AsyncClient(timeout=settings.DEEPSEEK_TIMEOUT) as client:
+        async with httpx.AsyncClient(timeout=settings.OLLAMA_TIMEOUT) as client:
             resp = await client.post(
-                f"{settings.DEEPSEEK_BASE_URL}/chat/completions",
-                headers={"Authorization": f"Bearer {settings.DEEPSEEK_API_KEY}"},
+                f"{settings.OLLAMA_BASE_URL}/v1/chat/completions",
                 json={
-                    "model": settings.DEEPSEEK_MODEL,
+                    "model": settings.OLLAMA_MODEL,
                     "messages": messages,
                     "temperature": 0.0,
                     "max_tokens": 700,

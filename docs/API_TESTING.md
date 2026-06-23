@@ -3,7 +3,7 @@
 ## 测试环境
 - 后端地址：http://localhost:8000
 - Swagger UI：http://localhost:8000/docs
-- 默认账号：`admin` / `请自行设置`
+- 默认账号：`admin` / 在 `init.sql` 中自行设置的密码
 
 ---
 

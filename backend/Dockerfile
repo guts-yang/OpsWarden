@@ -6,7 +6,7 @@ WORKDIR /app
 
 # 直接安装 Python 依赖（使用官方 PyPI，添加 trusted-host 解决 SSL 问题）
 COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org -r /app/requirements.txt
+RUN pip install --no-cache-dir -i https://mirrors.cloud.tencent.com/pypi/simple --trusted-host mirrors.cloud.tencent.com -r /app/requirements.txt
 
 COPY backend /app/backend
 

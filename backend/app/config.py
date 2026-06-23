@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings
-from functools import lru_cache
+# lru_cache removed for hot-reload support
 from pathlib import Path
 
 # Project root is two levels up from this file (backend/app/config.py)
@@ -12,18 +12,18 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
 
-    # DeepSeek LLM
-    DEEPSEEK_API_KEY: str = ""
-    DEEPSEEK_BASE_URL: str = "https://api.deepseek.com"
-    DEEPSEEK_MODEL: str = "deepseek-chat"
-    DEEPSEEK_TEMPERATURE: float = 0.1
-    DEEPSEEK_MAX_TOKENS: int = 800
-    DEEPSEEK_TIMEOUT: float = 30.0
+    # Ollama LLM (local)
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    OLLAMA_MODEL: str = "qwen2.5:1.5b"
+    OLLAMA_TEMPERATURE: float = 0.1
+    OLLAMA_MAX_TOKENS: int = 800
+    OLLAMA_TIMEOUT: float = 60.0
+    
 
     # RAG
     EMBEDDING_MODEL: str = "BAAI/bge-small-zh-v1.5"
     EMBEDDING_DEVICE: str = "cpu"
-    RAG_SCORE_THRESHOLD: float = 0.4
+    RAG_SCORE_THRESHOLD: float = 0.65
     RAG_TOP_K: int = 3
     RAG_ANCHOR_TOP_K: int = 8
     ANCHOR_QUANT_EPSILON: float = 0.02
@@ -33,6 +33,6 @@ class Settings(BaseSettings):
         extra = "ignore"
 
 
-@lru_cache()
+# @lru_cache() removed for hot-reload support
 def get_settings():
     return Settings()

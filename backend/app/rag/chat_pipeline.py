@@ -44,6 +44,8 @@ async def run_chat_pipeline(db: Session, user: CurrentUser, query: str) -> dict:
             "kb_entry_id": results[0]["id"],
             "question": results[0]["question"],
             "category": results[0]["category"],
+            "score": results[0]["score"],  # 添加分数
+            "top_3_scores": [{"question": r["question"][:50], "score": r["score"]} for r in results[:3]],  # 前3条分数
         }
 
     general = await generate_general_answer(q)

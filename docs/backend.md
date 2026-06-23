@@ -1,261 +1,261 @@
-# OpsWarden 后端 - 账号管理 & 工单系统
+# OpsWarden 后端技术说明
 
-> 成员 B 负责模块：数据库设计、账号CRUD、JWT鉴权、工单全流程
+> 面向开发者的后端模块、数据库与 API 参考。完整架构见 [TECHNICAL.md](TECHNICAL.md)。
 
 ## 技术栈
-- Python 3.10 + FastAPI
-- MySQL 8.0 + SQLAlchemy + pymysql
-- JWT认证 (python-jose + passlib/bcrypt)
-- Docker Compose
+
+| 组件 | 选型 |
+| --- | --- |
+| 语言 / 框架 | Python 3.11、FastAPI 0.115、Uvicorn 0.30 |
+| ORM | SQLAlchemy 2.0 + psycopg3 |
+| 数据库 | PostgreSQL 16 + pgvector |
+| 认证 | JWT（python-jose + passlib/bcrypt） |
+| AI 生成 | Ollama 本地 API（OpenAI 兼容 `/v1/chat/completions`） |
+| Embedding | sentence-transformers，`BAAI/bge-small-zh-v1.5`（512 维） |
+| 对话编排 | LangGraph + langgraph-checkpoint-postgres |
+
+---
 
 ## 快速启动
 
-### 1. 启动 MySQL
 ```bash
-cd 项目根目录
-docker compose up -d mysql
-```
-
-### 2. 安装依赖
-```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate          # Windows
-pip install -r requirements.txt
-```
-
-### 3. 配置环境变量
-```bash
+# 1. 环境
 cp .env.example .env
-# 编辑 .env 填入实际配置
+# 编辑 DATABASE_URL、SECRET_KEY、OLLAMA_BASE_URL 等
+
+# 2. 数据库
+createdb -U postgres opswarden
+psql -U postgres -d opswarden -f init.sql
+
+# 3. Ollama
+ollama pull qwen2.5:1.5b
+
+# 4. 依赖与启动
+pip install -r requirements.txt
+cd backend
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-### 4. 启动后端
-```bash
-uvicorn app.main:app --reload --port 8000
-```
+API 文档：<http://localhost:8000/docs>
 
-### 5. 访问API文档
-http://localhost:8000/docs
+---
+
+## 模块划分
+
+```
+backend/app/
+├── main.py              # 路由注册、启动钩子（FAQ、checkpointer、agent 表）
+├── config.py            # pydantic-settings，读取根目录 .env
+├── database.py          # Engine、SessionLocal、pgvector 扩展初始化
+├── api/
+│   ├── auth.py          # POST /api/auth/login
+│   ├── account.py       # 账号 CRUD（admin）
+│   ├── ticket.py        # 工单全流程 + 知识库回写
+│   ├── knowledge.py     # 知识库 CRUD + 按 doc 删除
+│   ├── analytics.py     # 仪表盘统计
+│   └── chat.py          # POST /api/chat（Agent + 兜底管线）
+├── agent/               # LangGraph Agent
+│   ├── graph.py         # 状态图：决策 → 工具 → 循环/结束
+│   ├── llm.py           # Ollama JSON 决策 + heuristic_decision 兜底
+│   ├── tools.py         # kb_search、ticket_*、analytics、health
+│   ├── policy.py        # 工具权限与 ticket_create 确认策略
+│   ├── prompts.py       # 系统提示词与 AVAILABLE_TOOLS
+│   ├── state.py         # AgentState 类型
+│   └── trace.py         # agent_runs / agent_tool_calls 审计
+├── rag/
+│   ├── embedder.py      # BGE 编码（query 带 instruction 前缀）
+│   ├── quantizer.py     # 网格量化 ε，生成 quant_key
+│   ├── retriever.py     # 双阶段检索、ingest_kb_entry、prune_anchor
+│   ├── llm.py           # Ollama 生成（命中 KB / 通用回复）
+│   ├── faq_loader.py    # 启动时从 Markdown 导入 FAQ
+│   └── chat_pipeline.py # Agent 不可用时的单轮 RAG 兜底
+├── middleware/
+│   ├── auth.py          # JWT 解析、require_admin / require_operator
+│   ├── exception.py     # 统一异常 → {code, message, data}
+│   └── logging.py       # 请求日志
+├── models/              # SQLAlchemy ORM
+├── schemas/             # Pydantic 请求/响应
+├── checkpointer/        # LangGraph Postgres checkpoint 连接池
+└── utils/               # security、response、employee_id
+```
 
 ---
 
 ## 数据库设计
 
+### ENUM 类型
+
+`account_role`（admin/operator/user）、`account_status`（active/frozen）、`ticket_source`、`ticket_status`、`ticket_priority`、`kb_source`
+
 ### accounts 账号表
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| id | bigint | 主键自增 |
-| employee_id | varchar(32) | 工号，唯一 |
-| username | varchar(64) | 用户名，唯一 |
-| password_hash | varchar(256) | bcrypt加密密码 |
-| name | varchar(64) | 姓名 |
-| department | varchar(128) | 部门 |
-| email | varchar(128) | 邮箱 |
-| phone | varchar(20) | 手机号 |
-| role | enum | admin/operator/user |
-| status | enum | active/frozen |
-| last_login_at | datetime | 最后登录时间 |
-| created_at | datetime | 创建时间 |
-| updated_at | datetime | 更新时间 |
 
-### tickets 工单表
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| id | bigint | 主键自增 |
-| ticket_no | varchar(32) | 工单编号 T-YYYYMMDD-NNN |
-| title | varchar(256) | 标题 |
-| description | text | 描述 |
-| source | enum | ai_auto/manual |
-| status | enum | pending/processing/resolved/closed |
-| priority | enum | low/medium/high/urgent |
-| reporter_id | bigint | 报障人ID |
-| reporter_name | varchar(64) | 报障人姓名 |
-| assignee_id | bigint | 处理人ID |
-| solution | text | 解决方案 |
-| is_written_back | tinyint | 是否回写知识库 |
-| callback_note | text | 回访备注 |
-| callback_at | datetime | 回访时间 |
-| resolved_at | datetime | 解决时间 |
-| closed_at | datetime | 关闭时间 |
-| created_at | datetime | 创建时间 |
-| updated_at | datetime | 更新时间 |
+| id | BIGINT IDENTITY | 主键 |
+| employee_id | VARCHAR(32) UNIQUE | 工号 |
+| username | VARCHAR(64) UNIQUE | 登录名 |
+| password_hash | VARCHAR(256) | bcrypt |
+| name | VARCHAR(64) | 姓名 |
+| department | VARCHAR(128) | 部门 |
+| role | account_role | 角色 |
+| status | account_status | active / frozen |
+| last_login_at | TIMESTAMPTZ | 最后登录 |
 
-### ticket_logs 工单日志表
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| id | bigint | 主键自增 |
-| ticket_id | bigint | 关联工单ID |
-| action | varchar(64) | 操作类型 |
-| operator_id | bigint | 操作人ID |
-| operator_name | varchar(64) | 操作人姓名 |
-| content | text | 操作内容 |
-| created_at | datetime | 操作时间 |
+### tickets / ticket_logs
+
+工单主表含 `ticket_no`、`source`、`status`、`priority`、`solution`、`is_written_back` 等；`ticket_logs` 记录操作审计（CASCADE 删除）。
+
+### kb_anchors（L1）
+
+| 字段 | 说明 |
+| --- | --- |
+| quant_key | 量化向量唯一键 |
+| anchor_vec | vector(512)，**IVFFlat cosine 索引** |
+
+### kb_entries（L2）
+
+| 字段 | 说明 |
+| --- | --- |
+| question / solution | 正文 |
+| doc_id / page_index | 页级索引，支持按文档精确删除 |
+| anchor_id | 外键 → kb_anchors |
+| embedding | vector(512)，**仅精排，无 ANN 索引** |
+| match_score | Q-S 联合 embedding 自检分 |
+| source | manual / ticket_writeback |
+
+### agent_runs / agent_tool_calls
+
+Agent 每次 `/api/chat` 调用写入 `agent_runs`；工具执行明细写入 `agent_tool_calls`（含 latency_ms、success）。
 
 ---
 
-## API 接口文档
+## API 接口
 
 ### 认证
-| 方法 | 路径 | 说明 | 权限 |
-| --- | --- | --- | --- |
-| POST | /api/auth/login | 用户登录，返回JWT Token | 无 |
+
+| 方法 | 路径 | 权限 |
+| --- | --- | --- |
+| POST | `/api/auth/login` | 无 |
+
+请求体：`{ "username": "...", "password": "..." }`  
+响应 `data` 含 `access_token`、`token_type`、`user`。
 
 ### 账号管理
-| 方法 | 路径 | 说明 | 权限 |
-| --- | --- | --- | --- |
-| POST | /api/accounts | 创建运维账号 | admin |
-| GET | /api/accounts | 查询账号列表（支持筛选+分页） | login |
-| GET | /api/accounts/{id} | 查询账号详情 | login |
-| PUT | /api/accounts/{id} | 修改账号信息 | admin |
-| PATCH | /api/accounts/{id}/freeze | 冻结账号 | admin |
-| PATCH | /api/accounts/{id}/unfreeze | 解冻账号 | admin |
-| PATCH | /api/accounts/{id}/reset-password | 重置密码 | admin |
 
-### 工单管理
-| 方法 | 路径 | 说明 | 权限 |
-| --- | --- | --- | --- |
-| POST | /api/tickets/auto | AI自动生成工单 | 无（内部调用） |
-| GET | /api/tickets | 查询工单列表（支持筛选+分页） | login |
-| GET | /api/tickets/{id} | 查询工单详情 | login |
-| GET | /api/tickets/{id}/logs | 查询操作日志 | login |
-| PUT | /api/tickets/{id} | 更新工单 | operator |
-| POST | /api/tickets/{id}/resolve | 解决工单 | operator |
-| POST | /api/tickets/{id}/callback | 回访工单 | operator |
-| POST | /api/tickets/{id}/close | 关闭工单 | operator |
+| 方法 | 路径 | 权限 |
+| --- | --- | --- |
+| GET | `/api/accounts/me` | Bearer |
+| GET/POST/PUT | `/api/accounts` … | admin |
+| PATCH | `/api/accounts/{id}/freeze` 等 | admin |
 
-### 系统
+### 工单
+
+| 方法 | 路径 | 权限 |
+| --- | --- | --- |
+| POST | `/api/tickets/auto` | 无（内部/RAG 降级） |
+| POST | `/api/tickets/manual` | Bearer |
+| GET/PUT | `/api/tickets` … | Bearer |
+| POST | `/api/tickets/{id}/resolve` | operator+ |
+| POST | `/api/tickets/{id}/close` | operator+ |
+
+解决工单时可勾选写回知识库：自动 `ingest_kb_entry` 并向量化。
+
+### 知识库
+
 | 方法 | 路径 | 说明 |
 | --- | --- | --- |
-| GET | / | 系统信息 |
-| GET | /health | 健康检查（含数据库连通性） |
+| GET | `/api/knowledge/stats` | 统计 |
+| GET | `/api/knowledge/quick-prompts` | 快捷问题 |
+| CRUD | `/api/knowledge` | 增删改查 |
+| DELETE | `/api/knowledge/by-doc` | 按 doc_id（+ page_index）批量删 |
+
+### AI 问答
+
+| 方法 | 路径 | 说明 |
+| --- | --- | --- |
+| POST | `/api/chat` | 见 [TECHNICAL.md §4](TECHNICAL.md#4-ai-问答链路) |
+
+请求体：
+
+```json
+{
+  "query": "VPN 连不上怎么办？",
+  "thread_id": "optional-session-uuid",
+  "pending_action": null
+}
+```
+
+确认建单时，客户端将上一轮返回的 `pending_action` 原样带回，用户回复「确认」类关键词后执行。
+
+### 统计
+
+| 方法 | 路径 | 权限 |
+| --- | --- | --- |
+| GET | `/api/analytics/summary` | Bearer |
 
 ---
 
 ## 认证说明
-### 获取Token
-调用 `POST /api/auth/login` 获取 `access_token`
 
-### 使用Token
-后续请求在 Header 中携带：
-```
-Authorization: Bearer <token>
-```
+- Header：`Authorization: Bearer <access_token>`
+- Token 载荷：`sub`（user id）、`username`、`role`
+- 有效期：`ACCESS_TOKEN_EXPIRE_MINUTES`（默认 480 分钟）
+- 冻结账号：`get_current_user` 返回 401
 
-### Token有效期
-8 小时
+### 权限矩阵
 
-### 权限级别
-- 无：不需要登录（如登录接口、工单自动生成）
-- login：登录即可访问
-- operator：需要 admin 或 operator 角色
-- admin：仅 admin 角色
+| 能力 | user | operator | admin |
+| --- | --- | --- | --- |
+| AI 问答 | ✓ | ✓ | ✓ |
+| 工单/知识库/统计 | | ✓ | ✓ |
+| 账号管理 | | | ✓ |
+| Agent 工具 ticket_search / analytics | | ✓ | ✓ |
 
 ---
 
 ## 统一响应格式
-### 成功响应
+
 ```json
-{
-  "code": 200,
-  "message": "success",
-  "data": {
-    "id": 1,
-    "username": "admin"
-  }
-}
+{ "code": 200, "message": "success", "data": { } }
 ```
 
-### 错误响应
-```json
-{
-  "code": 404,
-  "message": "账号不存在",
-  "data": null
-}
-```
-
-### 错误码说明
-| 状态码 | 说明 |
-|--------|------|
+| code | 含义 |
+| --- | --- |
 | 200 | 成功 |
-| 400 | 请求参数错误 |
-| 401 | 未认证或Token已过期 |
+| 400 | 参数错误 |
+| 401 | 未认证 / Token 无效 |
 | 403 | 权限不足 |
 | 404 | 资源不存在 |
-| 409 | 数据冲突 |
-| 422 | 请求数据格式错误 |
-| 500 | 服务器内部错误 |
+| 422 | 请求体校验失败 |
+| 500 | 服务器错误 |
 
 ---
 
-## 跨模块接口说明
-### 供 RAG 模块（成员A）调用
-当 RAG 知识库无法回答用户问题时，调用以下接口自动创建工单：
-```
-POST /api/tickets/auto
-Content-Type: application/json
+## 跨模块调用约定
 
-{
-  "title": "用户的问题",
-  "description": "问题详细描述",
-  "reporter_name": "用户姓名",
-  "source": "ai_auto"
-}
-```
+### RAG → 工单
 
-### 供前端（成员C）调用
-所有接口均可通过 http://localhost:8000/docs 查看 Swagger 文档，支持在线测试。前端使用 axios 调用时需在请求头携带 JWT Token。
+- **推荐路径**：Agent `ticket_create` 工具 + 用户确认（`pending_action`）
+- **兜底路径**：`run_chat_pipeline` 返回 `needs_confirmation: true`，不自动建单
+- **遗留接口**：`POST /api/tickets/auto`（无认证，供内部或脚本调用）
+
+### 工单 → 知识库
+
+`POST /api/tickets/{id}/resolve` 且 `write_to_kb=true` 时，创建 `kb_entries` 并调用 `ingest_kb_entry`。
 
 ---
 
-## 默认账号
-- 用户名：admin
-- 密码：请自行设置
-- 角色：管理员
+## 默认管理员
 
----
+- 用户名：`admin`
+- 密码：在 `init.sql` 中替换 bcrypt hash 后生效
 
-## 项目结构
-```
-backend/
-├── app/
-│   ├── main.py              # FastAPI 入口，路由注册，中间件注册
-│   ├── config.py            # Pydantic Settings 配置管理
-│   ├── database.py          # SQLAlchemy 连接池配置
-│   ├── models/              # ORM 模型
-│   │   ├── account.py       # 账号模型
-│   │   └── ticket.py        # 工单+日志模型
-│   ├── schemas/             # Pydantic 请求/响应格式
-│   │   ├── account.py       # 账号相关 Schema
-│   │   └── ticket.py        # 工单相关 Schema
-│   ├── api/                 # 接口路由
-│   │   ├── auth.py          # 登录接口
-│   │   ├── account.py       # 账号 CRUD
-│   │   └── ticket.py        # 工单全流程
-│   ├── middleware/          # 中间件
-│   │   ├── auth.py          # JWT 鉴权 + 权限控制
-│   │   ├── exception.py     # 全局异常处理
-│   │   └── logging.py       # 请求日志中间件
-│   └── utils/               # 工具函数
-│       ├── security.py      # 密码加密 + JWT 生成
-│       └── response.py      # 统一响应格式
-├── requirements.txt         # Python 依赖
-├── .env                     # 环境变量（不上传Git）
-├── .env.example             # 环境变量模板
-├── app.log                  # 运行日志（自动生成）
-└── .gitignore
+```bash
+python -c "from passlib.context import CryptContext; print(CryptContext(schemes=['bcrypt']).hash('你的密码'))"
 ```
 
 ---
 
-## 开发日志
-所有 API 请求会自动记录到：
-- 控制台输出：实时查看请求日志
-- app.log 文件：持久化保存，包含时间戳、请求方法、路径、状态码、耗时、IP
+## 日志
 
-### 日志格式示例
-```
-2026-03-28 16:01:23 [INFO] GET /api/accounts | query= | status=200 | 12.34ms | ip=127.0.0.1
-2026-03-28 16:01:30 [WARNING] GET /api/accounts/9999 | query= | status=404 | 5.67ms | ip=127.0.0.1
-```
+`RequestLoggingMiddleware` 记录每条请求的方法、路径、状态码、耗时、客户端 IP。
