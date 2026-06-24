@@ -292,10 +292,10 @@ OpsWarden/
 
 | 成员             | 负责模块                   | 主要文件                                                    |
 | -------------- | ---------------------- | ------------------------------------------------------- |
-| **廖晨扬**        | AI 核心 / RAG / Qwen2.5  | `backend/app/rag/`                                      |
+| **廖晨扬**        | AI 核心 / RAG / 敏捷开发统筹  | `backend/app/rag/`                                      |
 | **吴雨彤**        | 后端业务 / 账号 / 工单 / 数据库   | `backend/app/api/` · `backend/app/models/` · `init.sql` |
 | **廖晨扬+Stitch** | 前端全部页面                 | `frontend/`                                             |
-| **丁其彬**        | Docker / 云服务器 / 申请域名   | `docker-compose.yml`                                    |
+| **丁其彬**        | Docker / 云服务器 / Qwen2.5:1.5b | `backend/app/rag/` · `backend/app/models/` · `init.sql` | `docker-compose.yml`                                    |
 
 ***
 
