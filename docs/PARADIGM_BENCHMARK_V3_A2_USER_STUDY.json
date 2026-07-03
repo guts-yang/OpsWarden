@@ -1,0 +1,2898 @@
+{
+  "version": "v3_a2",
+  "generated_at": "2026-06-25 13:57:57",
+  "n_queries": 30,
+  "n_paradigms": 5,
+  "queries": [
+    {
+      "query_id": 0,
+      "query_text": "账号被冻结后如何自助解冻或申请人工处理？",
+      "ground_truth_page_index": 1,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 1,
+            "score": 0.908,
+            "question": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #3 (score=0.90, type=main)\n  - 桶 #2 (score=0.89, type=main)\n  - 桶 #0 (score=0.89, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 3,
+                "score": 0.9022729973607132,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 2,
+                "score": 0.8941816304220355,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 0,
+                "score": 0.8891240011863559,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 1,
+                "score": 0.8831085948306916,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 19,
+                "score": 0.756814704546022,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 16,
+                "score": 0.7428578329234963,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 17,
+                "score": 0.7416871098612945,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 18,
+                "score": 0.7412609559985707,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 1,
+            "score": 0.908,
+            "question": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.908\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 1,
+            "score": 0.908,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.908\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 1,
+            "score": 0.908,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.908\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 7.417,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 1,
+      "query_text": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+      "ground_truth_page_index": 1,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 1,
+            "score": 0.912,
+            "question": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #3 (score=0.91, type=main)\n  - 桶 #2 (score=0.89, type=main)\n  - 桶 #0 (score=0.89, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 3,
+                "score": 0.9062854827306968,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 2,
+                "score": 0.894073887456183,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 0,
+                "score": 0.8886900864763436,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 1,
+                "score": 0.8822946471677666,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 19,
+                "score": 0.7603492852321012,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 394,
+                "score": 0.7388662887204742,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 393,
+                "score": 0.7370609163376092,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 18,
+                "score": 0.7367692797324474,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 1,
+            "score": 0.912,
+            "question": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.912\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 1,
+            "score": 0.912,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.912\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 1,
+            "score": 0.912,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.912\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 8.168,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 2,
+      "query_text": "账号被冻结后如何自助解冻或申请人要咋处理？",
+      "ground_truth_page_index": 1,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 1,
+            "score": 0.896,
+            "question": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #3 (score=0.89, type=main)\n  - 桶 #0 (score=0.88, type=main)\n  - 桶 #2 (score=0.88, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 3,
+                "score": 0.8892174035182623,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 0,
+                "score": 0.881875662990331,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 2,
+                "score": 0.8817833871819181,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 1,
+                "score": 0.8710522580588171,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 19,
+                "score": 0.7420404885443241,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 18,
+                "score": 0.7214791129338355,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 17,
+                "score": 0.7194654471222279,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 16,
+                "score": 0.7188671253541221,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 1,
+            "score": 0.896,
+            "question": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.896\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 1,
+            "score": 0.896,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.896\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 1,
+            "score": 0.896,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.896\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 3,
+      "query_text": "账号被冻结后如何自助解冻或申请人工处理咋整",
+      "ground_truth_page_index": 1,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 1,
+            "score": 0.901,
+            "question": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #3 (score=0.89, type=main)\n  - 桶 #2 (score=0.88, type=main)\n  - 桶 #0 (score=0.88, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 3,
+                "score": 0.8937649191921635,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 2,
+                "score": 0.8841434155039157,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 0,
+                "score": 0.8810582822858739,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 1,
+                "score": 0.8748947916391281,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 19,
+                "score": 0.741541308994432,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 394,
+                "score": 0.7273969898749241,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 17,
+                "score": 0.7256396816084693,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 393,
+                "score": 0.7248481647218267,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 1,
+            "score": 0.901,
+            "question": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.901\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 1,
+            "score": 0.901,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.901\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 1,
+            "score": 0.901,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.901\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 4,
+      "query_text": "想问下账号被冻结后如何自助解冻或申请人工处理有没有办法处理？",
+      "ground_truth_page_index": 1,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 1,
+            "score": 0.896,
+            "question": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #3 (score=0.89, type=main)\n  - 桶 #2 (score=0.88, type=main)\n  - 桶 #1 (score=0.87, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 3,
+                "score": 0.8903455643455027,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 2,
+                "score": 0.8806175941337047,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 1,
+                "score": 0.8729976079111061,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 0,
+                "score": 0.8729562053579543,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 19,
+                "score": 0.7368143049353549,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 394,
+                "score": 0.7268990038014007,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 393,
+                "score": 0.7239618448551566,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 18,
+                "score": 0.7203523373642304,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 1,
+            "score": 0.896,
+            "question": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.896\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 1,
+            "score": 0.896,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.896\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 1,
+            "score": 0.896,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.896\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 5,
+      "query_text": "忘记密码后如何通过短信验证码重置新密码？",
+      "ground_truth_page_index": 2,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 2,
+            "score": 0.894,
+            "question": "关于忘记密码后如何通过短信验证码重置新密码的问题",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #5 (score=0.89, type=main)\n  - 桶 #7 (score=0.89, type=main)\n  - 桶 #6 (score=0.88, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 5,
+                "score": 0.8856424977547357,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 7,
+                "score": 0.8854644125967229,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 6,
+                "score": 0.8823176755779936,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 4,
+                "score": 0.8794541223292482,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 23,
+                "score": 0.6290113849533334,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 22,
+                "score": 0.6273004229665771,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 21,
+                "score": 0.6220987630236154,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 20,
+                "score": 0.6180771196018116,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 2,
+            "score": 0.894,
+            "question": "关于忘记密码后如何通过短信验证码重置新密码的问题",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.894\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 2,
+            "score": 0.894,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.894\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 2,
+            "score": 0.894,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.894\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 2,
+            "score": 7.417,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 6,
+      "query_text": "忘记密码后如何通过短信验证码重置新密码怎么办？",
+      "ground_truth_page_index": 2,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 2,
+            "score": 0.903,
+            "question": "忘记密码后如何通过短信验证码重置新密码怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #7 (score=0.90, type=main)\n  - 桶 #5 (score=0.89, type=main)\n  - 桶 #6 (score=0.88, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 7,
+                "score": 0.900055395074694,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 5,
+                "score": 0.8855466900361897,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 6,
+                "score": 0.8840201914370174,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 4,
+                "score": 0.8817947119039089,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 23,
+                "score": 0.660556151190772,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 22,
+                "score": 0.6470199023802563,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 27,
+                "score": 0.643364045823236,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 21,
+                "score": 0.6405791163577546,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 2,
+            "score": 0.903,
+            "question": "忘记密码后如何通过短信验证码重置新密码怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.903\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 2,
+            "score": 0.903,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.903\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 2,
+            "score": 0.903,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.903\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 2,
+            "score": 8.168,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 7,
+      "query_text": "忘记密码后如何通过短信验证码重置要咋处理？",
+      "ground_truth_page_index": 2,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 2,
+            "score": 0.853,
+            "question": "忘记密码后如何通过短信验证码重置新密码怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #7 (score=0.85, type=main)\n  - 桶 #5 (score=0.83, type=main)\n  - 桶 #6 (score=0.83, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 7,
+                "score": 0.8497343176094907,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 5,
+                "score": 0.8313421264489883,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 6,
+                "score": 0.8277401160165051,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 4,
+                "score": 0.8192446918545598,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 55,
+                "score": 0.635735263473836,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 279,
+                "score": 0.6344241613895328,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 54,
+                "score": 0.6297591468893831,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 27,
+                "score": 0.6232365853681703,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 2,
+            "score": 0.853,
+            "question": "忘记密码后如何通过短信验证码重置新密码怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.853\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 2,
+            "score": 0.853,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.853\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 2,
+            "score": 0.853,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.853\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 8,
+      "query_text": "忘记密码后如何通过短信验证码重置新密码咋整",
+      "ground_truth_page_index": 2,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 2,
+            "score": 0.875,
+            "question": "关于忘记密码后如何通过短信验证码重置新密码的问题",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #7 (score=0.87, type=main)\n  - 桶 #5 (score=0.87, type=main)\n  - 桶 #6 (score=0.86, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 7,
+                "score": 0.8701820003368959,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 5,
+                "score": 0.8669141670442735,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 6,
+                "score": 0.8635892075003151,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 4,
+                "score": 0.8635153627881252,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 23,
+                "score": 0.6456892152159978,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 22,
+                "score": 0.6401731391487786,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 21,
+                "score": 0.6343786014671674,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 20,
+                "score": 0.6307526168276221,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 2,
+            "score": 0.875,
+            "question": "关于忘记密码后如何通过短信验证码重置新密码的问题",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.875\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 2,
+            "score": 0.875,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.875\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 2,
+            "score": 0.875,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.875\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 9,
+      "query_text": "想问下忘记密码后如何通过短信验证码重置新密码有没有办法处理？",
+      "ground_truth_page_index": 2,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 2,
+            "score": 0.873,
+            "question": "忘记密码后如何通过短信验证码重置新密码怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #7 (score=0.87, type=main)\n  - 桶 #5 (score=0.86, type=main)\n  - 桶 #6 (score=0.86, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 7,
+                "score": 0.8698087400341195,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 5,
+                "score": 0.8615165833704606,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 6,
+                "score": 0.8600042592220866,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 4,
+                "score": 0.8514059019260098,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 23,
+                "score": 0.6487172205469204,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 22,
+                "score": 0.6438036781925939,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 27,
+                "score": 0.6403476786238402,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 21,
+                "score": 0.6386370302970006,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 2,
+            "score": 0.873,
+            "question": "忘记密码后如何通过短信验证码重置新密码怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.873\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 2,
+            "score": 0.873,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.873\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 2,
+            "score": 0.873,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.873\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 10,
+      "query_text": "如何申请新系统的访问权限并完成审批？",
+      "ground_truth_page_index": 3,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 3,
+            "score": 0.881,
+            "question": "如何申请新系统的访问权限并完成审批？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #8 (score=0.87, type=main)\n  - 桶 #9 (score=0.85, type=main)\n  - 桶 #11 (score=0.84, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 8,
+                "score": 0.8745333764933414,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 9,
+                "score": 0.8461714229525354,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 11,
+                "score": 0.8423772675925314,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 10,
+                "score": 0.8347768991388032,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 35,
+                "score": 0.6486949530944185,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 34,
+                "score": 0.6471373335710915,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 32,
+                "score": 0.6445959510679506,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 33,
+                "score": 0.6408651233433915,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 3,
+            "score": 0.881,
+            "question": "如何申请新系统的访问权限并完成审批？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.881\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 3,
+            "score": 0.881,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.881\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 3,
+            "score": 0.881,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.881\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 3,
+            "score": 8.168,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 11,
+      "query_text": "申请新系统的访问权限并完成审批怎么办？",
+      "ground_truth_page_index": 3,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 3,
+            "score": 0.888,
+            "question": "申请新系统的访问权限并完成审批怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #11 (score=0.88, type=main)\n  - 桶 #8 (score=0.88, type=main)\n  - 桶 #9 (score=0.87, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 11,
+                "score": 0.8805110886020251,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 8,
+                "score": 0.875777053870893,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 9,
+                "score": 0.8681479112603483,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 10,
+                "score": 0.8566656998275014,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 35,
+                "score": 0.6907583549356808,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 34,
+                "score": 0.6868456473977445,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 32,
+                "score": 0.6856073068948358,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 33,
+                "score": 0.6827614089275198,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 3,
+            "score": 0.887,
+            "question": "申请新系统的访问权限并完成审批怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.887\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 3,
+            "score": 0.888,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.888\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 3,
+            "score": 0.888,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.888\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 3,
+            "score": 8.168,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 12,
+      "query_text": "申请新系统的访问权限并完成审批要咋处理？",
+      "ground_truth_page_index": 3,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 3,
+            "score": 0.868,
+            "question": "申请新系统的访问权限并完成审批怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #11 (score=0.86, type=main)\n  - 桶 #9 (score=0.85, type=main)\n  - 桶 #8 (score=0.85, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 11,
+                "score": 0.8627100835196823,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 9,
+                "score": 0.8519117082155706,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 8,
+                "score": 0.8480462171046566,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 10,
+                "score": 0.8367209274080558,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 35,
+                "score": 0.6834666724218386,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 33,
+                "score": 0.6811159085714229,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 34,
+                "score": 0.6802746054791942,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 32,
+                "score": 0.6791668363004806,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 3,
+            "score": 0.868,
+            "question": "申请新系统的访问权限并完成审批怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.868\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 3,
+            "score": 0.868,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.868\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 3,
+            "score": 0.868,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.868\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 13,
+      "query_text": "申请新系统的访问权限并完成审批咋整",
+      "ground_truth_page_index": 3,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 3,
+            "score": 0.861,
+            "question": "申请新系统的访问权限并完成审批怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #9 (score=0.86, type=main)\n  - 桶 #11 (score=0.85, type=main)\n  - 桶 #8 (score=0.85, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 9,
+                "score": 0.8556586057323894,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 11,
+                "score": 0.8528173187684415,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 8,
+                "score": 0.8482874948836627,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 10,
+                "score": 0.8412218345679718,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 29,
+                "score": 0.6671252475666714,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 60,
+                "score": 0.6642278700992466,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 30,
+                "score": 0.6624546332799783,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 61,
+                "score": 0.6556082043648757,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 3,
+            "score": 0.861,
+            "question": "申请新系统的访问权限并完成审批怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.861\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 3,
+            "score": 0.861,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.861\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 3,
+            "score": 0.861,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.861\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 14,
+      "query_text": "想问下申请新系统的访问权限并完成审批有没有办法处理？",
+      "ground_truth_page_index": 3,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 3,
+            "score": 0.828,
+            "question": "申请新系统的访问权限并完成审批怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #11 (score=0.82, type=main)\n  - 桶 #9 (score=0.81, type=main)\n  - 桶 #10 (score=0.81, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 11,
+                "score": 0.8222719847791753,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 9,
+                "score": 0.81335723432034,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 10,
+                "score": 0.8085293873448698,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 8,
+                "score": 0.8052249130777069,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 34,
+                "score": 0.6726022580461677,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 33,
+                "score": 0.6673782453607515,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 32,
+                "score": 0.664991790835515,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 35,
+                "score": 0.6595423805390688,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 3,
+            "score": 0.828,
+            "question": "申请新系统的访问权限并完成审批怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.828\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 3,
+            "score": 0.828,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.828\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 3,
+            "score": 0.828,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.828\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 15,
+      "query_text": "管理员如何为新员工开通运维账号并下发初始密码？",
+      "ground_truth_page_index": 4,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 4,
+            "score": 0.928,
+            "question": "管理员如何为新员工开通运维账号并下发初始密码？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #13 (score=0.92, type=main)\n  - 桶 #12 (score=0.92, type=main)\n  - 桶 #15 (score=0.92, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 13,
+                "score": 0.9217172852779758,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 12,
+                "score": 0.9181840452233653,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 15,
+                "score": 0.9179791942990141,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 14,
+                "score": 0.9157105775346703,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 387,
+                "score": 0.7436107679447985,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 384,
+                "score": 0.7025850964123922,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 385,
+                "score": 0.6991873339985848,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 386,
+                "score": 0.6980257210397747,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 4,
+            "score": 0.928,
+            "question": "管理员如何为新员工开通运维账号并下发初始密码？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.928\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 4,
+            "score": 0.928,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.928\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 4,
+            "score": 0.928,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.928\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 4,
+            "score": 7.417,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 16,
+      "query_text": "管理员如何为新员工开通运维账号并下发初始密码怎么办？",
+      "ground_truth_page_index": 4,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 4,
+            "score": 0.941,
+            "question": "管理员如何为新员工开通运维账号并下发初始密码怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #15 (score=0.93, type=main)\n  - 桶 #13 (score=0.92, type=main)\n  - 桶 #12 (score=0.92, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 15,
+                "score": 0.9347908517680129,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 13,
+                "score": 0.9217043048849684,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 12,
+                "score": 0.9154578385647729,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 14,
+                "score": 0.9135657479309877,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 387,
+                "score": 0.7571796765090602,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 385,
+                "score": 0.7010456561004161,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 384,
+                "score": 0.7006959096731438,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 386,
+                "score": 0.6977353435398709,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 4,
+            "score": 0.941,
+            "question": "管理员如何为新员工开通运维账号并下发初始密码怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.941\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 4,
+            "score": 0.941,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.941\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 4,
+            "score": 0.941,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.941\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 4,
+            "score": 8.168,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 17,
+      "query_text": "管理员如何为新员工开通运维账号并要咋处理？",
+      "ground_truth_page_index": 4,
+      "is_negative": false,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 4,
+            "score": 0.831,
+            "question": "管理员如何为新员工开通运维账号并下发初始密码怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #15 (score=0.83, type=main)\n  - 桶 #13 (score=0.82, type=main)\n  - 桶 #14 (score=0.82, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 15,
+                "score": 0.8290076174406028,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 13,
+                "score": 0.8177015009271744,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 14,
+                "score": 0.8154421487270663,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 12,
+                "score": 0.8076317284543746,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 387,
+                "score": 0.7334568107600279,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 384,
+                "score": 0.6928509798600984,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 386,
+                "score": 0.6927732692506434,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 385,
+                "score": 0.688739102707008,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 4,
+            "score": 0.831,
+            "question": "管理员如何为新员工开通运维账号并下发初始密码怎么办？",
+            "category": "账号与权限管理"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.831\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 4,
+            "score": 0.831,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.831\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 4,
+            "score": 0.831,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.831\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 18,
+      "query_text": "会议室投影仪连不上笔记本",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 90,
+            "score": 0.736,
+            "question": "会议室投影仪或大屏无法连接电脑时如何排查接口与投屏怎么办？",
+            "category": "办公设备与环境"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #359 (score=0.73, type=main)\n  - 桶 #357 (score=0.72, type=main)\n  - 桶 #358 (score=0.72, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 359,
+                "score": 0.7260763301967484,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 357,
+                "score": 0.7249381510954149,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 358,
+                "score": 0.7218364627245958,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 356,
+                "score": 0.7148546415409751,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 92,
+                "score": 0.5307878868803428,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 345,
+                "score": 0.5307355264852318,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 344,
+                "score": 0.5240972514730726,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 93,
+                "score": 0.5238291761253482,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 90,
+            "score": 0.736,
+            "question": "会议室投影仪或大屏无法连接电脑时如何排查接口与投屏怎么办？",
+            "category": "办公设备与环境"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.736\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 90,
+            "score": 0.736,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.736\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 90,
+            "score": 0.736,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.736\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 19,
+      "query_text": "公司食堂几点开门",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（0 个）：\n\n📊 L1 候选数：0 | 平均桶大小：0.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {}
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: None\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 97,
+            "score": 0.465,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.465\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 97,
+            "score": 0.465,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.465\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 20,
+      "query_text": "如何申请年假报销差旅费",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": 95,
+            "score": 0.631,
+            "question": "关于差旅报销系统无法登录或提交报销单失败时如何排查并应急处理的问题",
+            "category": "差旅报销与入职离职事务"
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（8 个）：\n  - 桶 #377 (score=0.63, type=main)\n  - 桶 #378 (score=0.62, type=main)\n  - 桶 #376 (score=0.61, type=main)\n📊 L1 候选数：8 | 平均桶大小：1.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {
+            "l1_anchors": [
+              {
+                "anchor_idx": 377,
+                "score": 0.6253831155276093,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 378,
+                "score": 0.6214636452386755,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 376,
+                "score": 0.6132081767289155,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 379,
+                "score": 0.6075273708401847,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 383,
+                "score": 0.5748626428685618,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 382,
+                "score": 0.5595215210853093,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 381,
+                "score": 0.5509072800831516,
+                "type": "main"
+              },
+              {
+                "anchor_idx": 380,
+                "score": 0.5457141089237864,
+                "type": "main"
+              }
+            ],
+            "l1_total_buckets": 8,
+            "l1_total_candidates": 8,
+            "l1_expansion_triggered": false,
+            "l1_expansion_added": 0,
+            "l1_avg_bucket_size": 1.0,
+            "rerank_triggered": false,
+            "rerank_candidates": 0
+          }
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": 95,
+            "score": 0.631,
+            "question": "关于差旅报销系统无法登录或提交报销单失败时如何排查并应急处理的问题",
+            "category": "差旅报销与入职离职事务"
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: 0.631\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 95,
+            "score": 0.631,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.631\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 95,
+            "score": 0.631,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.631\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 21,
+      "query_text": "今天天气怎么样",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（0 个）：\n\n📊 L1 候选数：0 | 平均桶大小：0.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {}
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: None\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 8,
+            "score": 0.375,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.375\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 8,
+            "score": 0.375,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.375\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 22,
+      "query_text": "帮我写一份周报",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（0 个）：\n\n📊 L1 候选数：0 | 平均桶大小：0.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {}
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: None\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 56,
+            "score": 0.449,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.449\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 56,
+            "score": 0.449,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.449\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 23,
+      "query_text": "股票今天涨了吗",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（0 个）：\n\n📊 L1 候选数：0 | 平均桶大小：0.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {}
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: None\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 7,
+            "score": 0.38,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.38\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 7,
+            "score": 0.38,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.38\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 24,
+      "query_text": "附近有什么好吃的餐厅",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（0 个）：\n\n📊 L1 候选数：0 | 平均桶大小：0.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {}
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: None\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 24,
+            "score": 0.246,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.246\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 24,
+            "score": 0.246,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.246\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 25,
+      "query_text": "怎么订机票和酒店",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（0 个）：\n\n📊 L1 候选数：0 | 平均桶大小：0.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {}
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: None\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 95,
+            "score": 0.482,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.482\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 95,
+            "score": 0.482,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.482\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 26,
+      "query_text": "Python 怎么学比较快",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（0 个）：\n\n📊 L1 候选数：0 | 平均桶大小：0.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {}
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: None\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 57,
+            "score": 0.501,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.501\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 57,
+            "score": 0.501,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.501\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 27,
+      "query_text": "春节放假安排是什么",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（0 个）：\n\n📊 L1 候选数：0 | 平均桶大小：0.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {}
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: None\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 99,
+            "score": 0.447,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.447\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 99,
+            "score": 0.447,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.447\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 28,
+      "query_text": "工资什么时候发",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（0 个）：\n\n📊 L1 候选数：0 | 平均桶大小：0.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {}
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: None\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 88,
+            "score": 0.466,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.466\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 88,
+            "score": 0.466,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.466\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    },
+    {
+      "query_id": 29,
+      "query_text": "公司年会什么时候开",
+      "ground_truth_page_index": null,
+      "is_negative": true,
+      "paradigm_outputs": {
+        "GridTrace+": {
+          "paradigm": "GridTrace+",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace+ L1 锚点命中**（0 个）：\n\n📊 L1 候选数：0 | 平均桶大小：0.0\n⚙️ 扩展环触发：False（新增 0 桶）\n🎯 L3 Rerank 触发：False（候选 0）",
+          "raw_trail": {}
+        },
+        "GridTrace": {
+          "paradigm": "GridTrace",
+          "top1": {
+            "page_index": null,
+            "score": null,
+            "question": null,
+            "category": null
+          },
+          "explanation": "🔍 **GridTrace（无增强）** 单层量化匹配\n📊 返回 top-1 score: None\n（无 trail 字段，无扩展环 / rerank）",
+          "raw_trail": {}
+        },
+        "HNSW": {
+          "paradigm": "HNSW",
+          "top1": {
+            "page_index": 88,
+            "score": 0.399,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🚀 **HNSW KNN 图检索** (M=16, ef_search=200)\n📊 返回 top-1 score: 0.399\n❌ 无任何 trail 字段——无法追溯「为什么这条被召回」",
+          "raw_trail": {}
+        },
+        "IVF": {
+          "paradigm": "IVF",
+          "top1": {
+            "page_index": 88,
+            "score": 0.399,
+            "question": "",
+            "category": null
+          },
+          "explanation": "🗂️ **IVF 倒排聚类** (n_probe=8)\n📊 返回 top-1 score: 0.399\n❌ 无 trail——只知 score，不知经过哪几个聚类",
+          "raw_trail": {}
+        },
+        "PageIndex": {
+          "paradigm": "PageIndex",
+          "top1": {
+            "page_index": 1,
+            "score": 0.0,
+            "question": "",
+            "category": null
+          },
+          "explanation": "📑 **PageIndex 类别树 + BM25**\n📊 命中类别：None\n（BM25 关键词匹配路径，可解释性中等）",
+          "raw_trail": {}
+        }
+      }
+    }
+  ]
+}

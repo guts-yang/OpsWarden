@@ -3,6 +3,7 @@
 .claude/
 .cursor/
 .vscode/
+.codebuddy/
 
 # Runtime logs
 *.log

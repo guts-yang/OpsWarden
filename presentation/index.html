@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>运维数字员工 OpsWarden · 答辩</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" id="theme">
+
+  <style>
+    :root {
+      --ow-orange: #ff6700;
+      --ow-orange-soft: #ff8a3d;
+      --ow-blue: #1a73e8;
+      --ow-bg: #f6f7f9;
+      --ow-bg2: #ffffff;
+      --ow-text: #1a1a1f;
+      --ow-dim: #6b7280;
+      --ow-line: #e5e7eb;
+      --ow-green: #34a853;
+    }
+
+    .reveal {
+      font-family: "PingFang SC", "Microsoft YaHei", "Inter", system-ui, sans-serif;
+      color: var(--ow-text);
+    }
+    .reveal .slides { text-align: left; }
+    .reveal .slides section { height: 100%; }
+
+    .reveal-viewport {
+      background: radial-gradient(1200px 700px at 80% -10%, #fff3e9 0%, var(--ow-bg) 55%) !important;
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 { color: var(--ow-text); font-weight: 800; letter-spacing: -0.01em; text-transform: none; }
+    .reveal h1 { font-size: 2.5em; line-height: 1.1; }
+    .reveal h2 { font-size: 1.7em; line-height: 1.15; margin-bottom: 0.5em; }
+    .reveal h3 { font-size: 1.15em; color: var(--ow-orange-soft); }
+    .reveal p, .reveal li { color: var(--ow-text); }
+    .reveal strong { color: var(--ow-orange); }
+    .reveal em { color: var(--ow-orange-soft); font-style: normal; }
+
+    .accent { color: var(--ow-orange); }
+    .blue { color: var(--ow-blue); }
+    .dim { color: var(--ow-dim); }
+
+    /* STAR tag in corner */
+    .star-tag {
+      position: absolute; top: 28px; right: 40px;
+      font-size: 0.5em; font-weight: 700; letter-spacing: 0.15em;
+      color: #1a1a1f; background: var(--ow-orange);
+      padding: 6px 14px; border-radius: 999px;
+    }
+    .star-tag.t { background: var(--ow-blue); color: #fff; }
+    .star-tag.a { background: var(--ow-orange); }
+    .star-tag.r { background: var(--ow-green); color: #fff; }
+    .star-tag.s { background: #e0533d; color:#fff; }
+
+    .kicker {
+      font-size: 0.5em; font-weight: 700; letter-spacing: 0.25em;
+      color: var(--ow-orange); text-transform: uppercase; margin-bottom: 0.6em;
+    }
+
+    /* huge punch number */
+    .punch { font-size: 3.2em; font-weight: 900; line-height: 1; color: var(--ow-orange); }
+    .punch.blue { color: var(--ow-blue); }
+    .punch.green { color: var(--ow-green); }
+
+    .slogan {
+      font-size: 1.6em; font-weight: 800; line-height: 1.25;
+      border-left: 6px solid var(--ow-orange); padding-left: 24px; margin: 0.4em 0;
+    }
+
+    .grid { display: grid; gap: 22px; }
+    .g2 { grid-template-columns: 1fr 1fr; }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+
+    .card {
+      background: var(--ow-bg2); border: 1px solid var(--ow-line);
+      border-radius: 16px; padding: 22px 24px;
+    }
+    .card h3 { margin: 0 0 8px; }
+    .card .num { font-size: 2.4em; font-weight: 900; color: var(--ow-orange); line-height: 1; }
+    .card .lbl { font-size: 0.62em; color: var(--ow-dim); margin-top: 6px; }
+
+    .reveal table { font-size: 0.62em; width: 100%; border-collapse: collapse; }
+    .reveal table th { background: #fff3e9; color: var(--ow-orange); border-bottom: 2px solid var(--ow-orange); padding: 10px 12px; }
+    .reveal table td { border-bottom: 1px solid var(--ow-line); padding: 9px 12px; color: var(--ow-text); }
+    .reveal table tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+
+    .flow { display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:center; }
+    .flow .step {
+      background: var(--ow-bg2); border:1px solid var(--ow-line); border-radius:14px;
+      padding:14px 18px; font-weight:700; font-size:0.62em; text-align:center; min-width:120px;
+    }
+    .flow .step.hot { border-color: var(--ow-orange); box-shadow: 0 0 0 1px var(--ow-orange) inset; }
+    .flow .arrow { color: var(--ow-orange); font-size: 1.2em; font-weight: 900; }
+
+    .pill { display:inline-block; background:#fff3e9; color:var(--ow-orange);
+      border:1px solid var(--ow-orange); border-radius:999px; padding:5px 14px; font-size:0.55em; font-weight:700; margin:4px 6px 0 0; }
+
+    .reveal ul { line-height: 1.55; }
+    .reveal .footnote { position:absolute; bottom: 22px; left: 40px; font-size: 0.4em; color: var(--ow-dim); }
+    .reveal section .center-wrap { display:flex; flex-direction:column; justify-content:center; height:100%; }
+
+    .layer { display:flex; gap:16px; align-items:stretch; }
+    .layer .lbox { flex:1; background:var(--ow-bg2); border:1px solid var(--ow-line); border-radius:14px; padding:18px 20px; }
+    .layer .lbox.l1 { border-color: var(--ow-blue); }
+    .layer .lbox.l2 { border-color: var(--ow-orange); }
+    .layer .tag { font-size:0.55em; font-weight:800; letter-spacing:0.1em; }
+
+    /* 功能短片（动图）占位框 */
+    .clipbox { position:relative; width:74%; margin:0.4em auto 0; aspect-ratio:16/9; max-height:440px;
+      border:2px dashed var(--ow-orange); border-radius:16px; background:#fafafa; overflow:hidden;
+      display:flex; align-items:center; justify-content:center; }
+    .clipbox .ph { position:absolute; z-index:0; color:var(--ow-dim); font-size:0.55em; font-weight:700; text-align:center; padding:0 16px; }
+    .clipbox video { position:relative; z-index:1; width:100%; height:100%; object-fit:cover; display:block; }
+    .feat-h { text-align:center; margin:0.1em 0 0; }
+    .feat-h .role { font-size:0.42em; font-weight:700; vertical-align:middle; margin-left:10px; color:#1a1a1f;
+      background:var(--ow-orange); border-radius:999px; padding:3px 10px; }
+    .feat-cap { text-align:center; font-size:0.58em; color:var(--ow-dim); margin-top:0.45em; }
+
+    .reveal .progress { color: var(--ow-orange); }
+    .reveal .controls { color: var(--ow-orange); }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+  <!-- 1 封面 -->
+  <section data-background-gradient="radial-gradient(900px 600px at 75% 0%, #fff3e9 0%, #f6f7f9 60%)">
+    <div class="center-wrap">
+      <div class="kicker">AI 运维数字员工平台</div>
+      <h1>运维数字员工 <span class="accent">OpsWarden</span></h1>
+      <p style="font-size:1.4em; font-weight:700; margin-top:0.3em;">让 AI 接管 80% 的重复运维咨询</p>
+      <p class="dim" style="margin-top:1.2em; font-size:0.7em;">
+        团队成员：廖晨扬 · 吴雨彤 · 丁其彬　|　答辩时间：2026.06.27
+      </p>
+    </div>
+    <aside class="notes">
+      各位老师好！今天我给大家带来的，不是又一个普通的课程作业，而是一个能真正干活的 AI 运维数字员工——OpsWarden。
+      一句话介绍：它能像一个 7×24 小时在线的运维同事，自动回答员工的运维问题；答不上来，自动开工单；问题解决了，还能自己学进知识库。
+      接下来 10 分钟，我会按"为什么做、做了什么、做成了什么"的顺序，重点给大家讲清楚我们的 RAG 系统。
+    </aside>
+  </section>
+
+  <!-- 2 痛点 S -->
+  <section>
+    <span class="star-tag s">S · 背景</span>
+    <h2>先问大家一个问题</h2>
+    <p class="slogan">运维同学每天在重复回答同样的问题，<br>这件事，值得吗？</p>
+    <div class="grid g3" style="margin-top:0.8em;">
+      <div class="card"><div class="num">慢</div><div class="lbl">人工响应慢，排队等回复</div></div>
+      <div class="card"><div class="num">贵</div><div class="lbl">大量重复咨询，人力成本高</div></div>
+      <div class="card"><div class="num">散</div><div class="lbl">知识分散在聊天记录，难复用</div></div>
+    </div>
+    <p style="margin-top:0.9em; font-size:0.8em;">企业信息化越深入，<strong>系统访问异常、权限申请、常见故障</strong>这类标准化问题越多——人工处理，又慢又累又记不住。</p>
+    <aside class="notes">
+      我先不讲技术，先讲痛点。请大家想象一下企业里的运维同学：每天被同样的问题轰炸——"我登不上系统了""帮我申请个权限""这个报错怎么办"。
+      传统运维有三个字的毛病：慢、贵、散。响应慢，要排队；成本贵，全靠人堆；知识散，今天解决的问题，明天换个人又得重来一遍。
+      企业信息化越深，这种重复咨询越多。这就是我们想解决的问题。记住这三个字——慢、贵、散，等会儿你会看到我们怎么把它们一个个干掉。
+    </aside>
+  </section>
+
+  <!-- 3 选题与目标 T -->
+  <section>
+    <span class="star-tag t">T · 选题</span>
+    <h2>我们的选题：<span class="accent">运维数字员工</span></h2>
+    <p style="font-size:0.85em;">用以 LLM + <strong>RAG（检索增强生成）</strong>为核心的 AI，替代人工处理重复性运维咨询，<br>从根本上提升运维服务的<em>效率</em>与<em>质量</em>。</p>
+    <div class="grid g3" style="margin-top:0.6em;">
+      <div class="card"><h3>① 自动答疑</h3><p class="dim" style="font-size:0.62em; margin:0;">命中知识库，秒级给出标准答案</p></div>
+      <div class="card"><h3>② 工单闭环</h3><p class="dim" style="font-size:0.62em; margin:0;">答不上来，自动建单并全程跟踪</p></div>
+      <div class="card"><h3>③ 持续自学习</h3><p class="dim" style="font-size:0.62em; margin:0;">工单解决后回写知识库，越用越聪明</p></div>
+    </div>
+    <p class="dim" style="margin-top:0.8em; font-size:0.62em;">对标腾讯"小Q同学"、讯飞"飞飞助手"等企业自研 RAG 知识库，把内部运维知识统一管起来。</p>
+    <aside class="notes">
+      那我们的选题就是——做一个"运维数字员工"。技术核心就四个字母：RAG，检索增强生成。
+      它要干三件事：第一，自动答疑，命中知识库秒级回答；第二，工单闭环，答不上来自动建单、全程跟踪；第三，也是最关键的——持续自学习，工单解决了能自己回写知识库，越用越聪明。
+      其实这条路业界已经验证过了，腾讯有"小Q同学"，讯飞有"飞飞助手"，都是用 RAG 把企业内部知识统一管理。我们做的，就是运维场景下的这样一套系统。
+    </aside>
+  </section>
+
+  <!-- 4 组员分工 -->
+  <section>
+    <span class="star-tag">团队分工</span>
+    <h2>先报家门：我们的<span class="accent">三人团队</span></h2>
+    <table>
+      <thead><tr><th>成员</th><th>负责模块</th><th>主要文件</th></tr></thead>
+      <tbody>
+        <tr><td><strong>廖晨扬</strong></td><td>AI 核心 / RAG / DeepSeek　+　前端全部页面</td><td><code>backend/app/rag/</code> · <code>frontend/</code></td></tr>
+        <tr><td><strong>吴雨彤</strong></td><td>后端业务 / 账号 / 工单 / 数据库</td><td><code>backend/app/api/</code> · <code>models/</code> · <code>init.sql</code></td></tr>
+        <tr><td><strong>丁其彬</strong></td><td>Docker / 云服务器 / 申请域名</td><td><code>docker-compose.yml</code></td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:0.9em; font-size:0.78em;">三个人，<strong>AI + 后端 + 部署</strong>各司其职，从模型到上线，全链路自己搞定。</p>
+    <aside class="notes">
+      正式开讲之前，先报一下家门。我们是三人团队，分工非常清晰。
+      廖晨扬，负责整个项目的大脑——AI 核心、RAG 系统、DeepSeek 接入，同时还扛了前端所有页面。
+      吴雨彤，负责后端业务的骨架——账号体系、工单系统、数据库设计，init.sql 也是她写的。
+      丁其彬，负责让系统真正跑起来——Docker 容器化、云服务器部署、还申请了域名。
+      AI、后端、部署，三个人各管一摊，从模型一直到上线，全链路我们自己搞定。下面进入完成情况，重头戏来了。
+    </aside>
+  </section>
+
+  <!-- 5 系统架构 A -->
+  <section>
+    <span class="star-tag a">A · 架构</span>
+    <h2>系统全景：一条请求是怎么流动的</h2>
+    <div class="flow" style="margin:0.6em 0;">
+      <div class="step">Vue3 前端<br><span class="dim" style="font-weight:400;">问答/工单/知识库</span></div>
+      <div class="arrow">→</div>
+      <div class="step">FastAPI 后端<br><span class="dim" style="font-weight:400;">JWT 鉴权 · 统一响应</span></div>
+      <div class="arrow">→</div>
+      <div class="step hot">RAG 引擎<br><span class="dim" style="font-weight:400;">检索 + 生成</span></div>
+    </div>
+    <div class="flow" style="margin:0.6em 0;">
+      <div class="step">PostgreSQL 16<br>+ <span class="accent">pgvector</span></div>
+      <div class="arrow">+</div>
+      <div class="step">BGE 向量模型<br><span class="dim" style="font-weight:400;">512 维 embedding</span></div>
+      <div class="arrow">+</div>
+      <div class="step">DeepSeek LLM<br><span class="dim" style="font-weight:400;">生成式回答</span></div>
+    </div>
+    <div style="margin-top:0.6em;">
+      <span class="pill">Python 3.11 · FastAPI</span>
+      <span class="pill">SQLAlchemy 2.0 · psycopg3</span>
+      <span class="pill">Vue3 · Vite6 · Tailwind</span>
+      <span class="pill">LangGraph Agent</span>
+      <span class="pill">Docker 一键部署</span>
+    </div>
+    <aside class="notes">
+      先看一眼系统全景，理解一条请求怎么流动。用户在 Vue3 前端提问，请求经过 FastAPI 后端做 JWT 鉴权，然后进入我们的核心——RAG 引擎。
+      底层是三件套：PostgreSQL 16 加 pgvector 做向量数据库，BGE 模型把文字变成 512 维向量，DeepSeek 大模型负责生成式回答。
+      技术栈这里我快速带过：后端 FastAPI + SQLAlchemy，前端 Vue3 + Tailwind，还接入了 LangGraph 做多轮 Agent，最后用 Docker 一键部署。
+      架构就讲到这，因为真正的灵魂在下一页——我们的 RAG 到底强在哪。
+    </aside>
+  </section>
+
+  <!-- 6 RAG 核心① 两阶段检索 A -->
+  <section>
+    <span class="star-tag a">A · RAG 核心 ①</span>
+    <h2>RAG 灵魂：<span class="accent">两阶段检索</span></h2>
+    <p style="font-size:0.72em; margin-bottom:0.5em;">别人是"一张大表暴力搜"，我们是<strong>先粗筛、再精排</strong>——又快又准。</p>
+    <div class="layer">
+      <div class="lbox l1">
+        <div class="tag blue">L1 · 粗筛路由</div>
+        <h3 class="blue" style="margin:6px 0;">kb_anchors 量化锚点</h3>
+        <p style="font-size:0.6em; margin:0;">IVFFlat 近似索引快速定位候选桶，取 Top-8 锚点。向量先量化压缩，相似条目共享同一锚点。</p>
+      </div>
+      <div style="display:flex; align-items:center;"><span class="arrow accent" style="font-size:1.6em; font-weight:900;">→</span></div>
+      <div class="lbox l2">
+        <div class="tag accent">L2 · 精排</div>
+        <h3 class="accent" style="margin:6px 0;">kb_entries 全精度重排</h3>
+        <p style="font-size:0.6em; margin:0;">在候选条目上做全精度余弦相似度精排，取 Top-3。<strong>score ≥ τ（实验调优至 0.65）</strong>才算命中。</p>
+      </div>
+    </div>
+    <p style="margin-top:0.7em; font-size:0.66em;"><strong>命中</strong> → 交给 DeepSeek 生成答案；<strong>未命中</strong> → 进入工单流程。</p>
+    <p class="footnote">代码：backend/app/rag/retriever.py · search() 两阶段实现</p>
+    <aside class="notes">
+      重点来了，这一页请大家务必看清楚。这是 OpsWarden 的灵魂——两阶段检索。
+      很多 RAG 系统是怎么做的？一张大向量表，来一个查询就全表暴力搜，数据一多就又慢又不准。我们不一样，我们做了两层。
+      第一层 L1，叫量化锚点路由。我们用 IVFFlat 近似索引，先快速把范围缩小到 Top-8 个"锚点桶"，相当于先翻到对的章节。
+      第二层 L2，精排。只在这几个桶里的候选条目上做全精度的余弦相似度计算，取最像的 Top-3，分数要超过 0.4 才算命中。
+      先粗筛、再精排——这就是又快又准的秘密。命中就交给 DeepSeek 润色生成答案；没命中，就进入工单流程。
+    </aside>
+  </section>
+
+  <!-- 7 RAG 核心② 技术栈 A -->
+  <section>
+    <span class="star-tag a">A · RAG 核心 ②</span>
+    <h2>把每个细节都打磨到位</h2>
+    <div class="grid g2" style="margin-top:0.4em;">
+      <div class="card">
+        <h3>BGE-small-zh-v1.5 向量化</h3>
+        <p style="font-size:0.62em; margin:0;">中文专用模型，<strong>512 维</strong>。查询侧加 instruction 前缀（非对称编码），召回更准。</p>
+      </div>
+      <div class="card">
+        <h3>Q + S 联合向量</h3>
+        <p style="font-size:0.62em; margin:0;">"问题"和"解决方案"分别编码后取均值，<strong>一个向量同时表达两面</strong>，检索更全。</p>
+      </div>
+      <div class="card">
+        <h3>量化锚点去重</h3>
+        <p style="font-size:0.62em; margin:0;">网格量化 + SHA256 哈希做幂等 upsert，<strong>近似重复向量自动合并</strong>，索引更轻。</p>
+      </div>
+      <div class="card">
+        <h3>DeepSeek 生成</h3>
+        <p style="font-size:0.62em; margin:0;">低温度 0.1，基于检索上下文生成。<strong>没 API Key 也能兜底</strong>直接返回原文方案。</p>
+      </div>
+    </div>
+    <p class="footnote">代码：backend/app/rag/embedder.py · quantizer.py · llm.py</p>
+    <aside class="notes">
+      光有架构还不够，魔鬼在细节。这一页是我们 RAG 的四个打磨点。
+      第一，向量模型选的是 BGE-small-zh，中文专用，512 维。而且我们用了 BGE 的最佳实践——查询侧加 instruction 前缀，做非对称编码，召回率更高。
+      第二，联合向量。我们把"问题"和"解决方案"分别编码再取均值，一个向量同时表达问题和答案两个侧面，无论用户问法多刁钻，都能检索到。
+      第三，量化锚点去重。用网格量化加 SHA256 哈希做幂等写入，把近似重复的向量自动合并，索引更轻、检索更快。
+      第四，生成端用 DeepSeek，温度调到 0.1 保证稳定。而且我们做了兜底——就算没有 API Key，也能直接返回知识库原文，绝不崩。每个细节，我们都抠到位了。
+    </aside>
+  </section>
+
+  <!-- 8 自学习闭环 A -->
+  <section>
+    <span class="star-tag a">A · RAG 核心 ③</span>
+    <h2>最骄傲的设计：<span class="accent">自学习闭环</span></h2>
+    <p class="slogan" style="font-size:1.2em; margin-bottom:0.6em;">它不只是能回答，<br>它会<em>越用越聪明</em>。</p>
+    <div class="flow">
+      <div class="step">用户提问</div><div class="arrow">→</div>
+      <div class="step">RAG 未命中</div><div class="arrow">→</div>
+      <div class="step">确认后建工单</div><div class="arrow">→</div>
+      <div class="step">运维解决</div><div class="arrow">→</div>
+      <div class="step hot">回写知识库</div><div class="arrow">↺</div>
+      <div class="step">下次直接命中</div>
+    </div>
+    <p style="margin-top:0.9em; font-size:0.72em;">工单解决时勾选"写入知识库"，系统自动 <code>ingest_kb_entry()</code> 生成向量、建锚点——<strong>这道题，下次它自己就会了。</strong></p>
+    <p class="footnote">代码：backend/app/api/ticket.py · resolve + writeback</p>
+    <aside class="notes">
+      如果说前面是技术，这一页讲的是灵魂里的灵魂——我最骄傲的设计，自学习闭环。
+      普通的问答机器人，答不上来就是答不上来，永远那么笨。我们的不一样——它会越用越聪明。
+      看这条闭环：用户提问，RAG 没命中，系统确认后自动建工单，运维同学把问题解决，解决的时候勾一下"写入知识库"，系统就自动把这条新知识向量化、建锚点，存进知识库。
+      结果是什么？同样的问题，下次再有人问，AI 自己就答出来了，根本不用再开工单。这就叫数字员工——它真的在成长，每解决一个新问题，就永久变聪明一点。这是我们整个系统的闭环，也是它区别于普通问答机器人的关键。
+    </aside>
+  </section>
+
+  <!-- 8.5 RAG 超参数调优 + 稳定性验证 A -->
+  <section>
+    <span class="star-tag a">A · 实验验证</span>
+    <h2 style="margin-bottom:0.25em;">实验为证：<span class="accent">逐参数调优 + 稳定性</span></h2>
+
+    <!-- 最终超参数（重点突出，置顶横条） -->
+    <div class="card" style="display:flex; align-items:center; justify-content:space-between; padding:9px 18px; border-color:var(--ow-orange); box-shadow:0 0 0 1px var(--ow-orange) inset; margin-bottom:12px;">
+      <span style="font-size:0.6em; font-weight:800; letter-spacing:0.06em; color:var(--ow-dim);">216 组网格 · 680 条评测 · 双轨复核　最终选定 ▶</span>
+      <span style="font-size:0.72em; font-weight:900;"><code>ε</code>=<span class="accent">0.02</span></span>
+      <span style="font-size:0.72em; font-weight:900;"><code>L1-K</code>=<span class="accent">8</span></span>
+      <span style="font-size:0.72em; font-weight:900;"><code>τ</code>=<span class="accent">0.65</span></span>
+      <span style="font-size:0.72em; font-weight:900;"><code>Top-K</code>=<span class="accent">3</span></span>
+    </div>
+
+    <!-- 四个参数各一张调优图 -->
+    <div class="grid g2" style="gap:12px;">
+      <div class="card" style="padding:10px 14px;">
+        <h3 style="margin:0 0 2px; font-size:0.92em;">① ε 量化精度 · 选定 <span class="accent">0.02</span></h3>
+        <div class="dim" style="font-size:0.48em; margin-bottom:2px;">命中 / 锚点数随 ε 恒定 → 不敏感</div>
+        <div style="position:relative; height:172px;"><canvas id="hpEps"></canvas></div>
+      </div>
+      <div class="card" style="padding:10px 14px;">
+        <h3 style="margin:0 0 2px; font-size:0.92em;">② L1-K 锚点候选 · 选定 <span class="accent">8</span></h3>
+        <div class="dim" style="font-size:0.48em; margin-bottom:2px;">困难召回到 8 进入平台期</div>
+        <div style="position:relative; height:172px;"><canvas id="hpAk"></canvas></div>
+      </div>
+      <div class="card" style="padding:10px 14px;">
+        <h3 style="margin:0 0 2px; font-size:0.92em;">③ τ 命中阈值 · 选定 <span class="accent">0.65</span></h3>
+        <div class="dim" style="font-size:0.48em; margin-bottom:2px;">命中率与误报率(FPR)最佳平衡点（v2 τ-扫描）</div>
+        <div style="position:relative; height:172px;"><canvas id="hpTau"></canvas></div>
+      </div>
+      <div class="card" style="padding:10px 14px;">
+        <h3 style="margin:0 0 2px; font-size:0.92em;">④ Top-K 精排 · 选定 <span class="accent">3</span></h3>
+        <div class="dim" style="font-size:0.48em; margin-bottom:2px;">召回早已饱和，取 3 兼顾上下文</div>
+        <div style="position:relative; height:172px;"><canvas id="hpTk"></canvas></div>
+      </div>
+    </div>
+    <aside class="notes">
+      讲完闭环，可能有老师会问：你们这些参数是拍脑袋定的吗？不是，我们是做了系统实验调出来的，这一页就是我们的"调参答卷"。最终锁定的四个参数就在顶部横条：ε=0.02、L1-K=8、τ=0.65、Top-K=3。下面四张图，是我们对每个参数单独做的扫描，逐个证明它稳。
+      图①，ε 量化精度：从 0.01 一路扫到 0.15，改写命中率和锚点数几乎一条直线——说明命中对 ε 不敏感，怎么取都稳。
+      图②，L1-K 一阶段锚点候选数：困难集召回随 L1-K 上升，到 8 就进入平台期，再大几乎没收益、只增开销，所以我们选 8——这是收益拐点，不是随便定的。
+      图③，τ 命中阈值：这是最关键的权衡，阈值越高误报率 FPR 越低、但命中率也会掉，两条线的最佳交叉点就在 0.65，既保住高命中、又把误报压下来。
+      图④，Top-K 精排返回条数：召回率在 K=1 就已经饱和，1、3、5 几乎一样，我们取 3 是为了给大模型多一点上下文。
+      四张图、四个参数，每一个的取值都有曲线支撑——这组参数经得起考验。
+    </aside>
+  </section>
+
+  <!-- 9 Agent 与安全工单 A -->
+  <section>
+    <span class="star-tag a">A · 智能体</span>
+    <h2>不止 RAG：<span class="accent">LangGraph 智能体</span></h2>
+    <div class="grid g2">
+      <div>
+        <h3>多轮 Agent 编排</h3>
+        <ul style="font-size:0.66em;">
+          <li>LangGraph + Postgres 检查点，<strong>多轮记忆</strong></li>
+          <li>RAG 只是其中一个工具，共 <strong>6 大工具</strong>：知识检索 / 工单增改 / 数据统计 / 健康检查</li>
+          <li>能先查再答，避免重复建单</li>
+        </ul>
+      </div>
+      <div>
+        <h3>安全 & 稳健</h3>
+        <ul style="font-size:0.66em;">
+          <li><strong>绝不静默建单</strong>：建工单必须用户确认</li>
+          <li><strong>多层优雅降级</strong>：Agent 挂了回退经典管线；模型挂了返回原文</li>
+          <li>全程审计：<code>agent_runs</code> / <code>tool_calls</code></li>
+        </ul>
+      </div>
+    </div>
+    <aside class="notes">
+      我们不止做了 RAG，还往上做了一层 LangGraph 智能体。
+      左边是能力：基于 LangGraph 加 Postgres 检查点，支持多轮记忆。RAG 在这里只是六大工具之一，还有工单的增改、数据统计、系统健康检查。它能先查再答，比如查一下有没有重复工单，避免乱建单。
+      右边是我特别想强调的——安全和稳健。第一，绝不静默建单，所有建工单的动作都要用户点确认，不会偷偷给你刷一堆工单。第二，多层优雅降级，智能体挂了就回退到经典 RAG 管线，大模型挂了就直接返回知识库原文，整个系统怎么都不会崩。所有动作还全程审计可追溯。又聪明，又靠谱。
+    </aside>
+  </section>
+
+  <!-- 10 产品功能/角色 A（含 6 个功能动图子页，向下翻页 ↓ 简单带过） -->
+  <section>
+
+    <!-- 10.0 产品总览 -->
+    <section>
+      <span class="star-tag a">A · 产品</span>
+      <h2>完整产品，不是 Demo</h2>
+      <div class="grid g2">
+        <div>
+          <h3>6 大功能页面</h3>
+          <ul style="font-size:0.64em;">
+            <li>AI 问答　·　仪表盘统计</li>
+            <li>工单中心（全生命周期）</li>
+            <li>知识库管理（增删改查）</li>
+            <li>账号管理（冻结/重置）</li>
+            <li>登录鉴权</li>
+          </ul>
+        </div>
+        <div>
+          <h3>三级角色权限</h3>
+          <table style="font-size:0.55em;">
+            <thead><tr><th>角色</th><th>能做什么</th></tr></thead>
+            <tbody>
+              <tr><td><strong>user</strong></td><td>只用 AI 问答</td></tr>
+              <tr><td><strong>operator</strong></td><td>+ 工单/知识库/统计</td></tr>
+              <tr><td><strong>admin</strong></td><td>+ 账号全权管理</td></tr>
+            </tbody>
+          </table>
+          <p class="dim" style="font-size:0.55em; margin-top:8px;">Material Design 3 配色 · 响应式 · 手机端适配</p>
+        </div>
+      </div>
+      <p class="dim" style="font-size:0.5em; margin-top:0.5em;">↓ 下翻：逐个功能动图，简单带过</p>
+      <aside class="notes">
+        我要强调，OpsWarden 是一个完整的产品，不是跑通就截图的 Demo。六大功能页面，三级角色权限：user 只问答，operator 加工单知识库统计，admin 再加账号管理。界面 Material Design 3，电脑手机都适配。
+        下面我快速过一遍每个功能的实际效果——（按 ↓ 向下翻，每个功能一个动图，简单带过即可）。
+      </aside>
+    </section>
+
+    <!-- 10.1 功能·登录鉴权 -->
+    <section>
+      <span class="star-tag a">功能演示</span>
+      <h3 class="feat-h">登录鉴权 + 角色跳转<span class="role">C1</span></h3>
+      <div class="clipbox">
+        <span class="ph">▶ C1 · 登录动图占位<br>assets/clips/c1.mp4</span>
+        <video autoplay loop muted playsinline><source src="assets/clips/c1.mp4" type="video/mp4"></video>
+      </div>
+      <p class="feat-cap">JWT 鉴权 · 按角色自动跳转（user→问答，operator/admin→后台）</p>
+      <aside class="notes">先看登录。账号密码登录后，系统按角色自动跳转——普通用户直接进 AI 问答，运维和管理员进后台。JWT 鉴权，冻结账号直接拦在门外。</aside>
+    </section>
+
+    <!-- 10.2 功能·AI 问答 -->
+    <section>
+      <span class="star-tag a">功能演示</span>
+      <h3 class="feat-h">AI 问答（命中知识库）<span class="role">C2</span></h3>
+      <div class="clipbox">
+        <span class="ph">▶ C2 · AI 问答命中动图占位<br>assets/clips/c2.mp4</span>
+        <video autoplay loop muted playsinline><source src="assets/clips/c2.mp4" type="video/mp4"></video>
+      </div>
+      <p class="feat-cap">提问 → 秒级命中 → 标准答案 + 绿色"知识库命中"徽标</p>
+      <aside class="notes">这就是 AI 问答。问一个常见问题，秒级返回标准答案，右上角"知识库命中"——背后就是前面讲的两阶段检索。</aside>
+    </section>
+
+    <!-- 10.3 功能·工单中心 -->
+    <section>
+      <span class="star-tag a">功能演示</span>
+      <h3 class="feat-h">工单中心（全生命周期）<span class="role">C4</span></h3>
+      <div class="clipbox">
+        <span class="ph">▶ C4 · 工单生命周期动图占位<br>assets/clips/c4.mp4</span>
+        <video autoplay loop muted playsinline><source src="assets/clips/c4.mp4" type="video/mp4"></video>
+      </div>
+      <p class="feat-cap">建单 → 处理 → 解决 → 关闭，全程操作日志可追溯</p>
+      <aside class="notes">工单中心，做了完整生命周期：建单、处理、解决、关闭，每一步都有操作日志，可追溯。</aside>
+    </section>
+
+    <!-- 10.4 功能·知识库管理 -->
+    <section>
+      <span class="star-tag a">功能演示</span>
+      <h3 class="feat-h">知识库管理（增删改查）<span class="role">C6</span></h3>
+      <div class="clipbox">
+        <span class="ph">▶ C6 · 知识库管理动图占位<br>assets/clips/c6.mp4</span>
+        <video autoplay loop muted playsinline><source src="assets/clips/c6.mp4" type="video/mp4"></video>
+      </div>
+      <p class="feat-cap">分类筛选 · 增删改查 · 命中分 / 写回来源可视</p>
+      <aside class="notes">知识库管理，增删改查、分类筛选，每条都有命中分和来源，知识库可治理、可运营。</aside>
+    </section>
+
+    <!-- 10.5 功能·账号管理 -->
+    <section>
+      <span class="star-tag a">功能演示</span>
+      <h3 class="feat-h">账号管理（冻结 / 重置）<span class="role">C7</span></h3>
+      <div class="clipbox">
+        <span class="ph">▶ C7 · 账号管理动图占位<br>assets/clips/c7.mp4</span>
+        <video autoplay loop muted playsinline><source src="assets/clips/c7.mp4" type="video/mp4"></video>
+      </div>
+      <p class="feat-cap">创建 / 冻结 / 解冻 / 重置密码，自动生成员工号</p>
+      <aside class="notes">账号管理是管理员功能：创建、冻结、解冻、重置密码，员工号自动生成。</aside>
+    </section>
+
+    <!-- 10.6 功能·仪表盘统计 -->
+    <section>
+      <span class="star-tag a">功能演示</span>
+      <h3 class="feat-h">仪表盘统计<span class="role">C8</span></h3>
+      <div class="clipbox">
+        <span class="ph">▶ C8 · 仪表盘动图占位<br>assets/clips/c8.mp4</span>
+        <video autoplay loop muted playsinline><source src="assets/clips/c8.mp4" type="video/mp4"></video>
+      </div>
+      <p class="feat-cap">日问答量 · 待处理工单 · 账号数 · 知识库条目，一屏掌握</p>
+      <aside class="notes">最后是仪表盘，日问答量、待处理工单、账号数、知识库增长，运营数据一屏掌握。好，功能就快速过到这，下面讲我们怎么协作的。</aside>
+    </section>
+
+  </section>
+
+  <!-- 11 团队协作 / 敏捷开发 Linear ① -->
+  <section>
+    <span class="star-tag a">A · 工程实践</span>
+    <h2>软件工程的答案：<span class="accent">敏捷开发 + Linear</span></h2>
+    <p style="font-size:0.72em; margin-bottom:0.5em;">好产品不是堆出来的，是<strong>高效协作迭代</strong>出来的。我们用业界主流的敏捷范式 + Linear。</p>
+    <div class="grid g3">
+      <div class="card">
+        <h3>① 极简专注</h3>
+        <p style="font-size:0.6em; margin:0;">现代化项目管理工具，专为敏捷团队设计，让人<strong>专注创造价值</strong>。</p>
+      </div>
+      <div class="card">
+        <h3>② Issue 生命周期</h3>
+        <p style="font-size:0.6em; margin:0;">自定义工作流：<br><strong>待办 → 进行中 → 评审 → 完成</strong>，状态自动流转。</p>
+      </div>
+      <div class="card">
+        <h3>③ 实时协作</h3>
+        <p style="font-size:0.6em; margin:0;">多人同时编辑，评论即时沟通，状态变化<strong>自动通知</strong>，团队永远同步。</p>
+      </div>
+    </div>
+    <div class="layer" style="margin-top:0.7em;">
+      <div class="lbox l2" style="flex:1;">
+        <div class="tag accent">GitHub 深度集成</div>
+        <p style="font-size:0.58em; margin:6px 0 0;">提交代码自动关联 issue · PR 与 issue 联动 · <strong>PR 合并自动更新任务状态</strong>，形成完整追溯链。</p>
+      </div>
+    </div>
+    <aside class="notes">
+      我们的答辩科目是软件工程，所以这一环至关重要——我们不仅做出了产品，更是用工程化的方式做出来的。
+      当今主流的团队协作范式是什么？敏捷开发。我们用的工具是 Linear，业界顶级的现代化项目管理工具。
+      它给我们三个核心价值：第一，极简专注，没有花里胡哨，让人专注写代码；第二，强大的 issue 生命周期管理，待办、进行中、评审、完成，状态自动流转，完美适配敏捷；第三，实时协作，多人同时编辑、评论即时沟通、状态一变全员自动收到通知。
+      最关键的是底部这条——和 GitHub 深度集成。我们提交代码会自动关联 issue，Pull Request 和任务联动，PR 一合并，任务状态自动更新。从需求到代码，一条完整的追溯链，这就是现代软件工程该有的样子。
+    </aside>
+  </section>
+
+  <!-- 12 团队协作 / 敏捷数据 Linear ② -->
+  <section>
+    <span class="star-tag a">A · 数据驱动</span>
+    <h2>用<span class="accent">数据</span>说话：OpsWarden 的敏捷实践</h2>
+    <div class="grid g4" style="margin-top:0.3em;">
+      <div class="card"><div class="num">116</div><div class="lbl">个 Issue<br>清晰任务拆分，便于迭代规划</div></div>
+      <div class="card"><div class="num green" style="color:var(--ow-green)">74</div><div class="lbl">个已完成<br>高效交付能力的体现</div></div>
+      <div class="card"><div class="num blue" style="color:var(--ow-blue)">21</div><div class="lbl">个被取消<br>敏捷"拥抱变化"的实践</div></div>
+      <div class="card"><div class="num">3</div><div class="lbl">人多角色协作<br>任务分配清晰，责任明确</div></div>
+    </div>
+    <div class="grid g2" style="margin-top:0.7em;">
+      <div class="card"><h3>效率指标追踪</h3><p style="font-size:0.58em; margin:0;">cycle time / lead time 等关键指标，可视化团队产出与进度趋势。</p></div>
+      <div class="card"><h3>瓶颈识别 · 持续改进</h3><p style="font-size:0.58em; margin:0;">数据分析发现流程阻塞点，让团队<strong>持续交付、持续改进</strong>。</p></div>
+    </div>
+    <p style="margin-top:0.7em; font-size:0.7em;">Linear 不只是工具，更是一种<strong>工作方式的升级</strong>。</p>
+    <aside class="notes">
+      光说理念太空，我们用真实数据说话。这是 OpsWarden 在 Linear 上的成绩。
+      116 个 issue，说明我们把任务拆得足够细，每一步都可规划、可追踪；74 个已完成，这是实打实的高效交付能力；还有 21 个被取消——这点我特别想强调，这不是失误，恰恰是敏捷"拥抱变化"的最好证明，需求变了我们就果断调整，不死磕过时的任务。三个人多角色协作，分工清晰、责任明确。
+      更进一步，Linear 还帮我们做数据驱动的优化：追踪 cycle time、lead time 这些效率指标，可视化产出趋势，发现流程瓶颈，持续改进。
+      所以一句话——Linear 对我们来说不只是个工具，更是一种工作方式的升级：专注创造价值、快速响应变化、持续交付。这就是我们这个软件工程团队的协作答卷。
+    </aside>
+  </section>
+
+  <!-- 13 演示 -->
+  <section data-background-gradient="radial-gradient(900px 600px at 50% 30%, #fff3e9 0%, #f6f7f9 65%)">
+    <div class="center-wrap" style="text-align:center;">
+      <div class="kicker" style="text-align:center;">LIVE DEMO</div>
+      <h1 style="font-size:2em;">说一千道一万，<br>不如<span class="accent">现场跑一遍</span></h1>
+      <div class="grid g3" style="margin-top:1em; text-align:left;">
+        <div class="card"><h3>① 命中问答</h3><p class="dim" style="font-size:0.58em; margin:0;">提问 → 秒级命中 → 标准答案</p></div>
+        <div class="card"><h3>② 未命中建单</h3><p class="dim" style="font-size:0.58em; margin:0;">冷门问题 → 确认 → 自动工单</p></div>
+        <div class="card"><h3>③ 回写学习</h3><p class="dim" style="font-size:0.58em; margin:0;">解决工单 → 写库 → 再问已会</p></div>
+      </div>
+    </div>
+    <aside class="notes">
+      说一千道一万，不如现场跑一遍。（如果是录播视频，这里切换到演示视频。）
+      我会演示三个场景，正好对应刚才讲的闭环：第一，问一个知识库里有的问题，看它秒级命中、给出标准答案；第二，问一个冷门问题，看它识别出来、确认后自动开工单；第三，我把这个工单解决并写入知识库，然后再问一遍同样的问题——这次它直接就会了。这就是自学习闭环的实际效果。
+    </aside>
+  </section>
+
+  <!-- 14 成果数据 R -->
+  <section>
+    <span class="star-tag r">R · 成果</span>
+    <h2>我们交出的<span class="accent">成绩单</span></h2>
+    <div class="grid g4" style="margin-top:0.5em;">
+      <div class="card"><div class="num">6</div><div class="lbl">核心功能模块全部跑通</div></div>
+      <div class="card"><div class="num blue" style="color:var(--ow-blue)">1</div><div class="lbl">完整 RAG 自学习闭环</div></div>
+      <div class="card"><div class="num">3</div><div class="lbl">级角色权限体系</div></div>
+      <div class="card"><div class="num green" style="color:var(--ow-green)">1键</div><div class="lbl">Docker 一键部署</div></div>
+    </div>
+    <p style="margin-top:1em; font-size:0.8em;">从一行代码到<strong>云端上线 + 独立域名</strong>，三个人，全栈打通，<em>真正能用</em>。</p>
+    <aside class="notes">
+      讲了这么多，我们到底做成了什么？这是我们的成绩单。
+      六大核心功能模块，全部跑通，不是半成品。一套完整的 RAG 自学习闭环，从提问到学习全链路打通。三级角色权限体系，企业级的权限设计。最后，Docker 一键部署。
+      而且我们没有停在本地——丁其彬把它部署上了云服务器，还申请了独立域名。从一行代码到云端上线，三个人，全栈打通，做出来的是一个真正能用的系统，不是 PPT 里的概念。
+    </aside>
+  </section>
+
+  <!-- 15 技术亮点 R -->
+  <section>
+    <span class="star-tag r">R · 亮点</span>
+    <h2>四个让我们与众不同的<span class="accent">技术亮点</span></h2>
+    <div class="grid g2">
+      <div class="card"><h3>两阶段检索</h3><p style="font-size:0.6em; margin:0;">量化锚点粗筛 + 全精度精排，又快又准</p></div>
+      <div class="card"><h3>自学习闭环</h3><p style="font-size:0.6em; margin:0;">工单回写知识库，越用越聪明</p></div>
+      <div class="card"><h3>精确反学习</h3><p style="font-size:0.6em; margin:0;">按 doc_id / page 精准删除，不用重建索引</p></div>
+      <div class="card"><h3>优雅降级</h3><p style="font-size:0.6em; margin:0;">模型/Agent 任意环节失效都不崩</p></div>
+    </div>
+    <aside class="notes">
+      最后总结一下，我们和普通课程作业不一样的四个技术亮点。
+      第一，两阶段检索——量化锚点粗筛加全精度精排，又快又准，这是我们的核心。
+      第二，自学习闭环——工单回写知识库，越用越聪明。
+      第三，精确反学习——我们给每条知识都标了 doc_id 和页码，要删除某条过时知识，可以精准删，不用把整个向量索引推倒重建。
+      第四，优雅降级——大模型、智能体任意一个环节出问题，系统都有兜底，绝不崩。这四点，是我们的技术护城河。
+    </aside>
+  </section>
+
+  <!-- 16 总结致谢 -->
+  <section data-background-gradient="radial-gradient(900px 600px at 50% 20%, #fff3e9 0%, #f6f7f9 60%)">
+    <div class="center-wrap" style="text-align:center;">
+      <div class="kicker" style="text-align:center;">ONE MORE THING</div>
+      <h1 style="font-size:2.1em;">OpsWarden</h1>
+      <p class="slogan" style="display:inline-block; text-align:left; font-size:1.4em; margin-top:0.5em;">
+        会回答、会建单、<em>会自己学习</em>，<br>这才是真正的运维数字员工。
+      </p>
+      <p class="dim" style="margin-top:1.4em; font-size:0.7em;">感谢各位老师 · 廖晨扬 · 吴雨彤 · 丁其彬　恳请指正</p>
+    </div>
+    <aside class="notes">
+      最后一句话总结我们的 OpsWarden：它会回答、会建单、会自己学习——这才是真正的运维数字员工，而不是一个只会查表的机器人。
+      我们三个人，用 AI、后端和部署的全链路能力，把它从想法做成了真正能上线的系统。
+      谢谢各位老师，我们的展示到此结束，恳请批评指正！
+    </aside>
+  </section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    backgroundTransition: 'fade',
+    width: 1280,
+    height: 720,
+    margin: 0.06,
+    plugins: [ RevealNotes ]
+  });
+
+  // 逐参数调优图：懒加载（slide 显示后再渲染，避免 display:none 下 canvas 尺寸为 0）
+  let hpChartsBuilt = false;
+  function buildHpCharts() {
+    if (hpChartsBuilt) return;
+    var probe = document.getElementById('hpAk');
+    if (!probe || probe.offsetParent === null || typeof Chart === 'undefined') return;
+    hpChartsBuilt = true;
+    Chart.defaults.font.family = '"PingFang SC","Microsoft YaHei",system-ui,sans-serif';
+    var tick = { font: { size: 9 } };
+    var legend = { labels: { boxWidth: 12, font: { size: 10 }, padding: 8 } };
+    var base = function (xTitle, yMin, yMax) {
+      return {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        scales: {
+          y: { min: yMin, max: yMax, ticks: tick },
+          x: { title: { display: true, text: xTitle, font: { size: 9 } }, ticks: tick }
+        },
+        plugins: { legend: legend }
+      };
+    };
+
+    // ① ε 量化精度扫描（固定 L1-K=8, Top-K=3, τ=0.65）
+    new Chart(document.getElementById('hpEps'), {
+      type: 'line',
+      data: {
+        labels: ["0.01", "0.02", "0.03", "0.05", "0.08", "0.1", "0.12", "0.15"],
+        datasets: [
+          { label: 'Hit@1·改写 (%)', data: [99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5],
+            borderColor: '#1a73e8', backgroundColor: 'transparent', yAxisID: 'y', tension: 0, pointRadius: 2 },
+          { label: '锚点数', data: [400, 400, 400, 400, 400, 400, 400, 400],
+            borderColor: '#ff6700', backgroundColor: 'transparent', borderDash: [6, 4], yAxisID: 'y1', tension: 0, pointRadius: 2 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        scales: {
+          y: { position: 'left', min: 90, max: 101, ticks: tick },
+          y1: { position: 'right', min: 0, max: 500, grid: { drawOnChartArea: false }, ticks: tick },
+          x: { title: { display: true, text: 'ε（量化精度）', font: { size: 9 } }, ticks: tick }
+        },
+        plugins: { legend: legend }
+      }
+    });
+
+    // ② L1-K 锚点候选扫描（固定 ε=0.02, Top-K=3）
+    new Chart(document.getElementById('hpAk'), {
+      type: 'line',
+      data: {
+        labels: ["1", "2", "3", "4", "6", "8", "12", "16", "24"],
+        datasets: [
+          { label: 'L1 召回·困难 (%)', data: [58.8, 63.7, 66.2, 73.8, 93.8, 96.2, 97.5, 97.5, 97.5],
+            borderColor: '#e0533d', backgroundColor: 'rgba(224,83,61,.10)', tension: .3, fill: true, pointRadius: 3 },
+          { label: 'Hit@1·改写 (%)', data: [99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5],
+            borderColor: '#1a73e8', backgroundColor: 'transparent', borderDash: [6, 4], tension: 0, pointRadius: 2 }
+        ]
+      },
+      options: base('L1-K（一阶段锚点候选数）', 50, 101)
+    });
+
+    // ③ τ 命中阈值权衡（ε=0.02, L1-K=8, Top-K=3；取自 v2 τ-扫描）
+    new Chart(document.getElementById('hpTau'), {
+      type: 'line',
+      data: {
+        labels: ["0.35", "0.40", "0.45", "0.50", "0.55", "0.60", "0.65", "0.70", "0.75", "0.80", "0.85"],
+        datasets: [
+          { label: 'Hit@1·改写 (%)', data: [100, 100, 100, 100, 100, 100, 98.5, 97.5, 95.5, 84.5, 66.5],
+            borderColor: '#1a73e8', backgroundColor: 'transparent', tension: .25, pointRadius: 2 },
+          { label: '误报率 FPR (%)', data: [96.9, 81.2, 62.5, 34.4, 15.6, 9.4, 3.1, 3.1, 0, 0, 0],
+            borderColor: '#e0533d', backgroundColor: 'transparent', tension: .25, pointRadius: 2 }
+        ]
+      },
+      options: base('τ（命中阈值）', 0, 101)
+    });
+
+    // ④ Top-K 精排返回条数（ε=0.02, L1-K=8）
+    new Chart(document.getElementById('hpTk'), {
+      type: 'bar',
+      data: {
+        labels: ["1", "3", "5"],
+        datasets: [
+          { label: 'Recall@K·改写 (%)', data: [99.5, 99.5, 99.5], backgroundColor: 'rgba(52,168,83,.75)' },
+          { label: 'Hit@1·改写 (%)', data: [99.5, 99.5, 99.5], backgroundColor: 'rgba(26,115,232,.75)' }
+        ]
+      },
+      options: base('Top-K（精排返回条数）', 90, 101)
+    });
+  }
+  Reveal.on('ready', buildHpCharts);
+  Reveal.on('slidechanged', buildHpCharts);
+</script>
+</body>
+</html>

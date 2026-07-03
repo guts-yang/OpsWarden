@@ -1,0 +1,96 @@
+{
+  "version": "v3_a1",
+  "generated_at": "2026-06-25 13:51:46",
+  "by_lang": [
+    {
+      "language": "zh",
+      "emb_dim": 512,
+      "paradigms": {
+        "GridTrace+": {
+          "build_time_sec": 0.04466500040143728,
+          "index_size_mb": 4.6875,
+          "n_anchors": 400,
+          "n_coarse_anchors": 400,
+          "hit@1": 0.8102941176470588,
+          "hit@3": 0.8176470588235294,
+          "mrr": 0.8137254901960785,
+          "p50_ms": 0.10184990242123604,
+          "p95_ms": 0.15839515253901473,
+          "retrieval_trail_completeness": 1.0
+        },
+        "HNSW": {
+          "build_time_sec": 0.0152818001806736,
+          "index_size_mb": 0.8056640625,
+          "n_anchors": 0,
+          "n_coarse_anchors": 0,
+          "hit@1": 0.8102941176470588,
+          "hit@3": 0.8176470588235294,
+          "mrr": 0.8137254901960785,
+          "p50_ms": 0.10270019993185997,
+          "p95_ms": 0.14170524664223194,
+          "retrieval_trail_completeness": 0.19999999999999285
+        }
+      }
+    },
+    {
+      "language": "en",
+      "emb_dim": 384,
+      "paradigms": {
+        "GridTrace+": {
+          "build_time_sec": 0.03250510012730956,
+          "index_size_mb": 3.498046875,
+          "n_anchors": 397,
+          "n_coarse_anchors": 397,
+          "hit@1": 0.7897058823529411,
+          "hit@3": 0.8147058823529412,
+          "mrr": 0.8,
+          "p50_ms": 0.08990010246634483,
+          "p95_ms": 0.16100963111966848,
+          "retrieval_trail_completeness": 1.0
+        },
+        "HNSW": {
+          "build_time_sec": 0.013175299856811762,
+          "index_size_mb": 0.6103515625,
+          "n_anchors": 0,
+          "n_coarse_anchors": 0,
+          "hit@1": 0.7897058823529411,
+          "hit@3": 0.8147058823529412,
+          "mrr": 0.8,
+          "p50_ms": 0.08699996396899223,
+          "p95_ms": 0.12261022347956894,
+          "retrieval_trail_completeness": 0.19999999999999285
+        }
+      }
+    },
+    {
+      "language": "mixed",
+      "emb_dim": 384,
+      "paradigms": {
+        "GridTrace+": {
+          "build_time_sec": 0.031910100020468235,
+          "index_size_mb": 3.515625,
+          "n_anchors": 400,
+          "n_coarse_anchors": 400,
+          "hit@1": 0.7823529411764706,
+          "hit@3": 0.7985294117647059,
+          "mrr": 0.7887254901960785,
+          "p50_ms": 0.08950009942054749,
+          "p95_ms": 0.151024991646409,
+          "retrieval_trail_completeness": 1.0
+        },
+        "HNSW": {
+          "build_time_sec": 0.012376799713820219,
+          "index_size_mb": 0.6103515625,
+          "n_anchors": 0,
+          "n_coarse_anchors": 0,
+          "hit@1": 0.7867647058823529,
+          "hit@3": 0.8029411764705883,
+          "mrr": 0.7931372549019609,
+          "p50_ms": 0.0849999487400055,
+          "p95_ms": 0.11490504257380962,
+          "retrieval_trail_completeness": 0.19999999999999285
+        }
+      }
+    }
+  ]
+}

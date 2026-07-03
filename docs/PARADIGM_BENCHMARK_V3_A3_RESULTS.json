@@ -1,0 +1,69 @@
+{
+  "version": "v3_a3",
+  "generated_at": "2026-06-25 13:56:25",
+  "kb_size": 10000,
+  "n_delete": 100,
+  "n_queries": 200,
+  "delete_targets": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "strategies": [
+    {
+      "strategy": "GridTrace+",
+      "build_time_sec": 1.1002350999042392,
+      "rebuild_time_sec": 0.0,
+      "delete_time_sec": 0.9413407002575696,
+      "pre_delete_p50_ms": 1.4332497958093882,
+      "post_delete_p50_ms": 1.3448998797684908,
+      "p50_increase_ratio": 0.9383569310114541,
+      "pre_delete_rss_mb": 568.1484375,
+      "post_delete_rss_mb": 571.0859375,
+      "rss_reduction_mb": -2.9375,
+      "pre_delete_index_mb": 114.84375,
+      "post_delete_index_mb": 112.5,
+      "index_reduction_mb": 2.34375,
+      "residual_recall": 0.0
+    },
+    {
+      "strategy": "HNSW_mark",
+      "build_time_sec": 0.455093199852854,
+      "rebuild_time_sec": 0.0,
+      "delete_time_sec": 0.0012063002213835716,
+      "pre_delete_p50_ms": 0.12834998778998852,
+      "post_delete_p50_ms": 0.1308999489992857,
+      "p50_increase_ratio": 1.0198672493328906,
+      "pre_delete_rss_mb": 393.375,
+      "post_delete_rss_mb": 393.39453125,
+      "rss_reduction_mb": -0.01953125,
+      "pre_delete_index_mb": 20.1416015625,
+      "post_delete_index_mb": 20.1416015625,
+      "index_reduction_mb": 0.0,
+      "residual_recall": 0.0
+    },
+    {
+      "strategy": "HNSW_rebuild",
+      "build_time_sec": 0.45447409991174936,
+      "rebuild_time_sec": 0.374583899974823,
+      "delete_time_sec": 0.0008364003151655197,
+      "pre_delete_p50_ms": 0.12479978613555431,
+      "post_delete_p50_ms": 0.1310498919337988,
+      "p50_increase_ratio": 1.0500810617692546,
+      "pre_delete_rss_mb": 393.5859375,
+      "post_delete_rss_mb": 392.9375,
+      "rss_reduction_mb": 0.6484375,
+      "pre_delete_index_mb": 20.1416015625,
+      "post_delete_index_mb": 19.3359375,
+      "index_reduction_mb": 0.8056640625,
+      "residual_recall": 0.0
+    }
+  ]
+}

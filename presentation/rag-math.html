@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpsWarden · RAG 数学求解原理</title>
+
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+    svg: { fontCache: 'global' },
+    startup: { typeset: true }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+
+<style>
+  :root{
+    --orange:#ff6700; --orange-soft:#ff8a3d; --orange-tint:#fff3e9;
+    --blue:#1a73e8; --blue-tint:#eaf2fe; --green:#1e7e34; --red:#c0392b; --purple:#7c4dff;
+    --bg:#f6f7f9; --bg2:#ffffff; --bg3:#f1f2f4; --text:#1a1a1f; --dim:#6b7280;
+    --line:#e5e7eb; --line2:#eceef1;
+    --r:16px; --shadow:0 10px 30px -18px rgba(20,20,40,.35);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--text);background:var(--bg);
+    background:radial-gradient(1100px 600px at 88% -6%, var(--orange-tint) 0%, var(--bg) 55%);
+    font-family:"PingFang SC","Microsoft YaHei","Inter",system-ui,sans-serif;line-height:1.65;}
+  code{font-family:"SF Mono",Consolas,Monaco,monospace;background:var(--bg3);color:#b5430a;
+    padding:1px 6px;border-radius:6px;font-size:.85em;border:1px solid var(--line)}
+  b{color:var(--text)}
+
+  .layout{display:grid;grid-template-columns:248px 1fr;gap:0;max-width:1280px;margin:0 auto}
+  @media(max-width:900px){.layout{grid-template-columns:1fr}.toc{display:none}}
+
+  /* sidebar */
+  .toc{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding:28px 20px;border-right:1px solid var(--line)}
+  .toc .brand{font-weight:900;font-size:18px;letter-spacing:-.01em;margin-bottom:2px}
+  .toc .brand .ow{color:var(--orange)}
+  .toc .sub{font-size:11.5px;color:var(--dim);margin-bottom:20px;letter-spacing:.04em}
+  .toc a{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--dim);
+    font-size:13px;font-weight:600;padding:9px 11px;border-radius:10px;transition:.15s;margin-bottom:3px}
+  .toc a:hover{background:var(--bg3);color:var(--text)}
+  .toc a.active{background:var(--orange-tint);color:#b5430a}
+  .toc a .n{width:22px;height:22px;border-radius:7px;background:var(--bg3);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:0 0 auto}
+  .toc a.active .n{background:var(--orange);color:#fff;border-color:var(--orange)}
+
+  /* content */
+  .content{padding:40px 48px 100px;min-width:0}
+  @media(max-width:900px){.content{padding:28px 22px 70px}}
+
+  .hero{margin-bottom:34px}
+  .kick{font-size:12px;font-weight:800;letter-spacing:.26em;color:var(--orange);text-transform:uppercase}
+  .hero h1{margin:.3em 0 .25em;font-size:32px;font-weight:900;letter-spacing:-.02em}
+  .hero p{margin:0;color:var(--dim);font-size:15px;max-width:720px}
+  .specs{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+  .spec{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:6px 13px;
+    font-size:12px;font-weight:700;box-shadow:var(--shadow)}
+  .spec b{color:var(--orange)}
+
+  .master{background:var(--bg2);border:1px solid var(--line);border-left:4px solid var(--orange);
+    border-radius:var(--r);padding:18px 22px;margin:26px 0 8px;box-shadow:var(--shadow);overflow-x:auto}
+  .master .cap{font-size:12px;font-weight:800;color:var(--orange);letter-spacing:.04em;margin-bottom:4px}
+
+  section.step{scroll-margin-top:18px;padding:30px 0;border-top:1px solid var(--line)}
+  .stephead{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+  .badge{width:38px;height:38px;border-radius:11px;background:var(--orange);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;flex:0 0 auto;box-shadow:var(--shadow)}
+  .stephead h2{margin:0;font-size:22px;font-weight:900;letter-spacing:-.01em}
+  .stephead .file{font-size:12px;color:var(--dim);margin-top:3px}
+  .stephead .file code{font-size:12px}
+
+  .formula{background:var(--bg2);border:1px solid var(--line);border-radius:12px;
+    padding:6px 20px;margin:16px 0;box-shadow:var(--shadow);overflow-x:auto}
+
+  .note{display:flex;gap:12px;background:var(--orange-tint);border:1px solid #ffd9bd;
+    border-radius:12px;padding:13px 16px;margin:14px 0;font-size:14px}
+  .note .ic{font-weight:900;color:var(--orange);flex:0 0 auto}
+  .note.blue{background:var(--blue-tint);border-color:#cfe0fb}.note.blue .ic{color:var(--blue)}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+  @media(max-width:680px){.grid2{grid-template-columns:1fr}}
+  .mini{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+  .mini h4{margin:0 0 6px;font-size:13.5px;font-weight:800}
+  .mini p{margin:0;font-size:13px;color:var(--dim)}
+
+  .pill{display:inline-block;background:var(--bg3);border:1px solid var(--line);border-radius:999px;
+    padding:3px 11px;font-size:11.5px;font-weight:700;margin:2px 4px 2px 0}
+  .pill.orange{background:var(--orange-tint);color:#b5430a;border-color:#ffd9bd}
+  .pill.blue{background:var(--blue-tint);color:var(--blue);border-color:#cfe0fb}
+
+  p.txt{font-size:14.5px;margin:10px 0}
+  .dim{color:var(--dim)}
+  .hl{color:var(--orange);font-weight:700}
+  .hlb{color:var(--blue);font-weight:700}
+
+  /* flow */
+  .flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
+  .flow .s{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:9px 13px;
+    font-size:12.5px;font-weight:700;box-shadow:var(--shadow)}
+  .flow .s.hot{border-color:var(--orange);color:#b5430a;background:var(--orange-tint)}
+  .flow .ar{color:var(--orange);font-weight:900;font-size:15px}
+
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .btnlink{text-decoration:none;background:var(--orange);color:#fff;font-weight:800;font-size:13.5px;
+    padding:10px 18px;border-radius:10px;box-shadow:var(--shadow);transition:.15s}
+  .btnlink:hover{background:var(--orange-soft)}
+  .btnlink.ghost{background:var(--bg2);color:var(--text);border:1px solid var(--line)}
+  .btnlink.ghost:hover{border-color:var(--orange);color:#b5430a}
+
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--dim)}
+
+  /* progress bar */
+  #prog{position:fixed;top:0;left:0;height:3px;background:var(--orange);width:0;z-index:50;transition:width .1s}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="toc">
+    <div class="brand"><span class="ow">OpsWarden</span></div>
+    <div class="sub">RAG 数学求解原理 · 答辩解读</div>
+    <a href="#overview"><span class="n">∑</span> 总览：求解什么</a>
+    <a href="#s1"><span class="n">1</span> 文本 → 向量</a>
+    <a href="#s2"><span class="n">2</span> 知识入库 · 联合向量</a>
+    <a href="#s3"><span class="n">3</span> 相似度 = 余弦 = 点积</a>
+    <a href="#s4"><span class="n">4</span> 两阶段检索</a>
+    <a href="#s5"><span class="n">5</span> 阈值判定</a>
+    <a href="#s6"><span class="n">6</span> 条件生成 LLM</a>
+    <a href="#summary"><span class="n">↺</span> 串联 + 自学习</a>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <div class="hero">
+      <div class="kick">检索增强生成 · 底层数学</div>
+      <h1>RAG 是如何「求解」一个运维问题的</h1>
+      <p>把 OpsWarden 的检索增强生成拆成 6 个数学环节，每一步都对应仓库里的真实代码（<code>backend/app/rag/</code>）。
+        本质上，RAG 是一个 <b>最近邻检索 + 条件生成</b> 的求解过程。</p>
+      <div class="specs">
+        <div class="spec">模型 <b>BGE-small-zh-v1.5</b></div>
+        <div class="spec">维度 <b>512</b></div>
+        <div class="spec">阈值 <b>τ = 0.40</b></div>
+        <div class="spec">精排 Top-<b>3</b></div>
+        <div class="spec">锚点 Top-<b>8</b></div>
+        <div class="spec">量化 <b>ε = 0.02</b></div>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section class="step" id="overview" style="border-top:none;padding-top:6px">
+      <div class="stephead"><div class="badge">∑</div>
+        <div><h2>总览：RAG 在数学上求解什么</h2>
+          <div class="file">一个最近邻检索 + 条件生成的复合问题</div></div>
+      </div>
+      <p class="txt">给定用户问题 \(q\) 与知识库 \(\mathcal{D}=\{d_1,\dots,d_N\}\)，目标是先选出最相关的 \(K\) 条，再据此生成答案：</p>
+      <div class="master">
+        <div class="cap">主目标</div>
+        \[ \text{answer} \;=\; \text{LLM}\Big(q,\; \underset{d \in \mathcal{D}}{\text{TopK}}\;\text{sim}(q, d)\Big) \]
+      </div>
+      <div class="note"><span class="ic">★</span>
+        <div>全部精巧之处都在于：如何<b>又快又准</b>地计算相似度 \(\text{sim}\) 并取出 TopK。下面 6 步逐一拆解。</div>
+      </div>
+    </section>
+
+    <!-- STEP 1 -->
+    <section class="step" id="s1">
+      <div class="stephead"><div class="badge">1</div>
+        <div><h2>文本 → 向量（Embedding）</h2>
+          <div class="file">代码：<code>embedder.py</code></div></div>
+      </div>
+      <p class="txt">一段文字 \(t\) 经 BGE 模型 \(f(\cdot)\) 映射成 512 维实向量，并做 <span class="hl">L2 归一化</span>：</p>
+      <div class="formula">\[ \mathbf{v} = \frac{f(t)}{\lVert f(t)\rVert_2},\qquad \lVert\mathbf{v}\rVert_2 = \sqrt{\sum_{i=1}^{512} v_i^2} = 1 \]</div>
+      <div class="note blue"><span class="ic">i</span>
+        <div><b>为什么归一化？</b> 归一化后所有向量落在单位超球面上，此时<b>点积直接等于余弦相似度</b>（见第 3 步），免去每次重算模长的开销。代码即 <code>normalize_embeddings=True</code>。</div>
+      </div>
+      <p class="txt"><b>非对称编码（关键技巧）：</b>查询与文档用不同方式编码——查询加 instruction 前缀，文档不加：</p>
+      <div class="formula">\[ \mathbf{q} = f(\underbrace{\text{“为这个句子生成表示以用于检索相关文章：”}}_{\text{instruction 前缀}} + q),\qquad \mathbf{d}=f(d) \]</div>
+      <p class="txt dim">前缀让模型知道「这是检索查询」，把查询向量推向更利于召回的语义子空间，实测提升召回率。</p>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step" id="s2">
+      <div class="stephead"><div class="badge">2</div>
+        <div><h2>知识入库：联合向量 + 自检质量分</h2>
+          <div class="file">代码：<code>retriever.py · ingest_kb_entry()</code></div></div>
+      </div>
+      <p class="txt">每条知识是「问题 \(Q\) + 解决方案 \(S\)」对。OpsWarden 存的不是单一问题向量，而是<span class="hl">联合表示</span>：</p>
+      <div class="formula">\[ \mathbf{q}_Q=f(Q),\quad \mathbf{q}_S=f(S),\qquad \mathbf{e}=\frac{\tfrac12(\mathbf{q}_Q+\mathbf{q}_S)}{\big\lVert \tfrac12(\mathbf{q}_Q+\mathbf{q}_S)\big\rVert_2} \]</div>
+      <div class="note"><span class="ic">▲</span>
+        <div><b>几何意义：</b>联合向量落在 \(\mathbf{q}_Q\) 与 \(\mathbf{q}_S\) 的「角平分线」方向。无论用户问法更像「问题」还是更像「答案描述」，都能被检索到，<b>召回更全面</b>。</div>
+      </div>
+      <p class="txt">同时计算<span class="hlb">自检质量分</span>（写入 <code>match_score</code>）——问题向量与方案向量的余弦相似度，裁剪到 \([0,1]\)：</p>
+      <div class="formula">\[ \text{match\_score} = \operatorname{clip}\!\big(\mathbf{q}_Q\cdot\mathbf{q}_S,\;0,\;1\big) \]</div>
+      <p class="txt dim">它衡量「问题与答案语义是否自洽」，是<b>数据治理指标</b>，与实际检索命中率无关。</p>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step" id="s3">
+      <div class="stephead"><div class="badge">3</div>
+        <div><h2>相似度 = 余弦 = 点积</h2>
+          <div class="file">代码：<code>retriever.py · search()</code></div></div>
+      </div>
+      <p class="txt">两向量 \(\mathbf{a},\mathbf{b}\) 的余弦相似度：</p>
+      <div class="formula">\[ \text{sim}(\mathbf{a},\mathbf{b})=\cos\theta=\frac{\mathbf{a}\cdot\mathbf{b}}{\lVert\mathbf{a}\rVert_2\,\lVert\mathbf{b}\rVert_2}=\frac{\sum_i a_ib_i}{\sqrt{\sum_i a_i^2}\,\sqrt{\sum_i b_i^2}} \]</div>
+      <p class="txt">因第 1 步已归一化（\(\lVert\mathbf a\rVert=\lVert\mathbf b\rVert=1\)），它<span class="hl">退化为简单点积</span>：</p>
+      <div class="formula">\[ \text{sim}(\mathbf{a},\mathbf{b})=\mathbf{a}\cdot\mathbf{b}\in[-1,1] \]</div>
+      <div class="note blue"><span class="ic">i</span>
+        <div>pgvector 返回的是<b>余弦距离</b>，二者关系：\(\;\text{distance}=1-\cos\theta\;\Rightarrow\;\text{score}=1-\text{distance}\)。距离越小 = 相似度越高。代码即 <code>(1 - distance_expr)</code>。</div>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="step" id="s4">
+      <div class="stephead"><div class="badge">4</div>
+        <div><h2>两阶段检索（系统的灵魂）</h2>
+          <div class="file">代码：<code>quantizer.py</code> + <code>retriever.py · search()</code></div></div>
+      </div>
+      <p class="txt">对全部 \(N\) 条算精确余弦是 \(O(N)\)，数据一多就慢。所以拆成 <span class="hl">粗筛 + 精排</span>。</p>
+
+      <h3 style="font-size:16px;margin:20px 0 6px">4.1　向量量化：把相似向量「吸附」成锚点</h3>
+      <p class="txt">把连续向量吸附到间距为 \(\varepsilon\) 的网格（\(\varepsilon=0.02\)）：</p>
+      <div class="formula">\[ \mathbf{a}=\operatorname{round}\!\Big(\frac{\mathbf{v}}{\varepsilon}\Big)\cdot\varepsilon,\qquad \text{quant\_key}=\operatorname{SHA256}\big(\text{bytes}(\mathbf{a})\big) \]</div>
+      <p class="txt dim">几乎相同的向量被吸附到<b>同一锚点</b>，相同 key 共享锚点（幂等 upsert）。相当于给知识库做了一层聚类分桶，索引规模大幅压缩。</p>
+
+      <h3 style="font-size:16px;margin:20px 0 6px">4.2　L1 粗筛：锚点路由</h3>
+      <p class="txt">只对锚点集合算余弦距离（借助 pgvector 近似索引），取最近 8 个：</p>
+      <div class="formula">\[ \mathcal{A}_{\text{top}}=\underset{\mathbf{a}\in\text{Anchors}}{\arg\text{top-}8}\;\big(1-\text{cosine\_distance}(\mathbf{q},\mathbf{a})\big) \]</div>
+      <p class="txt dim">对应 <code>RAG_ANCHOR_TOP_K = 8</code>，把搜索范围从「全库」缩到「8 个桶里的少量候选」。</p>
+
+      <h3 style="font-size:16px;margin:20px 0 6px">4.3　L2 精排：全精度重排</h3>
+      <p class="txt">取出候选条目 \(\mathcal{C}\)，用<span class="hl">未量化的原始向量</span>逐条精算余弦：</p>
+      <div class="formula">\[ s_i=\frac{\mathbf{q}\cdot\mathbf{e}_i}{\lVert\mathbf{q}\rVert_2\,\lVert\mathbf{e}_i\rVert_2},\qquad i\in\mathcal{C} \]</div>
+      <div class="note"><span class="ic">★</span>
+        <div><b>为什么两段？</b>量化会丢精度（快但不准），所以只用它「缩范围」；最终排序仍用全精度——<b>先粗筛保证快，再精排保证准</b>。</div>
+      </div>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="step" id="s5">
+      <div class="stephead"><div class="badge">5</div>
+        <div><h2>阈值判定：命中 / 未命中</h2>
+          <div class="file">代码：<code>search()</code> + <code>chat_pipeline.py</code></div></div>
+      </div>
+      <p class="txt">过滤、降序、取前 3：</p>
+      <div class="formula">\[ \mathcal{R}=\underset{k=3}{\text{TopK}}\Big(\{\,i\in\mathcal{C}\;:\;s_i\ge\tau\,\}\Big),\qquad \tau=0.40 \]</div>
+      <p class="txt">判定规则：</p>
+      <div class="formula">\[ \text{结果}=\begin{cases}\textbf{命中}\to\text{交给 LLM 生成}, & \max_i s_i\ge 0.40\\[4pt]\textbf{未命中}\to\text{通用回答 / 建工单}, & \max_i s_i<0.40\end{cases} \]</div>
+      <div class="grid2">
+        <div class="mini"><h4 style="color:var(--green)">τ 调高 ↑</h4><p>更准，但可能漏召回 → 误判未命中、多建工单。</p></div>
+        <div class="mini"><h4 style="color:var(--blue)">τ 调低 ↓</h4><p>召回更多，但可能答非所问。</p></div>
+      </div>
+      <p class="txt dim">\(\tau=0.40\)（<code>RAG_SCORE_THRESHOLD</code>）是<b>召回率与准确率的权衡旋钮</b>。</p>
+    </section>
+
+    <!-- STEP 6 -->
+    <section class="step" id="s6">
+      <div class="stephead"><div class="badge">6</div>
+        <div><h2>条件生成（LLM）</h2>
+          <div class="file">代码：<code>llm.py · generate_answer()</code></div></div>
+      </div>
+      <p class="txt">把 Top-K 条目拼成上下文 \(C\)，让 DeepSeek 在该上下文条件下生成：</p>
+      <div class="formula">\[ \text{answer}=\arg\max_{y}\;\prod_{t}P_\theta\big(y_t\mid y_{<t},\,q,\,C\big) \]</div>
+      <p class="txt">采样温度 \(T=0.1\)（很低），数学上让 softmax 分布更「尖锐」：</p>
+      <div class="formula">\[ P(y_t=w)=\frac{\exp(z_w/T)}{\sum_{w'}\exp(z_{w'}/T)} \]</div>
+      <div class="note blue"><span class="ic">i</span>
+        <div>\(T\) 越小，分布越集中在最高概率 token → 输出越确定、越少胡编，符合运维场景对稳定性的要求。<b>兜底</b>：无 API Key 时直接返回 <code>results[0]["solution"]</code> 原文，系统绝不崩。</div>
+      </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section class="step" id="summary">
+      <div class="stephead"><div class="badge">↺</div>
+        <div><h2>一句话串起来 + 自学习闭环</h2>
+          <div class="file">从提问到「越用越聪明」的数学本质</div></div>
+      </div>
+      <div class="master">
+        <div class="cap">端到端求解链</div>
+        \[ \underbrace{q}_{\text{问题}}\xrightarrow{\text{BGE+前缀}}\mathbf{q}\xrightarrow{\text{量化锚点 Top-8}}\mathcal{C}\xrightarrow{\text{全精度余弦 Top-3}}\mathcal{R}\xrightarrow{\,s\ge0.4\,?\,}\begin{cases}\text{是}\Rightarrow\text{DeepSeek 生成}\\\text{否}\Rightarrow\text{建工单}\end{cases} \]
+      </div>
+      <p class="txt"><b>自学习闭环</b>：把「未命中 → 已解决的工单」再走一遍第 1、2、4.1 步（<code>ingest_kb_entry</code>：编码 → 联合向量 → 量化建锚点）写回知识库。于是下次同样的 \(q\) 在第 5 步就满足 \(s\ge0.4\) 而命中。</p>
+      <div class="flow">
+        <span class="s">用户提问</span><span class="ar">→</span>
+        <span class="s">RAG 未命中</span><span class="ar">→</span>
+        <span class="s">确认后建工单</span><span class="ar">→</span>
+        <span class="s">运维解决</span><span class="ar">→</span>
+        <span class="s hot">回写知识库</span><span class="ar">↺</span>
+        <span class="s">下次直接命中</span>
+      </div>
+      <div class="note"><span class="ic">★</span>
+        <div>「越用越聪明」的数学本质：<b>不断往 \(\mathcal{D}\) 里增加能提高 \(\max_i s_i\) 的新点</b>，让原本低于阈值的问题被新增知识点拉过 \(\tau\)。</div>
+      </div>
+      <div class="actions">
+        <a class="btnlink" href="rag-interactive.html">▶ 打开交互演示（实时算相似度）</a>
+        <a class="btnlink ghost" href="index.html">查看答辩主稿 slides</a>
+      </div>
+    </section>
+
+    <footer>
+      OpsWarden · AI 运维数字员工平台　|　公式渲染：MathJax　|　核心代码：<code>backend/app/rag/</code>（embedder · quantizer · retriever · llm · chat_pipeline）
+    </footer>
+  </main>
+</div>
+
+<script>
+  // scroll progress + active TOC highlight
+  const prog=document.getElementById('prog');
+  const links=[...document.querySelectorAll('.toc a')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  function onScroll(){
+    const h=document.documentElement;
+    const sc=h.scrollTop, max=h.scrollHeight-h.clientHeight;
+    prog.style.width=(max>0?(sc/max*100):0)+'%';
+    let idx=0;
+    secs.forEach((s,i)=>{ if(s && s.getBoundingClientRect().top<=120) idx=i; });
+    links.forEach((a,i)=>a.classList.toggle('active', i===idx));
+  }
+  document.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+</script>
+</body>
+</html>

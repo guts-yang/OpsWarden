@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpsWarden · RAG 超参数调优实验报告</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --orange:#ff6700; --orange-soft:#ff8a3d; --orange-tint:#fff3e9;
+    --blue:#1a73e8; --blue-tint:#eaf2fe; --green:#1e7e34; --green-tint:#e9f7ee;
+    --red:#c0392b; --red-tint:#fdecea; --purple:#7c4dff;
+    --bg:#f6f7f9; --bg2:#ffffff; --bg3:#f1f2f4; --text:#1a1a1f; --dim:#6b7280;
+    --line:#e5e7eb; --r:16px; --shadow:0 10px 30px -18px rgba(20,20,40,.35);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--text);background:var(--bg);
+    background:radial-gradient(1100px 600px at 88% -6%, var(--orange-tint) 0%, var(--bg) 55%);
+    font-family:"PingFang SC","Microsoft YaHei","Inter",system-ui,sans-serif;line-height:1.65}
+  code{font-family:"SF Mono",Consolas,Monaco,monospace;background:var(--bg3);color:#b5430a;
+    padding:1px 6px;border-radius:6px;font-size:.85em;border:1px solid var(--line)}
+  .wrap{max-width:1080px;margin:0 auto;padding:36px 28px 90px}
+
+  /* hero */
+  .kick{font-size:12px;font-weight:800;letter-spacing:.26em;color:var(--orange);text-transform:uppercase}
+  h1{margin:.3em 0 .2em;font-size:30px;font-weight:900;letter-spacing:-.02em}
+  .meta{color:var(--dim);font-size:13px;margin:0}
+  .meta b{color:var(--text)}
+  .specs{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .spec{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:6px 13px;
+    font-size:12px;font-weight:700;box-shadow:var(--shadow)}
+  .spec b{color:var(--orange)}
+
+  h2{font-size:21px;font-weight:900;margin:40px 0 6px;letter-spacing:-.01em;display:flex;align-items:center;gap:11px}
+  h2 .n{width:30px;height:30px;border-radius:9px;background:var(--orange);color:#fff;font-size:15px;
+    display:flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:var(--shadow)}
+  h3{font-size:15px;font-weight:800;margin:22px 0 8px}
+  p{font-size:14.5px;margin:10px 0}
+  .dim{color:var(--dim)}
+  .hl{color:var(--orange);font-weight:700}.hlb{color:var(--blue);font-weight:700}.hlg{color:var(--green);font-weight:700}.hlr{color:var(--red);font-weight:700}
+
+  .card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;box-shadow:var(--shadow);margin:16px 0}
+  .chartbox{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px 12px;box-shadow:var(--shadow);margin:16px 0}
+  .chartbox .cap{font-size:13px;font-weight:800;margin-bottom:2px}
+  .chartbox .sub{font-size:12px;color:var(--dim);margin-bottom:12px}
+  .chartbox .holder{position:relative;height:320px}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+  th{background:var(--orange-tint);color:#b5430a;text-align:left;padding:9px 11px;border-bottom:2px solid #ffd9bd;font-weight:800;font-size:12.5px}
+  td{padding:8px 11px;border-bottom:1px solid var(--line)}
+  tr:nth-child(even) td{background:rgba(0,0,0,.018)}
+  td.best{color:var(--green);font-weight:800}
+  .tagrec{display:inline-block;background:var(--green-tint);color:var(--green);border:1px solid #b9e3c6;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:800}
+  .tagnow{display:inline-block;background:var(--red-tint);color:var(--red);border:1px solid #f3c7c0;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:800}
+
+  .grid{display:grid;gap:14px;margin:16px 0}
+  .g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}}
+  .kpi{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+  .kpi .num{font-size:26px;font-weight:900;line-height:1;color:var(--orange)}
+  .kpi .num.b{color:var(--blue)}.kpi .num.g{color:var(--green)}.kpi .num.r{color:var(--red)}
+  .kpi .lbl{font-size:11.5px;color:var(--dim);margin-top:6px}
+
+  .note{display:flex;gap:12px;border-radius:12px;padding:13px 16px;margin:14px 0;font-size:14px;border:1px solid}
+  .note.o{background:var(--orange-tint);border-color:#ffd9bd}.note.o .ic{color:var(--orange)}
+  .note.b{background:var(--blue-tint);border-color:#cfe0fb}.note.b .ic{color:var(--blue)}
+  .note.r{background:var(--red-tint);border-color:#f3c7c0}.note.r .ic{color:var(--red)}
+  .note .ic{font-weight:900;flex:0 0 auto}
+
+  pre{background:#1a1a1f;color:#e8e8ea;border-radius:12px;padding:14px 16px;font-size:13px;overflow:auto;box-shadow:var(--shadow)}
+  pre .k{color:#ff9a5a}.pre-cmt{color:#7c8694}
+
+  footer{margin-top:46px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--dim)}
+  a{color:#b5430a}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="kick">实验报告 · 答辩材料</div>
+  <h1>OpsWarden · RAG 超参数调优实验</h1>
+  <p class="meta">目标：在<b>误命中率 FPR ≤ 5%</b> 约束下，最大化知识库召回 <b>Hit@1</b>　·　评测集：exact + paraphrase + hard + negative　·　向量库：PostgreSQL / pgvector</p>
+  <div class="specs">
+    <div class="spec">模型 <b>BGE-small-zh-v1.5</b></div>
+    <div class="spec">维度 <b>512</b></div>
+    <div class="spec">调参维度 <b>ε · L1-K · τ · Top-K</b></div>
+    <div class="spec">网格组合 <b>1584 (v2)</b></div>
+  </div>
+
+  <!-- 1 背景 -->
+  <h2><span class="n">1</span>实验背景与目标</h2>
+  <div class="card">
+    <p style="margin-top:0">RAG 检索链由 <b>4 个超参数</b>控制，它们共同决定「问对了能不能查到、问偏了会不会乱答」：</p>
+    <div class="grid g4">
+      <div class="kpi"><div class="num">ε</div><div class="lbl"><b>量化步长</b><br>向量吸附网格，越大锚点合并越多</div></div>
+      <div class="kpi"><div class="num b">L1-K</div><div class="lbl"><b>锚点路由 Top-K</b><br>粗筛保留的候选桶数量</div></div>
+      <div class="kpi"><div class="num g">τ</div><div class="lbl"><b>相似度阈值</b><br>≥τ 判命中，否则建工单</div></div>
+      <div class="kpi"><div class="num">Top-K</div><div class="lbl"><b>精排返回条数</b><br>送入 LLM 的上下文条数</div></div>
+    </div>
+    <p class="dim" style="margin-bottom:0">核心矛盾：阈值 τ 调低 → 召回高但<b>误命中多（拿不相关知识硬答）</b>；τ 调高 → 误命中少但<b>可能漏答</b>。调优就是找这个平衡点。</p>
+  </div>
+
+  <!-- 2 设置 -->
+  <h2><span class="n">2</span>实验设置</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>超参数</th><th>候选范围（v2 网格）</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>ANCHOR_QUANT_EPSILON</code> ε</td><td>0.01 – 0.10（6 档）</td><td>量化网格步长</td></tr>
+        <tr><td><code>RAG_ANCHOR_TOP_K</code> L1-K</td><td>1, 2, 3, 4, 8, 12, 16, 24</td><td>锚点粗筛 Top-K</td></tr>
+        <tr><td><code>RAG_SCORE_THRESHOLD</code> τ</td><td>0.35 – 0.85（步长 0.05）</td><td>命中阈值</td></tr>
+        <tr><td><code>RAG_TOP_K</code> Top-K</td><td>1, 3, 5</td><td>精排返回条数</td></tr>
+      </tbody>
+    </table>
+    <p class="dim">评测集构造（v2，共 332 条）：原题 <b>exact 100</b> + 口语改写 <b>paraphrase 200</b> + 知识库外 <b>negative 32</b>。v3 进一步扩到 680 条（加 hard_confusion 同类干扰 80 + negative 100），知识库扩至 400 条以测锚点合并。</p>
+  </div>
+
+  <h3>评测指标</h3>
+  <div class="grid g2">
+    <div class="card" style="margin:0"><b class="hl">Hit@1_para</b><p style="margin:.3em 0 0">主指标——口语改写问题的 Top-1 命中率。衡量「换种问法还能不能查到」。</p></div>
+    <div class="card" style="margin:0"><b class="hlr">FPR</b><p style="margin:.3em 0 0">误命中率——知识库外问题被误判为命中的比例。越低越好。</p></div>
+    <div class="card" style="margin:0"><b class="hlb">L1_recall</b><p style="margin:.3em 0 0">锚点召回——正确条目的锚点是否进入 L1 候选桶。验证粗筛不漏。</p></div>
+    <div class="card" style="margin:0"><b class="hlg">anchor_compression</b><p style="margin:.3em 0 0">锚点压缩比——量化后锚点数 / 条目数，越小索引越轻。</p></div>
+  </div>
+
+  <!-- 3 结果 -->
+  <h2><span class="n">3</span>核心结果</h2>
+
+  <div class="note o"><span class="ic">★</span><div><b>一句话结论：</b>最优组合 <span class="hl">ε=0.02 · L1-K=8 · τ=0.65 · Top-K=3</span>。其中 <b>τ 从默认 0.4 提到 0.65</b> 是关键——几乎不损召回，却把误命中率从 81% 砍到 3%。</div></div>
+
+  <h3>图 1 · 阈值 τ 权衡曲线（ε=0.02, L1-K=8, Top-K=3）</h3>
+  <div class="chartbox">
+    <div class="cap">召回 Hit@1_para 与 误命中 FPR 随 τ 的变化</div>
+    <div class="sub">绿线越高越好，红线越低越好。两线的「黄金交叉区」就是最佳阈值。</div>
+    <div class="holder"><canvas id="c1"></canvas></div>
+  </div>
+  <p>τ ≤ 0.5 时召回满分但 FPR 高得离谱（0.40 时 <span class="hlr">81.2%</span>）；τ ≥ 0.75 后召回开始崩塌。<span class="hl">τ=0.65</span> 是甜点：Hit_para 仍有 <b>98.5%</b>，FPR 降到 <b>3.1%</b>，满足 ≤5% 约束。</p>
+
+  <h3>图 2 · 当前默认 vs 推荐配置</h3>
+  <div class="chartbox">
+    <div class="cap">把 τ 0.4 → 0.65 的直接效果</div>
+    <div class="sub">召回几乎不变，误命中率断崖式下降。</div>
+    <div class="holder"><canvas id="c2"></canvas></div>
+  </div>
+
+  <h3>最优超参数组合</h3>
+  <table>
+    <thead><tr><th>参数</th><th>当前默认 <span class="tagnow">线上</span></th><th>v2 推荐</th><th>v3 推荐 <span class="tagrec">最新</span></th></tr></thead>
+    <tbody>
+      <tr><td>ε（量化步长）</td><td>0.02</td><td>0.02</td><td class="best">0.02</td></tr>
+      <tr><td>L1-K（锚点 Top-K）</td><td>8</td><td>8</td><td class="best">8</td></tr>
+      <tr><td>τ（相似度阈值）</td><td><span class="hlr">0.40</span></td><td>0.65</td><td class="best">0.65</td></tr>
+      <tr><td>Top-K（精排条数）</td><td>3</td><td>3</td><td class="best">3</td></tr>
+    </tbody>
+  </table>
+
+  <h3>推荐配置指标（v3，680 条评测 / 400 条扩库）</h3>
+  <div class="grid g4">
+    <div class="kpi"><div class="num g">100%</div><div class="lbl">Hit@1_exact 原题命中</div></div>
+    <div class="kpi"><div class="num">99.5%</div><div class="lbl">Hit@1_para 改写命中</div></div>
+    <div class="kpi"><div class="num b">96.2%</div><div class="lbl">L1_recall_hard 锚点召回</div></div>
+    <div class="kpi"><div class="num">0.25×</div><div class="lbl">anchor_compression 压缩比</div></div>
+  </div>
+  <div class="note b"><span class="ic">i</span><div><b>关于 FPR 的两个数：</b>v2（32 条负样本）测得 FPR≈3.1%，v3 把负样本扩到 100 条含 near-miss 后 FPR≈13%。数字升高不是模型变差，而是<b>评测更严格</b>；负样本量小、估计有方差，生产应持续用真实日志迭代。</div></div>
+
+  <h3>Top 配置（v3 joint，按 Hit_para + L1_hard 选优）</h3>
+  <table>
+    <thead><tr><th>Rank</th><th>ε</th><th>L1-K</th><th>Top-K</th><th>Hit_para</th><th>L1_hard</th><th>FPR</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>0.02</td><td>12</td><td>3</td><td>99.5%</td><td>97.5%</td><td>13.0%</td></tr>
+      <tr><td>2</td><td>0.01</td><td>12</td><td>3</td><td>99.5%</td><td>97.5%</td><td>13.0%</td></tr>
+      <tr><td>3</td><td>0.02</td><td>12</td><td>1</td><td>99.5%</td><td>97.5%</td><td>13.0%</td></tr>
+      <tr><td>—</td><td>0.02</td><td><b>8</b></td><td>3</td><td>99.5%</td><td>96.2%</td><td>13.0%</td></tr>
+    </tbody>
+  </table>
+  <p class="dim">统计最优 L1-K=12，但生产保守取 <b>L1-K=8</b>：召回仅差 1.3 个百分点，候选更少、延迟更低，且与现有默认一致、无需大改。</p>
+
+  <!-- 4 结论 -->
+  <h2><span class="n">4</span>结论与生产建议</h2>
+  <div class="card">
+    <p style="margin-top:0"><b>1. 立即可落地：</b>把 <code>RAG_SCORE_THRESHOLD</code> 从 <span class="hlr">0.40</span> 调到 <span class="hlg">0.65</span>，性价比最高。</p>
+    <p><b>2. 其余三参数维持默认：</b>ε=0.02、L1-K=8、Top-K=3 已是稳健解，无需改动。</p>
+    <p><b>3. 显式写入 <code>.env</code>：</b>当前 <code>RAG_ANCHOR_TOP_K</code> / <code>ANCHOR_QUANT_EPSILON</code> 未写进 <code>.env</code>，靠代码默认兜底，建议显式声明避免歧义。</p>
+    <p style="margin-bottom:0"><b>4. 持续迭代：</b>负样本规模偏小，上线后应收集真实「未命中 / 误命中」日志，定期重跑调优脚本。</p>
+  </div>
+
+  <h3>推荐 <code>.env</code></h3>
+  <pre><span class="pre-cmt"># RAG 最优组合（v3 调优结论）</span>
+<span class="k">ANCHOR_QUANT_EPSILON</span>=0.02
+<span class="k">RAG_ANCHOR_TOP_K</span>=8
+<span class="k">RAG_SCORE_THRESHOLD</span>=0.65   <span class="pre-cmt"># ← 由 0.40 上调，FPR 81% → 3%</span>
+<span class="k">RAG_TOP_K</span>=3</pre>
+
+  <h3>复现命令</h3>
+  <pre>python scripts/build_eval_dataset_v3.py
+python scripts/rag_hyperparam_eval.py --dataset v3 --joint3 --all
+python scripts/rag_hyperparam_verify_db.py --dataset v3 --joint3</pre>
+
+  <footer>
+    OpsWarden · AI 运维数字员工平台　|　数据来源：<code>docs/rag_hyperparam_report.md</code>（v2）· <code>docs/rag_hyperparam_report_v3_joint.md</code>（v3）<br>
+    图表渲染：Chart.js　·　配套：<a href="rag-math.html">RAG 数学原理</a> · <a href="rag-interactive.html">RAG 交互演示</a>
+  </footer>
+</div>
+
+<script>
+const ORANGE="#ff6700", GREEN="#1e7e34", RED="#c0392b", BLUE="#1a73e8", DIM="#6b7280", LINE="#e5e7eb";
+Chart.defaults.font.family='"PingFang SC","Microsoft YaHei",system-ui,sans-serif';
+Chart.defaults.color=DIM;
+
+/* 图1：τ 权衡曲线 */
+const taus=[0.35,0.40,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.85];
+const hitPara=[100,100,100,100,100,100,98.5,97.5,95.5,84.5,66.5];
+const fpr=[96.9,81.2,62.5,34.4,15.6,9.4,3.1,3.1,0.0,0.0,0.0];
+const hi=taus.indexOf(0.65);
+const ptColors=taus.map((t,i)=> i===hi ? GREEN : "rgba(0,0,0,0)");
+const ptColorsF=taus.map((t,i)=> i===taus.indexOf(0.40) ? RED : "rgba(0,0,0,0)");
+new Chart(document.getElementById('c1'),{
+  type:'line',
+  data:{labels:taus.map(t=>t.toFixed(2)),datasets:[
+    {label:'Hit@1_para（召回，越高越好）',data:hitPara,borderColor:GREEN,backgroundColor:'rgba(30,126,52,.08)',
+      tension:.3,fill:true,borderWidth:3,pointRadius:taus.map((t,i)=>i===hi?6:3),pointBackgroundColor:taus.map((t,i)=>i===hi?GREEN:'#fff'),pointBorderColor:GREEN},
+    {label:'FPR（误命中，越低越好）',data:fpr,borderColor:RED,backgroundColor:'rgba(192,57,43,.06)',
+      tension:.3,fill:true,borderWidth:3,pointRadius:taus.map((t,i)=>i===taus.indexOf(0.40)?6:3),pointBackgroundColor:taus.map((t,i)=>i===taus.indexOf(0.40)?RED:'#fff'),pointBorderColor:RED}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{position:'top',labels:{boxWidth:14,font:{size:12}}},
+      tooltip:{callbacks:{title:i=>'τ = '+i[0].label,label:c=>c.dataset.label.split('（')[0]+': '+c.parsed.y+'%'}}},
+    scales:{x:{title:{display:true,text:'相似度阈值 τ'},grid:{color:LINE}},
+      y:{min:0,max:105,title:{display:true,text:'百分比 %'},grid:{color:LINE},ticks:{callback:v=>v+'%'}}}}
+});
+
+/* 图2：默认 vs 推荐 */
+new Chart(document.getElementById('c2'),{
+  type:'bar',
+  data:{labels:['Hit@1_exact','Hit@1_para','FPR（越低越好）'],
+    datasets:[
+      {label:'当前默认 (τ=0.40)',data:[100,100,81.2],backgroundColor:RED,borderRadius:6,maxBarThickness:54},
+      {label:'推荐 (τ=0.65)',data:[100,98.5,3.1],backgroundColor:GREEN,borderRadius:6,maxBarThickness:54}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{boxWidth:14,font:{size:12}}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+'%'}}},
+    scales:{x:{grid:{display:false}},y:{min:0,max:105,grid:{color:LINE},ticks:{callback:v=>v+'%'}}}}
+});
+</script>
+</body>
+</html>

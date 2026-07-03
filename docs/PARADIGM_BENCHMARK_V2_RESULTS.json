@@ -1,0 +1,1219 @@
+{
+  "S1": {
+    "spec": {
+      "id": "S1",
+      "name": "标准企业运维 FAQ",
+      "description": "原始 400 条真实运维 KB，680 条查询（100 exact + 400 paraphrase + 100 negative + 80 hard_confusion）。作为基线场景，用于评估各范式在标准企业运维 FAQ 检索中的综合表现。",
+      "kb_source": "v3",
+      "query_filter": "all",
+      "extra": {
+        "hotspot_top_k": null
+      }
+    },
+    "kpis": {
+      "Flat": {
+        "hit@1": 0.8044117647058824,
+        "hit@3": 0.8147058823529412,
+        "hit@5": 0.8147058823529412,
+        "mrr": 0.808578431372549,
+        "ndcg@10": 1.7189418157510739,
+        "latency_p50_ms": 0.08384999819099903,
+        "latency_p95_ms": 0.133734755218029,
+        "qps": 18.171671392536485,
+        "build_time_sec": 0.0072085000574588776,
+        "index_size_mb": 0.78125,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.19999999999999285,
+        "forget_residual_recall": 0.0
+      },
+      "IVF": {
+        "hit@1": 0.8044117647058824,
+        "hit@3": 0.8147058823529412,
+        "hit@5": 0.8147058823529412,
+        "mrr": 0.808578431372549,
+        "ndcg@10": 1.7189418157510739,
+        "latency_p50_ms": 0.12004980817437172,
+        "latency_p95_ms": 0.1876000314950943,
+        "qps": 18.171671392536485,
+        "build_time_sec": 2.7440380002371967,
+        "index_size_mb": 0.8203125,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.19999999999999285,
+        "forget_residual_recall": 0.0
+      },
+      "HNSW": {
+        "hit@1": 0.8044117647058824,
+        "hit@3": 0.8147058823529412,
+        "hit@5": 0.8147058823529412,
+        "mrr": 0.808578431372549,
+        "ndcg@10": 1.7189418157510739,
+        "latency_p50_ms": 0.13409974053502083,
+        "latency_p95_ms": 0.1959449844434857,
+        "qps": 18.171671392536485,
+        "build_time_sec": 0.016722400207072496,
+        "index_size_mb": 0.8056640625,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.19999999999999285,
+        "forget_residual_recall": 0.0
+      },
+      "PageIndex": {
+        "hit@1": 0.5955882352941176,
+        "hit@3": 0.6,
+        "hit@5": 0.6,
+        "mrr": 0.5970588235294118,
+        "ndcg@10": 1.173604734648125,
+        "latency_p50_ms": 2.4592499248683453,
+        "latency_p95_ms": 3.175289952196181,
+        "qps": 18.171671392536485,
+        "build_time_sec": 0.013546600006520748,
+        "index_size_mb": 0.13179969787597656,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.19999999999999285,
+        "forget_residual_recall": 0.0
+      },
+      "GridTrace": {
+        "hit@1": 0.8,
+        "hit@3": 0.8058823529411765,
+        "hit@5": 0.8058823529411765,
+        "mrr": 0.802450980392157,
+        "ndcg@10": 1.7073347727206116,
+        "latency_p50_ms": 2.1168498788028955,
+        "latency_p95_ms": 2.627344755455851,
+        "qps": 18.171671392536485,
+        "build_time_sec": 0.02849610010161996,
+        "index_size_mb": 3.125,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.19999999999999357,
+        "forget_residual_recall": 0.0
+      },
+      "GridTrace+": {
+        "hit@1": 0.8,
+        "hit@3": 0.8058823529411765,
+        "hit@5": 0.8058823529411765,
+        "mrr": 0.802450980392157,
+        "ndcg@10": 1.7073347727206116,
+        "latency_p50_ms": 0.14350004494190216,
+        "latency_p95_ms": 0.24392977356910694,
+        "qps": 18.171671392536485,
+        "build_time_sec": 0.05284490017220378,
+        "index_size_mb": 4.6875,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 1.0,
+        "forget_residual_recall": 0.0
+      }
+    },
+    "winner": "Flat",
+    "n_queries": 680,
+    "n_kb": 400,
+    "per_query_counts": {
+      "Flat": 680,
+      "IVF": 680,
+      "HNSW": 680,
+      "PageIndex": 680,
+      "GridTrace": 680,
+      "GridTrace+": 680
+    },
+    "index_stats": {
+      "Flat": {
+        "build_time_sec": 0.0072085000574588776,
+        "index_size_bytes": 819200
+      },
+      "IVF": {
+        "build_time_sec": 2.7440380002371967,
+        "index_size_bytes": 860160
+      },
+      "HNSW": {
+        "build_time_sec": 0.016722400207072496,
+        "index_size_bytes": 844800
+      },
+      "PageIndex": {
+        "build_time_sec": 0.013546600006520748,
+        "index_size_bytes": 138202
+      },
+      "GridTrace": {
+        "build_time_sec": 0.02849610010161996,
+        "index_size_bytes": 3276800
+      },
+      "GridTrace+": {
+        "build_time_sec": 0.05284490017220378,
+        "index_size_bytes": 4915200
+      }
+    }
+  },
+  "S2": {
+    "by_size": {
+      "1000": {
+        "spec": {
+          "id": "S2",
+          "name": "规模化压力",
+          "description": "N ∈ {1K, 5K, 10K, 50K} 四档规模，每档跑 100 条 paraphrase query。用于评估各范式在 KB 规模增长下的延迟、召回与可扩展性。",
+          "kb_source": "multi_size",
+          "query_filter": "paraphrase",
+          "extra": {
+            "sizes": [
+              1000,
+              5000,
+              10000,
+              50000
+            ],
+            "n_queries_per_size": 100
+          }
+        },
+        "kpis": {
+          "Flat": {
+            "hit@1": 0.99,
+            "hit@3": 1.0,
+            "hit@5": 1.0,
+            "mrr": 0.995,
+            "ndcg@10": 1.476536984178585,
+            "latency_p50_ms": 0.33510010689496994,
+            "latency_p95_ms": 0.758814951404929,
+            "qps": 20.51396508774994,
+            "build_time_sec": 0.01728569995611906,
+            "index_size_mb": 1.953125,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "IVF": {
+            "hit@1": 0.99,
+            "hit@3": 1.0,
+            "hit@5": 1.0,
+            "mrr": 0.995,
+            "ndcg@10": 1.476536984178585,
+            "latency_p50_ms": 0.16189995221793652,
+            "latency_p95_ms": 0.27273509185761213,
+            "qps": 20.51396508774994,
+            "build_time_sec": 0.23493729997426271,
+            "index_size_mb": 2.013671875,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "HNSW": {
+            "hit@1": 0.99,
+            "hit@3": 1.0,
+            "hit@5": 1.0,
+            "mrr": 0.995,
+            "ndcg@10": 1.476536984178585,
+            "latency_p50_ms": 0.17765001393854618,
+            "latency_p95_ms": 0.26571527123451233,
+            "qps": 20.51396508774994,
+            "build_time_sec": 0.03840279998257756,
+            "index_size_mb": 2.01416015625,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "PageIndex": {
+            "hit@1": 0.55,
+            "hit@3": 0.56,
+            "hit@5": 0.56,
+            "mrr": 0.555,
+            "ndcg@10": 0.7740417359285788,
+            "latency_p50_ms": 5.050950217992067,
+            "latency_p95_ms": 7.495304918847978,
+            "qps": 20.51396508774994,
+            "build_time_sec": 0.01909800013527274,
+            "index_size_mb": 0.3297748565673828,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "GridTrace": {
+            "hit@1": 0.99,
+            "hit@3": 1.0,
+            "hit@5": 1.0,
+            "mrr": 0.995,
+            "ndcg@10": 1.471536984178585,
+            "latency_p50_ms": 5.716250045225024,
+            "latency_p95_ms": 7.523514935746788,
+            "qps": 20.51396508774994,
+            "build_time_sec": 0.06411950010806322,
+            "index_size_mb": 7.8125,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "GridTrace+": {
+            "hit@1": 0.99,
+            "hit@3": 1.0,
+            "hit@5": 1.0,
+            "mrr": 0.995,
+            "ndcg@10": 1.471536984178585,
+            "latency_p50_ms": 0.3923999611288309,
+            "latency_p95_ms": 0.7363902404904366,
+            "qps": 20.51396508774994,
+            "build_time_sec": 0.0982035999186337,
+            "index_size_mb": 11.71875,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 1.0,
+            "forget_residual_recall": 0.0
+          }
+        },
+        "winner": "IVF",
+        "n_queries": 100,
+        "n_kb": 1000,
+        "per_query_counts": {
+          "Flat": 100,
+          "IVF": 100,
+          "HNSW": 100,
+          "PageIndex": 100,
+          "GridTrace": 100,
+          "GridTrace+": 100
+        },
+        "index_stats": {
+          "Flat": {
+            "build_time_sec": 0.01728569995611906,
+            "index_size_bytes": 2048000
+          },
+          "IVF": {
+            "build_time_sec": 0.23493729997426271,
+            "index_size_bytes": 2111488
+          },
+          "HNSW": {
+            "build_time_sec": 0.03840279998257756,
+            "index_size_bytes": 2112000
+          },
+          "PageIndex": {
+            "build_time_sec": 0.01909800013527274,
+            "index_size_bytes": 345794
+          },
+          "GridTrace": {
+            "build_time_sec": 0.06411950010806322,
+            "index_size_bytes": 8192000
+          },
+          "GridTrace+": {
+            "build_time_sec": 0.0982035999186337,
+            "index_size_bytes": 12288000
+          }
+        }
+      },
+      "5000": {
+        "spec": {
+          "id": "S2",
+          "name": "规模化压力",
+          "description": "N ∈ {1K, 5K, 10K, 50K} 四档规模，每档跑 100 条 paraphrase query。用于评估各范式在 KB 规模增长下的延迟、召回与可扩展性。",
+          "kb_source": "multi_size",
+          "query_filter": "paraphrase",
+          "extra": {
+            "sizes": [
+              1000,
+              5000,
+              10000,
+              50000
+            ],
+            "n_queries_per_size": 100
+          }
+        },
+        "kpis": {
+          "Flat": {
+            "hit@1": 0.69,
+            "hit@3": 0.94,
+            "hit@5": 0.94,
+            "mrr": 0.8066666666666665,
+            "ndcg@10": 1.721527480678597,
+            "latency_p50_ms": 0.5696502048522234,
+            "latency_p95_ms": 0.7384348660707469,
+            "qps": 5.111670969757175,
+            "build_time_sec": 0.0897433003410697,
+            "index_size_mb": 9.765625,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "IVF": {
+            "hit@1": 0.69,
+            "hit@3": 0.94,
+            "hit@5": 0.94,
+            "mrr": 0.8066666666666665,
+            "ndcg@10": 1.721527480678597,
+            "latency_p50_ms": 0.8349497802555561,
+            "latency_p95_ms": 1.446815370582044,
+            "qps": 5.111670969757175,
+            "build_time_sec": 2.474559299647808,
+            "index_size_mb": 9.90234375,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "HNSW": {
+            "hit@1": 0.74,
+            "hit@3": 0.95,
+            "hit@5": 0.95,
+            "mrr": 0.8366666666666666,
+            "ndcg@10": 1.5855787201071638,
+            "latency_p50_ms": 0.18500001169741154,
+            "latency_p95_ms": 0.2818651497364043,
+            "qps": 5.111670969757175,
+            "build_time_sec": 0.2114347997121513,
+            "index_size_mb": 10.07080078125,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "PageIndex": {
+            "hit@1": 0.54,
+            "hit@3": 0.56,
+            "hit@5": 0.56,
+            "mrr": 0.5483333333333333,
+            "ndcg@10": 0.7677324383928643,
+            "latency_p50_ms": 26.602550176903605,
+            "latency_p95_ms": 33.91912474762648,
+            "qps": 5.111670969757175,
+            "build_time_sec": 0.10839289985597134,
+            "index_size_mb": 1.6645488739013672,
+            "sla_30ms_violation_rate": 0.24,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "GridTrace": {
+            "hit@1": 0.69,
+            "hit@3": 0.89,
+            "hit@5": 0.89,
+            "mrr": 0.7833333333333333,
+            "ndcg@10": 1.671290290535739,
+            "latency_p50_ms": 31.177999917417765,
+            "latency_p95_ms": 35.859990026801825,
+            "qps": 5.111670969757175,
+            "build_time_sec": 0.2821581996977329,
+            "index_size_mb": 37.890625,
+            "sla_30ms_violation_rate": 0.68,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "GridTrace+": {
+            "hit@1": 0.69,
+            "hit@3": 0.89,
+            "hit@5": 0.89,
+            "mrr": 0.7833333333333333,
+            "ndcg@10": 1.671290290535739,
+            "latency_p50_ms": 1.065900083631277,
+            "latency_p95_ms": 1.1860803700983524,
+            "qps": 5.111670969757175,
+            "build_time_sec": 0.5107896998524666,
+            "index_size_mb": 56.25,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 1.0,
+            "forget_residual_recall": 0.0
+          }
+        },
+        "winner": "HNSW",
+        "n_queries": 100,
+        "n_kb": 5000,
+        "per_query_counts": {
+          "Flat": 100,
+          "IVF": 100,
+          "HNSW": 100,
+          "PageIndex": 100,
+          "GridTrace": 100,
+          "GridTrace+": 100
+        },
+        "index_stats": {
+          "Flat": {
+            "build_time_sec": 0.0897433003410697,
+            "index_size_bytes": 10240000
+          },
+          "IVF": {
+            "build_time_sec": 2.474559299647808,
+            "index_size_bytes": 10383360
+          },
+          "HNSW": {
+            "build_time_sec": 0.2114347997121513,
+            "index_size_bytes": 10560000
+          },
+          "PageIndex": {
+            "build_time_sec": 0.10839289985597134,
+            "index_size_bytes": 1745406
+          },
+          "GridTrace": {
+            "build_time_sec": 0.2821581996977329,
+            "index_size_bytes": 39731200
+          },
+          "GridTrace+": {
+            "build_time_sec": 0.5107896998524666,
+            "index_size_bytes": 58982400
+          }
+        }
+      },
+      "10000": {
+        "spec": {
+          "id": "S2",
+          "name": "规模化压力",
+          "description": "N ∈ {1K, 5K, 10K, 50K} 四档规模，每档跑 100 条 paraphrase query。用于评估各范式在 KB 规模增长下的延迟、召回与可扩展性。",
+          "kb_source": "multi_size",
+          "query_filter": "paraphrase",
+          "extra": {
+            "sizes": [
+              1000,
+              5000,
+              10000,
+              50000
+            ],
+            "n_queries_per_size": 100
+          }
+        },
+        "kpis": {
+          "Flat": {
+            "hit@1": 0.57,
+            "hit@3": 0.89,
+            "hit@5": 0.89,
+            "mrr": 0.7066666666666667,
+            "ndcg@10": 1.488197315178593,
+            "latency_p50_ms": 0.9447999764233828,
+            "latency_p95_ms": 1.1037150165066123,
+            "qps": 2.7692850727876173,
+            "build_time_sec": 0.19659190019592643,
+            "index_size_mb": 19.53125,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "IVF": {
+            "hit@1": 0.57,
+            "hit@3": 0.89,
+            "hit@5": 0.89,
+            "mrr": 0.7066666666666667,
+            "ndcg@10": 1.488197315178593,
+            "latency_p50_ms": 0.7731500081717968,
+            "latency_p95_ms": 1.0909502394497395,
+            "qps": 2.7692850727876173,
+            "build_time_sec": 6.864142700098455,
+            "index_size_mb": 19.7265625,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "HNSW": {
+            "hit@1": 0.68,
+            "hit@3": 0.94,
+            "hit@5": 0.94,
+            "mrr": 0.7933333333333333,
+            "ndcg@10": 1.597125207785737,
+            "latency_p50_ms": 0.17795013263821602,
+            "latency_p95_ms": 0.317425187677145,
+            "qps": 2.7692850727876173,
+            "build_time_sec": 0.4359530000947416,
+            "index_size_mb": 20.1416015625,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "PageIndex": {
+            "hit@1": 0.52,
+            "hit@3": 0.56,
+            "hit@5": 0.56,
+            "mrr": 0.5366666666666666,
+            "ndcg@10": 0.7514231408571496,
+            "latency_p50_ms": 53.64514980465174,
+            "latency_p95_ms": 65.69832521490753,
+            "qps": 2.7692850727876173,
+            "build_time_sec": 0.20380999986082315,
+            "index_size_mb": 3.3353137969970703,
+            "sla_30ms_violation_rate": 1.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "GridTrace": {
+            "hit@1": 0.52,
+            "hit@3": 0.72,
+            "hit@5": 0.72,
+            "mrr": 0.6166666666666667,
+            "ndcg@10": 1.3216508275000203,
+            "latency_p50_ms": 56.9772501476109,
+            "latency_p95_ms": 62.882019905373454,
+            "qps": 2.7692850727876173,
+            "build_time_sec": 0.5539551000110805,
+            "index_size_mb": 76.953125,
+            "sla_30ms_violation_rate": 1.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "GridTrace+": {
+            "hit@1": 0.52,
+            "hit@3": 0.72,
+            "hit@5": 0.72,
+            "mrr": 0.6166666666666667,
+            "ndcg@10": 1.3216508275000203,
+            "latency_p50_ms": 2.12455028668046,
+            "latency_p95_ms": 2.3986603133380413,
+            "qps": 2.7692850727876173,
+            "build_time_sec": 1.1894271997734904,
+            "index_size_mb": 114.84375,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 1.0,
+            "forget_residual_recall": 0.0
+          }
+        },
+        "winner": "HNSW",
+        "n_queries": 100,
+        "n_kb": 10000,
+        "per_query_counts": {
+          "Flat": 100,
+          "IVF": 100,
+          "HNSW": 100,
+          "PageIndex": 100,
+          "GridTrace": 100,
+          "GridTrace+": 100
+        },
+        "index_stats": {
+          "Flat": {
+            "build_time_sec": 0.19659190019592643,
+            "index_size_bytes": 20480000
+          },
+          "IVF": {
+            "build_time_sec": 6.864142700098455,
+            "index_size_bytes": 20684800
+          },
+          "HNSW": {
+            "build_time_sec": 0.4359530000947416,
+            "index_size_bytes": 21120000
+          },
+          "PageIndex": {
+            "build_time_sec": 0.20380999986082315,
+            "index_size_bytes": 3497330
+          },
+          "GridTrace": {
+            "build_time_sec": 0.5539551000110805,
+            "index_size_bytes": 80691200
+          },
+          "GridTrace+": {
+            "build_time_sec": 1.1894271997734904,
+            "index_size_bytes": 120422400
+          }
+        }
+      },
+      "50000": {
+        "spec": {
+          "id": "S2",
+          "name": "规模化压力",
+          "description": "N ∈ {1K, 5K, 10K, 50K} 四档规模，每档跑 100 条 paraphrase query。用于评估各范式在 KB 规模增长下的延迟、召回与可扩展性。",
+          "kb_source": "multi_size",
+          "query_filter": "paraphrase",
+          "extra": {
+            "sizes": [
+              1000,
+              5000,
+              10000,
+              50000
+            ],
+            "n_queries_per_size": 100
+          }
+        },
+        "kpis": {
+          "Flat": {
+            "hit@1": 0.28,
+            "hit@3": 0.58,
+            "hit@5": 0.58,
+            "mrr": 0.40833333333333327,
+            "ndcg@10": 0.8539183891071559,
+            "latency_p50_ms": 4.46099997498095,
+            "latency_p95_ms": 4.782650084234774,
+            "qps": 0.6698171345919386,
+            "build_time_sec": 0.9404188003391027,
+            "index_size_mb": 97.65625,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "IVF": {
+            "hit@1": 0.28,
+            "hit@3": 0.58,
+            "hit@5": 0.58,
+            "mrr": 0.40833333333333327,
+            "ndcg@10": 0.8539183891071559,
+            "latency_p50_ms": 1.8676996696740389,
+            "latency_p95_ms": 2.425959729589522,
+            "qps": 0.6698171345919386,
+            "build_time_sec": 93.28760050004348,
+            "index_size_mb": 98.091796875,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "HNSW": {
+            "hit@1": 0.56,
+            "hit@3": 0.89,
+            "hit@5": 0.89,
+            "mrr": 0.7083333333333331,
+            "ndcg@10": 1.421888017642879,
+            "latency_p50_ms": 0.17619994468986988,
+            "latency_p95_ms": 0.28355971444398165,
+            "qps": 0.6698171345919386,
+            "build_time_sec": 2.3128546001389623,
+            "index_size_mb": 100.7080078125,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "PageIndex": {
+            "hit@1": 0.49,
+            "hit@3": 0.5,
+            "hit@5": 0.5,
+            "mrr": 0.495,
+            "ndcg@10": 0.6888045457857206,
+            "latency_p50_ms": 231.42759990878403,
+            "latency_p95_ms": 254.99072526581585,
+            "qps": 0.6698171345919386,
+            "build_time_sec": 0.9586197002790868,
+            "index_size_mb": 16.68428611755371,
+            "sla_30ms_violation_rate": 1.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "GridTrace": {
+            "hit@1": 0.21,
+            "hit@3": 0.32,
+            "hit@5": 0.32,
+            "mrr": 0.26,
+            "ndcg@10": 0.5529696285357227,
+            "latency_p50_ms": 231.2413500621915,
+            "latency_p95_ms": 256.466695247218,
+            "qps": 0.6698171345919386,
+            "build_time_sec": 3.0639398000203073,
+            "index_size_mb": 389.453125,
+            "sla_30ms_violation_rate": 1.0,
+            "retrieval_trail_completeness": 0.20000000000000104,
+            "forget_residual_recall": 0.0
+          },
+          "GridTrace+": {
+            "hit@1": 0.21,
+            "hit@3": 0.32,
+            "hit@5": 0.32,
+            "mrr": 0.26,
+            "ndcg@10": 0.5529696285357227,
+            "latency_p50_ms": 9.812099859118462,
+            "latency_p95_ms": 11.030095024034381,
+            "qps": 0.6698171345919386,
+            "build_time_sec": 5.6887634000740945,
+            "index_size_mb": 583.59375,
+            "sla_30ms_violation_rate": 0.0,
+            "retrieval_trail_completeness": 1.0,
+            "forget_residual_recall": 0.0
+          }
+        },
+        "winner": "HNSW",
+        "n_queries": 100,
+        "n_kb": 50000,
+        "per_query_counts": {
+          "Flat": 100,
+          "IVF": 100,
+          "HNSW": 100,
+          "PageIndex": 100,
+          "GridTrace": 100,
+          "GridTrace+": 100
+        },
+        "index_stats": {
+          "Flat": {
+            "build_time_sec": 0.9404188003391027,
+            "index_size_bytes": 102400000
+          },
+          "IVF": {
+            "build_time_sec": 93.28760050004348,
+            "index_size_bytes": 102856704
+          },
+          "HNSW": {
+            "build_time_sec": 2.3128546001389623,
+            "index_size_bytes": 105600000
+          },
+          "PageIndex": {
+            "build_time_sec": 0.9586197002790868,
+            "index_size_bytes": 17494742
+          },
+          "GridTrace": {
+            "build_time_sec": 3.0639398000203073,
+            "index_size_bytes": 408371200
+          },
+          "GridTrace+": {
+            "build_time_sec": 5.6887634000740945,
+            "index_size_bytes": 611942400
+          }
+        }
+      }
+    }
+  },
+  "S3": {
+    "spec": {
+      "id": "S3",
+      "name": "热冷分布（20% 热点 80% 长尾）",
+      "description": "N=10K 真实扩展 KB。模拟运维真实访问：80% 查询来自 20% 高频 KB（热点），20% 来自长尾。GridTrace L1 锚点天然聚合热点 → 热点查询的 L1 候选集应 < 5 条，p50 应显著低于平均。",
+      "kb_source": "v3_10K",
+      "query_filter": "hot_cold",
+      "extra": {
+        "hot_frac_kb": 0.2,
+        "hot_frac_queries": 0.8,
+        "n_queries": 200
+      }
+    },
+    "kpis": {
+      "Flat": {
+        "hit@1": 0.49,
+        "hit@3": 0.71,
+        "hit@5": 0.71,
+        "mrr": 0.5866666666666667,
+        "ndcg@10": 1.2424857447500184,
+        "latency_p50_ms": 0.9472500532865524,
+        "latency_p95_ms": 1.0992449941113591,
+        "qps": 3.1468815309584772,
+        "build_time_sec": 0.1737274001352489,
+        "index_size_mb": 19.53125,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.20000000000000195,
+        "forget_residual_recall": 0.0
+      },
+      "IVF": {
+        "hit@1": 0.49,
+        "hit@3": 0.71,
+        "hit@5": 0.71,
+        "mrr": 0.5866666666666667,
+        "ndcg@10": 1.2424857447500184,
+        "latency_p50_ms": 0.6673999596387148,
+        "latency_p95_ms": 0.9890700690448283,
+        "qps": 3.1468815309584772,
+        "build_time_sec": 6.305456600151956,
+        "index_size_mb": 19.7265625,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.20000000000000195,
+        "forget_residual_recall": 0.0
+      },
+      "HNSW": {
+        "hit@1": 0.585,
+        "hit@3": 0.745,
+        "hit@5": 0.745,
+        "mrr": 0.6558333333333333,
+        "ndcg@10": 1.3282589885893048,
+        "latency_p50_ms": 0.16120006330311298,
+        "latency_p95_ms": 0.30356987845152617,
+        "qps": 3.1468815309584772,
+        "build_time_sec": 0.45026820013299584,
+        "index_size_mb": 20.1416015625,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.20000000000000195,
+        "forget_residual_recall": 0.0
+      },
+      "PageIndex": {
+        "hit@1": 0.51,
+        "hit@3": 0.545,
+        "hit@5": 0.545,
+        "mrr": 0.5258333333333333,
+        "ndcg@10": 0.6754127068750051,
+        "latency_p50_ms": 54.24709990620613,
+        "latency_p95_ms": 62.90805481839924,
+        "qps": 3.1468815309584772,
+        "build_time_sec": 0.19623839994892478,
+        "index_size_mb": 3.3353137969970703,
+        "sla_30ms_violation_rate": 1.0,
+        "retrieval_trail_completeness": 0.20000000000000195,
+        "forget_residual_recall": 0.0
+      },
+      "GridTrace": {
+        "hit@1": 0.43,
+        "hit@3": 0.585,
+        "hit@5": 0.585,
+        "mrr": 0.5033333333333334,
+        "ndcg@10": 1.0758206620000164,
+        "latency_p50_ms": 42.876299703493714,
+        "latency_p95_ms": 45.88007482234388,
+        "qps": 3.1468815309584772,
+        "build_time_sec": 0.5435146000236273,
+        "index_size_mb": 76.953125,
+        "sla_30ms_violation_rate": 1.0,
+        "retrieval_trail_completeness": 0.20000000000000173,
+        "forget_residual_recall": 0.0
+      },
+      "GridTrace+": {
+        "hit@1": 0.43,
+        "hit@3": 0.585,
+        "hit@5": 0.585,
+        "mrr": 0.5033333333333334,
+        "ndcg@10": 1.0758206620000164,
+        "latency_p50_ms": 1.7301500774919987,
+        "latency_p95_ms": 1.9559498876333237,
+        "qps": 3.1468815309584772,
+        "build_time_sec": 1.285074200015515,
+        "index_size_mb": 114.84375,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 1.0,
+        "forget_residual_recall": 0.0
+      }
+    },
+    "winner": "Flat",
+    "n_queries": 200,
+    "n_kb": 10000,
+    "per_query_counts": {
+      "Flat": 200,
+      "IVF": 200,
+      "HNSW": 200,
+      "PageIndex": 200,
+      "GridTrace": 200,
+      "GridTrace+": 200
+    },
+    "index_stats": {
+      "Flat": {
+        "build_time_sec": 0.1737274001352489,
+        "index_size_bytes": 20480000
+      },
+      "IVF": {
+        "build_time_sec": 6.305456600151956,
+        "index_size_bytes": 20684800
+      },
+      "HNSW": {
+        "build_time_sec": 0.45026820013299584,
+        "index_size_bytes": 21120000
+      },
+      "PageIndex": {
+        "build_time_sec": 0.19623839994892478,
+        "index_size_bytes": 3497330
+      },
+      "GridTrace": {
+        "build_time_sec": 0.5435146000236273,
+        "index_size_bytes": 80691200
+      },
+      "GridTrace+": {
+        "build_time_sec": 1.285074200015515,
+        "index_size_bytes": 120422400
+      }
+    }
+  },
+  "S4": {
+    "spec": {
+      "id": "S4",
+      "name": "合规精确删除（GDPR / 审计）",
+      "description": "随机选 1 条高频 KB（与 ≥3 条 query 关联）执行删除操作，再跑 100 query 重新检索。GridTrace 删 quant_key 桶后立即生效；HNSW 删节点 mark_deleted（实际仍可能召回）。关键指标：残余召回率（residual recall）越低越好。",
+      "kb_source": "v3",
+      "query_filter": "forget",
+      "extra": {
+        "n_test_queries": 100,
+        "n_delete": 1,
+        "_target": {
+          "kb_id": 1,
+          "page_index": 1,
+          "parent_page_index": null,
+          "is_canonical": true,
+          "variant_id": null,
+          "category": "账号与权限管理",
+          "question": "账号被冻结后如何自助解冻或申请人工处理？",
+          "solution": "账号被冻结后，可按以下步骤自助解冻或申请人工处理：\n1. 自助解冻：登录运维门户 → 账号中心 → 自助解冻，完成身份验证后自动解冻\n2. 人工处理：拨打运维热线 400-XXX-XXXX，工作时间 09:00–18:00\n3. 常见冻结原因：连续 5 次密码错误、账号长期未使用（超过 90 天）\n4. 解冻成功后建议立即修改密码",
+          "_related_query_count": 6,
+          "_related_queries": [
+            {
+              "page_index": 1,
+              "category": "账号与权限管理",
+              "question": "账号被冻结后如何自助解冻或申请人工处理？",
+              "solution": "账号被冻结后，可按以下步骤自助解冻或申请人工处理：\n1. 自助解冻：登录运维门户 → 账号中心 → 自助解冻，完成身份验证后自动解冻\n2. 人工处理：拨打运维热线 400-XXX-XXXX，工作时间 09:00–18:00\n3. 常见冻结原因：连续 5 次密码错误、账号长期未使用（超过 90 天）\n4. 解冻成功后建议立即修改密码",
+              "query": "账号被冻结后如何自助解冻或申请人工处理？",
+              "split": "exact",
+              "paraphrase_id": null
+            },
+            {
+              "page_index": 1,
+              "category": "账号与权限管理",
+              "question": "账号被冻结后如何自助解冻或申请人工处理？",
+              "solution": "账号被冻结后，可按以下步骤自助解冻或申请人工处理：\n1. 自助解冻：登录运维门户 → 账号中心 → 自助解冻，完成身份验证后自动解冻\n2. 人工处理：拨打运维热线 400-XXX-XXXX，工作时间 09:00–18:00\n3. 常见冻结原因：连续 5 次密码错误、账号长期未使用（超过 90 天）\n4. 解冻成功后建议立即修改密码",
+              "query": "账号被冻结后如何自助解冻或申请人工处理怎么办？",
+              "split": "paraphrase",
+              "paraphrase_id": "p1_a"
+            },
+            {
+              "page_index": 1,
+              "category": "账号与权限管理",
+              "question": "账号被冻结后如何自助解冻或申请人工处理？",
+              "solution": "账号被冻结后，可按以下步骤自助解冻或申请人工处理：\n1. 自助解冻：登录运维门户 → 账号中心 → 自助解冻，完成身份验证后自动解冻\n2. 人工处理：拨打运维热线 400-XXX-XXXX，工作时间 09:00–18:00\n3. 常见冻结原因：连续 5 次密码错误、账号长期未使用（超过 90 天）\n4. 解冻成功后建议立即修改密码",
+              "query": "账号被冻结后如何自助解冻或申请人要咋处理？",
+              "split": "paraphrase",
+              "paraphrase_id": "p1_b"
+            },
+            {
+              "page_index": 1,
+              "category": "账号与权限管理",
+              "question": "账号被冻结后如何自助解冻或申请人工处理？",
+              "solution": "账号被冻结后，可按以下步骤自助解冻或申请人工处理：\n1. 自助解冻：登录运维门户 → 账号中心 → 自助解冻，完成身份验证后自动解冻\n2. 人工处理：拨打运维热线 400-XXX-XXXX，工作时间 09:00–18:00\n3. 常见冻结原因：连续 5 次密码错误、账号长期未使用（超过 90 天）\n4. 解冻成功后建议立即修改密码",
+              "query": "账号被冻结后如何自助解冻或申请人工处理咋整",
+              "split": "paraphrase",
+              "paraphrase_id": "p1_c"
+            },
+            {
+              "page_index": 1,
+              "category": "账号与权限管理",
+              "question": "账号被冻结后如何自助解冻或申请人工处理？",
+              "solution": "账号被冻结后，可按以下步骤自助解冻或申请人工处理：\n1. 自助解冻：登录运维门户 → 账号中心 → 自助解冻，完成身份验证后自动解冻\n2. 人工处理：拨打运维热线 400-XXX-XXXX，工作时间 09:00–18:00\n3. 常见冻结原因：连续 5 次密码错误、账号长期未使用（超过 90 天）\n4. 解冻成功后建议立即修改密码",
+              "query": "想问下账号被冻结后如何自助解冻或申请人工处理有没有办法处理？",
+              "split": "paraphrase",
+              "paraphrase_id": "p1_d"
+            }
+          ]
+        }
+      }
+    },
+    "kpis": {
+      "Flat": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "hit@5": 1.0,
+        "mrr": 1.0,
+        "ndcg@10": 2.1309297535714573,
+        "latency_p50_ms": 0.0879999715834856,
+        "latency_p95_ms": 0.13305030297487971,
+        "qps": 38.51530435126039,
+        "build_time_sec": 0.007446799892932177,
+        "index_size_mb": 0.78125,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.20000000000000104,
+        "forget_residual_recall": 0.0
+      },
+      "IVF": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "hit@5": 1.0,
+        "mrr": 1.0,
+        "ndcg@10": 2.1309297535714573,
+        "latency_p50_ms": 0.12225005775690079,
+        "latency_p95_ms": 0.18787514418363568,
+        "qps": 38.51530435126039,
+        "build_time_sec": 0.07207409990951419,
+        "index_size_mb": 0.8203125,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.20000000000000104,
+        "forget_residual_recall": 0.0
+      },
+      "HNSW": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "hit@5": 1.0,
+        "mrr": 1.0,
+        "ndcg@10": 2.1309297535714573,
+        "latency_p50_ms": 0.13349996879696846,
+        "latency_p95_ms": 0.175795261748135,
+        "qps": 38.51530435126039,
+        "build_time_sec": 0.01680790027603507,
+        "index_size_mb": 0.8056640625,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.20000000000000104,
+        "forget_residual_recall": 0.0
+      },
+      "PageIndex": {
+        "hit@1": 0.63,
+        "hit@3": 0.65,
+        "hit@5": 0.65,
+        "mrr": 0.6366666666666667,
+        "ndcg@10": 1.1604648767857286,
+        "latency_p50_ms": 2.49595008790493,
+        "latency_p95_ms": 3.318579774349928,
+        "qps": 38.51530435126039,
+        "build_time_sec": 0.008633899968117476,
+        "index_size_mb": 0.13179969787597656,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.20000000000000104,
+        "forget_residual_recall": 0.0
+      },
+      "GridTrace": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "hit@5": 1.0,
+        "mrr": 1.0,
+        "ndcg@10": 2.1309297535714573,
+        "latency_p50_ms": 2.0655998960137367,
+        "latency_p95_ms": 2.5630048476159573,
+        "qps": 38.51530435126039,
+        "build_time_sec": 0.027755099814385176,
+        "index_size_mb": 3.125,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.20000000000000104,
+        "forget_residual_recall": 0.0
+      },
+      "GridTrace+": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "hit@5": 1.0,
+        "mrr": 1.0,
+        "ndcg@10": 2.1309297535714573,
+        "latency_p50_ms": 0.14774990268051624,
+        "latency_p95_ms": 0.25117993354797363,
+        "qps": 38.51530435126039,
+        "build_time_sec": 0.052132700104266405,
+        "index_size_mb": 4.6875,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 1.0,
+        "forget_residual_recall": 0.0
+      }
+    },
+    "winner": "Flat",
+    "n_queries": 100,
+    "n_kb": 400,
+    "per_query_counts": {
+      "Flat": 100,
+      "IVF": 100,
+      "HNSW": 100,
+      "PageIndex": 100,
+      "GridTrace": 100,
+      "GridTrace+": 100
+    },
+    "index_stats": {
+      "Flat": {
+        "build_time_sec": 0.007446799892932177,
+        "index_size_bytes": 819200
+      },
+      "IVF": {
+        "build_time_sec": 0.07207409990951419,
+        "index_size_bytes": 860160
+      },
+      "HNSW": {
+        "build_time_sec": 0.01680790027603507,
+        "index_size_bytes": 844800
+      },
+      "PageIndex": {
+        "build_time_sec": 0.008633899968117476,
+        "index_size_bytes": 138202
+      },
+      "GridTrace": {
+        "build_time_sec": 0.027755099814385176,
+        "index_size_bytes": 3276800
+      },
+      "GridTrace+": {
+        "build_time_sec": 0.052132700104266405,
+        "index_size_bytes": 4915200
+      }
+    }
+  },
+  "S5": {
+    "spec": {
+      "id": "S5",
+      "name": "可解释性（retrieval_trail 完整度）",
+      "description": "各范式返回结果时附带 retrieval_trail 字段。GridTrace 唯一能返回 {quant_key, l1_bucket_size, l2_score, anchor_path, rerank_info} 完整 trail。关键指标：retrieval_trail_completeness（0~1，越大越好）。",
+      "kb_source": "v3",
+      "query_filter": "paraphrase",
+      "extra": {
+        "n_queries": 50
+      }
+    },
+    "kpis": {
+      "Flat": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "hit@5": 1.0,
+        "mrr": 1.0,
+        "ndcg@10": 2.1309297535714573,
+        "latency_p50_ms": 0.08864980190992355,
+        "latency_p95_ms": 0.12085505295544856,
+        "qps": 37.82688193923382,
+        "build_time_sec": 0.009540800005197525,
+        "index_size_mb": 0.78125,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.1999999999999995,
+        "forget_residual_recall": 0.0
+      },
+      "IVF": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "hit@5": 1.0,
+        "mrr": 1.0,
+        "ndcg@10": 2.1309297535714573,
+        "latency_p50_ms": 0.12775021605193615,
+        "latency_p95_ms": 0.19506998360157007,
+        "qps": 37.82688193923382,
+        "build_time_sec": 0.08024200005456805,
+        "index_size_mb": 0.8203125,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.1999999999999995,
+        "forget_residual_recall": 0.0
+      },
+      "HNSW": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "hit@5": 1.0,
+        "mrr": 1.0,
+        "ndcg@10": 2.1309297535714573,
+        "latency_p50_ms": 0.13785017654299736,
+        "latency_p95_ms": 0.21126975771039722,
+        "qps": 37.82688193923382,
+        "build_time_sec": 0.018548500258475542,
+        "index_size_mb": 0.8056640625,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.1999999999999995,
+        "forget_residual_recall": 0.0
+      },
+      "PageIndex": {
+        "hit@1": 0.48,
+        "hit@3": 0.48,
+        "hit@5": 0.48,
+        "mrr": 0.48,
+        "ndcg@10": 0.8318975211428665,
+        "latency_p50_ms": 2.8141001239418983,
+        "latency_p95_ms": 3.262344980612397,
+        "qps": 37.82688193923382,
+        "build_time_sec": 0.013600199948996305,
+        "index_size_mb": 0.13179969787597656,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.1999999999999995,
+        "forget_residual_recall": 0.0
+      },
+      "GridTrace": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "hit@5": 1.0,
+        "mrr": 1.0,
+        "ndcg@10": 2.1309297535714573,
+        "latency_p50_ms": 2.13455012999475,
+        "latency_p95_ms": 2.4261248763650656,
+        "qps": 37.82688193923382,
+        "build_time_sec": 0.032111700158566236,
+        "index_size_mb": 3.125,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 0.1999999999999995,
+        "forget_residual_recall": 0.0
+      },
+      "GridTrace+": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "hit@5": 1.0,
+        "mrr": 1.0,
+        "ndcg@10": 2.1309297535714573,
+        "latency_p50_ms": 0.15189987607300282,
+        "latency_p95_ms": 0.2457499038428068,
+        "qps": 37.82688193923382,
+        "build_time_sec": 0.04897200036793947,
+        "index_size_mb": 4.6875,
+        "sla_30ms_violation_rate": 0.0,
+        "retrieval_trail_completeness": 1.0,
+        "forget_residual_recall": 0.0
+      }
+    },
+    "winner": "GridTrace+",
+    "n_queries": 50,
+    "n_kb": 400,
+    "per_query_counts": {
+      "Flat": 50,
+      "IVF": 50,
+      "HNSW": 50,
+      "PageIndex": 50,
+      "GridTrace": 50,
+      "GridTrace+": 50
+    },
+    "index_stats": {
+      "Flat": {
+        "build_time_sec": 0.009540800005197525,
+        "index_size_bytes": 819200
+      },
+      "IVF": {
+        "build_time_sec": 0.08024200005456805,
+        "index_size_bytes": 860160
+      },
+      "HNSW": {
+        "build_time_sec": 0.018548500258475542,
+        "index_size_bytes": 844800
+      },
+      "PageIndex": {
+        "build_time_sec": 0.013600199948996305,
+        "index_size_bytes": 138202
+      },
+      "GridTrace": {
+        "build_time_sec": 0.032111700158566236,
+        "index_size_bytes": 3276800
+      },
+      "GridTrace+": {
+        "build_time_sec": 0.04897200036793947,
+        "index_size_bytes": 4915200
+      }
+    }
+  }
+}
