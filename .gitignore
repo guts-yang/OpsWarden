@@ -29,6 +29,9 @@ dist/
 backend/chroma_db/
 .gitignore
 docs/reports/
+presentation/
+scripts/
+
 
 # macOS
 .DS_Store
