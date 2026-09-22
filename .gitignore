@@ -45,5 +45,8 @@ docs/reports/
 /experiments/
 /scripts/
 
+# Defense slides & scripts (local only, not part of deliverable)
+/presentation/
+
 # macOS
 .DS_Store

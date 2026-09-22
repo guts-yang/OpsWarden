@@ -275,6 +275,7 @@ OpsWarden/
 │       │   ├── response.py      # 统一响应格式
 │       │   ├── security.py      # 密码哈希 / JWT 工具
 │       │   └── employee_id.py   # 按角色生成工号（ADM/OPS/USR + 序号）
+│       ├── agent/               # Agent 编排层：graph / policy / prompts / state / tools / trace
 │       ├── graphs/
 │       │   └── chat_workflow.py # LangGraph 对话编排（Postgres checkpoint）
 │       ├── checkpointer/        # LangGraph Postgres checkpoint 连接与工具
@@ -284,15 +285,21 @@ OpsWarden/
 │           ├── faq_loader.py    # Markdown FAQ 解析 → PostgreSQL
 │           ├── llm.py           # 本地 Qwen2.5:1.5b 大模型调用（OpenAI 兼容接口）
 │           ├── retriever.py     # 双阶段检索 + ingest_kb_entry / prune_anchor
-│           └── chat_pipeline.py # RAG 管道（供工作流节点调用）
+│           ├── chat_pipeline.py # RAG 管道（供工作流节点调用）
+│           └── eval_engine.py   # 检索评测
 ├── frontend/                    # Vue 3 + Vite SPA
 │   ├── index.html               # Vite 入口
 │   ├── package.json
 │   ├── vite.config.js           # 代理 /api → :8000
 │   ├── tailwind.config.js       # MD3 色板主题
+│   ├── postcss.config.js
+│   ├── nginx.conf               # 生产容器静态资源托管
+│   ├── Dockerfile
+│   ├── public/fonts/            # 自托管字体（离线可用）
 │   └── src/
 │       ├── main.js              # createApp + Pinia + Router
 │       ├── App.vue
+│       ├── style.css
 │       ├── api/
 │       │   ├── client.js        # Axios 实例（拦截器：token 注入 + 401 自动登出）
 │       │   ├── auth.js / accounts.js / tickets.js
@@ -310,23 +317,27 @@ OpsWarden/
 │       │   ├── TicketsView.vue
 │       │   ├── AiChatView.vue
 │       │   └── KnowledgeBaseView.vue
-│       └── components/
-│           ├── AppSidebar.vue / AppHeader.vue
-│           ├── BasePagination.vue / BaseModal.vue / BaseSlidePanel.vue
+│       ├── components/
+│       │   ├── AppSidebar.vue / AppHeader.vue / AppBottomTabBar.vue
+│       │   ├── BasePagination.vue / BaseModal.vue / BaseSlidePanel.vue
+│       └── utils/
+│           ├── chatSessionStorage.js  # 多轮会话本地持久化
+│           └── constants.js
 ├── docs/
 │   ├── canva.png                # 系统流程图
 │   ├── API_TESTING.md           # API 测试文档
 │   └── backend.md               # 后端设计文档
-├── presentation/                # 答辩演示与可视化（纯前端、可离线）
-│   ├── index.html               # 答辩主稿 slides（reveal.js）
-│   ├── rag-interactive.html     # RAG 底层原理交互演示
-│   └── rag-math.html            # RAG 数学求解原理解读（MathJax 公式）
+├── docker/
+│   └── engine-ipv4-snippet.json # Docker Engine 配置片段
 ├── init.sql                     # 数据库初始化脚本（PostgreSQL + pgvector）
 ├── requirements.txt             # Python 依赖
-├── docker-compose.yml           # Docker 编排
+├── docker-compose.yml           # Docker 编排（postgres / backend / frontend）
 ├── .env.example                 # 环境变量模板
+├── CLAUDE.md                    # AI 协作用的精简项目说明
 └── README.md
 ```
+
+> **本地保留、不入库**（已写入 `.gitignore`）：`experiments/`（实验源码 + 报告 + 图表）、`presentation/`（答辩材料）、`scripts/`（评测脚本与缓存）。
 
 ***
 
