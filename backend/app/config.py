@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     DEEPSEEK_MAX_TOKENS: int = 800
     DEEPSEEK_TIMEOUT: float = 30.0
 
-    # RAG（取值来自 docs/rag_hyperparam_report_v3_joint.md 联合调优结论）
+    # RAG（取值来自 experiments/reports/rag_hyperparam_report_v3_joint.md 联合调优结论）
     EMBEDDING_MODEL: str = "BAAI/bge-small-zh-v1.5"
     EMBEDDING_DEVICE: str = "cpu"
     RAG_SCORE_THRESHOLD: float = 0.65

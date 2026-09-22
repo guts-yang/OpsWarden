@@ -1,8 +1,8 @@
 # 答辩 Q&A 弹药库 · 范式对比 + 超参调参
 
 > 配套讲稿:`presentation/答辩讲稿_10min_基于PDF.md`
-> 配套报告:`docs/PARADIGM_BENCHMARK_V2_REPORT.md` / `PARADIGM_BENCHMARK_V3_A3_REPORT.md` / `rag_hyperparam_report_v3_joint.md`
-> 配套图:`docs/paradigm_benchmark_v2_charts/`(8 张) / `docs/hyperparam_charts/`(4 张) / `docs/rag4_charts/`(3 张)
+> 配套报告:`experiments/reports/PARADIGM_BENCHMARK_V2_REPORT.md` / `experiments/reports/PARADIGM_BENCHMARK_V3_A3_REPORT.md` / `experiments/reports/rag_hyperparam_report_v3_joint.md`
+> 配套图:`experiments/charts/paradigm_v2/`(8 张) / `experiments/charts/hyperparam/`(4 张) / `experiments/charts/rag4/`(3 张)
 > 风格:老师问什么就抽哪条,**短句 + 数字 + 引用图**。
 
 ---
@@ -117,7 +117,7 @@
 >
 > **5x 不是拍脑袋,是字段覆盖率 = 5/1 = 5.0**。
 >
-> 报告:`docs/PARADIGM_BENCHMARK_V3_A3_REPORT.md` A3 trail 章节。
+> 报告:`experiments/reports/PARADIGM_BENCHMARK_V3_A3_REPORT.md` A3 trail 章节。
 
 ---
 
@@ -365,7 +365,7 @@
 >
 > 这也是我们在延迟项上**不主观打分**,直接给数据的原因。
 >
-> 报告:`docs/PARADIGM_BENCHMARK_V3_A2_USER_STUDY.md`
+> 报告:`experiments/reports/PARADIGM_BENCHMARK_V3_A2_USER_STUDY.md`
 >
 > **金句**:"PageIndex 慢,不是 2 倍,是 490 倍。"
 
@@ -392,16 +392,16 @@
 
 | 编号 | 文件 | 章节 / 行号 |
 |---|---|---|
-| [V2-主] | `docs/PARADIGM_BENCHMARK_V2_REPORT.md` | S1-S5 决策树 |
-| [V3-A1] | `docs/PARADIGM_BENCHMARK_V3_A1_REPORT.md` | A1 多语言模型对比 |
-| [V3-A2] | `docs/PARADIGM_BENCHMARK_V3_A2_USER_STUDY.md` | A2 30 query × 5 范式 |
-| [V3-A3] | `docs/PARADIGM_BENCHMARK_V3_A3_REPORT.md` | A3 诚实修正 + trail 完整度 |
-| [V3-Phase1] | `docs/PARADIGM_BENCHMARK_V3_PHASE1_REPORT.md` | Phase 1 中期汇总 |
-| [HP-V2] | `docs/rag_hyperparam_report.md` | V2 1584 组调参 |
-| [HP-V3] | `docs/rag_hyperparam_report_v3_joint.md` | V3 joint 216 组 + 验证 |
-| [图-V2] | `docs/paradigm_benchmark_v2_charts/` | 8 张:决策树 / 雷达 / 热力图 / 规模化 / SLA / 残余召回 / trail / KPI |
-| [图-HP] | `docs/hyperparam_charts/` | 4 张:τ 权衡 / τ-L1K 热力图 / L1-K 敏感性 / ε 平台 |
-| [图-4范] | `docs/rag4_charts/` | 3 张:trail 5x / build 16.4x / delete 2.34MB |
+| [V2-主] | `experiments/reports/PARADIGM_BENCHMARK_V2_REPORT.md` | S1-S5 决策树 |
+| [V3-A1] | `experiments/reports/PARADIGM_BENCHMARK_V3_A1_REPORT.md` | A1 多语言模型对比 |
+| [V3-A2] | `experiments/reports/PARADIGM_BENCHMARK_V3_A2_USER_STUDY.md` | A2 30 query × 5 范式 |
+| [V3-A3] | `experiments/reports/PARADIGM_BENCHMARK_V3_A3_REPORT.md` | A3 诚实修正 + trail 完整度 |
+| [V3-Phase1] | `experiments/reports/PARADIGM_BENCHMARK_V3_PHASE1_REPORT.md` | Phase 1 中期汇总 |
+| [HP-V2] | `experiments/reports/rag_hyperparam_report.md` | V2 1584 组调参 |
+| [HP-V3] | `experiments/reports/rag_hyperparam_report_v3_joint.md` | V3 joint 216 组 + 验证 |
+| [图-V2] | `experiments/charts/paradigm_v2/` | 8 张:决策树 / 雷达 / 热力图 / 规模化 / SLA / 残余召回 / trail / KPI |
+| [图-HP] | `experiments/charts/hyperparam/` | 4 张:τ 权衡 / τ-L1K 热力图 / L1-K 敏感性 / ε 平台 |
+| [图-4范] | `experiments/charts/rag4/` | 3 张:trail 5x / build 16.4x / delete 2.34MB |
 | [论文] | ICML 2025 | Fast Exact Unlearning for In-Context Learning Data for LLMs |
 | [GT仓库] | github.com/guts-yang/GridTrace | 开源版 |
 | [PI仓库] | github.com/VectifyAI/PageIndex | 对比基准 |
@@ -411,7 +411,7 @@
 ## F 篇 · 应急模板(老师突然问"未准备过的")
 
 ### 模板 1:数据没准备
-> "这个具体数字我现场没记下来,但可以引用 [`docs/PARADIGM_BENCHMARK_V2_REPORT.md`] 的 [章节] 给您查证。我**优先保证已答过的精确,不现场编**。"
+> "这个具体数字我现场没记下来,但可以引用 [`experiments/reports/PARADIGM_BENCHMARK_V2_REPORT.md`] 的 [章节] 给您查证。我**优先保证已答过的精确,不现场编**。"
 
 ### 模板 2:方案不熟
 > "这块主要是我们组 [名字] 负责的,我了解思路但具体实现细节要问他。**核心思想**是 [简述一二三]。**我们不抢答,也不搪塞**。"

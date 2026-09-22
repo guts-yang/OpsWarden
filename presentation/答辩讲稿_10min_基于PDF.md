@@ -177,7 +177,7 @@
 
 | 突发情况 | 应对话术 |
 |---|---|
-| 老师追问"1800 组实验" | 翻回 P12,引向 `docs/hyperparam_charts/` 四张图,讲 τ 甜蜜点 + L1-K 膝盖点 + ε 平台 |
+| 老师追问"1800 组实验" | 翻回 P12,引向 `experiments/charts/hyperparam/` 四张图,讲 τ 甜蜜点 + L1-K 膝盖点 + ε 平台 |
 | 老师追问"GridTrace 论文" | ICML 2025,Fast Exact Unlearning for In-Context Learning Data for LLMs,引文已写在 P6 |
 | 老师追问"PageIndex 仓库" | https://github.com/VectifyAI/PageIndex,GridTrace 仓库 https://github.com/guts-yang/GridTrace |
 | 老师追问"性能数据" | Hit@1 paraphrase 98.5%、FPR 3.1%、L1-K=8 召回 95%、IVF build 93s vs GT+ 5.7s |

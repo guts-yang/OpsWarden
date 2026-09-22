@@ -4,6 +4,9 @@
 .cursor/
 .vscode/
 .codebuddy/
+.idea/
+.windsurf/
+.trae/
 
 # Runtime logs
 *.log
@@ -27,8 +30,17 @@ dist/
 
 # ChromaDB runtime data
 backend/chroma_db/
-.gitignore
 docs/reports/
+
+# Editor scratch files
+.history/
+*.swp
+*.swo
+*~
+~$*
+
+# Experiment scratch code (local only, not part of deliverable)
+/experiments/
 
 # macOS
 .DS_Store
