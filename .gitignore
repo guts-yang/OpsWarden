@@ -41,6 +41,7 @@ docs/reports/
 
 # Experiment scratch code (local only, not part of deliverable)
 /experiments/
+/scripts/
 
 # macOS
 .DS_Store
