@@ -358,6 +358,20 @@ OpsWarden/
 │   ├── 4-summary.png            # 截图：项目亮点总览
 │   ├── API_TESTING.md           # API 测试文档
 │   └── backend.md               # 后端设计文档
+├── presentation/                # 答辩材料（部分入库，见下方「入库范围说明」）
+│   ├── demos/                   # RAG 原理交互演示（纯前端、可离线）
+│   │   ├── rag-interactive.html # 底层原理交互演示
+│   │   ├── rag-math.html        # 数学求解解读（MathJax 公式）
+│   │   ├── rag-space.html       # 向量空间可视化
+│   │   └── rag-hyperparam-*.html# 超参数调优图表（report / v2-charts / v3-joint-charts）
+│   ├── assets/                  # 封面 / 背景图素材
+│   │   ├── 封面.png
+│   │   ├── 内容背景图.png
+│   │   ├── 学术答辩风.png
+│   │   ├── 总结背景.png
+│   │   └── 科技-AI主题背景.png
+│   ├── deliverables/            # 答辩成品
+│       └── 运维数字员工.pdf      # 27 页答辩演示稿
 ├── docker/
 │   └── engine-ipv4-snippet.json # Docker Engine 配置片段
 ├── init.sql                     # 数据库初始化脚本（PostgreSQL + pgvector）
@@ -367,9 +381,6 @@ OpsWarden/
 ├── CLAUDE.md                    # AI 协作用的精简项目说明
 └── README.md
 ```
-
-> **本地保留、不入库**（已写入 `.gitignore`）：`experiments/`（实验源码 + 报告 + 图表）、`presentation/`（答辩材料）、`scripts/`（评测脚本与缓存）。
-
 ***
 
 ## 团队分工
