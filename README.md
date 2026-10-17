@@ -31,6 +31,21 @@
 
 ***
 
+### 在线交互演示
+
+> 以下为纯前端、可离线运行的 RAG 原理交互演示，点击即可在线体验（无需登录、无需后端）。
+
+| 演示 | 说明 | 在线访问 |
+| --- | --- | --- |
+| RAG 底层原理交互演示 | 端到端演示检索增强生成的分层召回流程 | [打开](https://guts-yang.github.io/OpsWarden/presentation/demos/rag-interactive.html) |
+| RAG 向量空间可视化 | 直观展示量化锚点与向量分布 | [打开](https://guts-yang.github.io/OpsWarden/presentation/demos/rag-space.html) |
+| RAG 数学求解原理 | 推导余弦相似度与 Top-K 选优过程 | [打开](https://guts-yang.github.io/OpsWarden/presentation/demos/rag-math.html) |
+| RAG 超参数调优实验报告 | 检索参数实验结论汇总 | [打开](https://guts-yang.github.io/OpsWarden/presentation/demos/rag-hyperparam-report.html) |
+| RAG 超参数实验 v2 图表 | 第二轮实验可视化图表 | [打开](https://guts-yang.github.io/OpsWarden/presentation/demos/rag-hyperparam-v2-charts.html) |
+| RAG 三参数联合调优 v3 | 三参数联合调优结果 | [打开](https://guts-yang.github.io/OpsWarden/presentation/demos/rag-hyperparam-v3-joint-charts.html) |
+
+***
+
 ## 课题背景与需求来源
 
 > **课题六：运维数字员工的建设**（联系导师：内部提供）
