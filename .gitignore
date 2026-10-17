@@ -35,6 +35,9 @@ dist/
 # ChromaDB runtime data
 backend/chroma_db/
 docs/reports/
+presentation/
+scripts/
+
 
 # Editor scratch files
 .history/
