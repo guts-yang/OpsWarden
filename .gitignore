@@ -14,8 +14,10 @@
 *.log
 
 # ML models (large files, use pip install instead)
+# 仅忽略仓库根目录下的权重目录；不可用 models/ 通配，
+# 否则会误伤 backend/app/models/（ORM 代码目录，如 knowledge.py）。
+/model
 /models
-models/
 
 # Python
 __pycache__/
